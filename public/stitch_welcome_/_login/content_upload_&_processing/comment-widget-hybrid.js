@@ -602,7 +602,7 @@ class HybridCommentWidget {
 let hybridCommentWidget;
 document.addEventListener('DOMContentLoaded', () => {
     hybridCommentWidget = new HybridCommentWidget({
-        apiBase: "https://clamshell-backend-pyblchd15-mohammed-asrafs-projects.vercel.app"
+        apiBase: "https://clamshell-backend-yxpypzv79-mohammed-asrafs-projects.vercel.app"
     });
     window.HybridCommentWidget = HybridCommentWidget;
     window.hybridCommentWidget = hybridCommentWidget;
