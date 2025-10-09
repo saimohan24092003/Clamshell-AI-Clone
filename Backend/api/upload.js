@@ -2,7 +2,6 @@ import { v4 as uuidv4 } from 'uuid';
 import formidable from 'formidable';
 import fs from 'fs/promises';
 import pdfParse from 'pdf-parse';
-import { extractContentWithPages } from '../utils/pageExtractor.js';
 
 // Store uploaded files in memory (for development)
 const uploadedFiles = new Map();
@@ -68,28 +67,19 @@ async function handler(req, res) {
       fileName = uploadedFile.originalFilename || uploadedFile.name || 'uploaded-file';
       console.log(`📄 Processing file: ${fileName}`);
 
-      // Extract content WITH PAGE TRACKING using new utility
-      try {
-        pageData = await extractContentWithPages(uploadedFile.filepath, fileName);
-        content = pageData.text;
-        console.log(`✅ Content extracted with ${pageData.totalPages} pages, ${content.length} characters`);
-      } catch (error) {
-        console.error('Page extraction failed, falling back to basic extraction:', error);
-
-        // Fallback to basic extraction without page tracking
-        if (fileName.toLowerCase().endsWith('.pdf')) {
-          content = await extractPDFText(uploadedFile.filepath);
-          console.log(`✅ PDF extracted (no page tracking): ${content.length} characters`);
-        } else if (fileName.toLowerCase().endsWith('.txt')) {
+      // Basic extraction without page tracking
+      if (fileName.toLowerCase().endsWith('.pdf')) {
+        content = await extractPDFText(uploadedFile.filepath);
+        console.log(`✅ PDF extracted: ${content.length} characters`);
+      } else if (fileName.toLowerCase().endsWith('.txt')) {
+        content = await fs.readFile(uploadedFile.filepath, 'utf-8');
+        console.log(`✅ Text file read: ${content.length} characters`);
+      } else {
+        // Try to read as text
+        try {
           content = await fs.readFile(uploadedFile.filepath, 'utf-8');
-          console.log(`✅ Text file read: ${content.length} characters`);
-        } else {
-          // Try to read as text
-          try {
-            content = await fs.readFile(uploadedFile.filepath, 'utf-8');
-          } catch (error) {
-            content = `[Binary file: ${fileName}]`;
-          }
+        } catch (error) {
+          content = `[Binary file: ${fileName}]`;
         }
       }
 
