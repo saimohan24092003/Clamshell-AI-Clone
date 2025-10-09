@@ -1,7 +1,7 @@
 import express from 'express';
-import cors from 'cors';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import { corsMiddleware } from './utils/cors.js';
 
 dotenv.config();
 
@@ -16,44 +16,17 @@ async function connectDB() {
   try {
     await mongoose.connect(MONGODB_URI);
     isConnected = true;
-    console.log('✅ MongoDB connected');
+    console.log('MongoDB connected');
   } catch (err) {
-    console.warn('⚠️  MongoDB not connected (optional for local dev):', err.message);
+    console.warn('MongoDB not connected (optional for local dev):', err.message);
   }
 }
 
 // Connect to DB on startup (non-blocking)
-connectDB().catch(() => console.log('ℹ️  Running without MongoDB - some features may be limited'));
+connectDB().catch(() => console.log('Running without MongoDB - some features may be limited'));
 
-// CORS configuration - Allow all Vercel deployments and localhost
-app.use(cors({
-  origin: (origin, callback) => {
-    // Allow requests with no origin (mobile apps, curl, Postman, etc.)
-    if (!origin) return callback(null, true);
-
-    // Allow all Vercel deployments
-    if (origin.includes('vercel.app') || origin.includes('localhost') || origin.includes('127.0.0.1')) {
-      return callback(null, true);
-    }
-
-    // Fallback to environment variable
-    const allowedOrigins = process.env.FRONTEND_ORIGIN
-      ? process.env.FRONTEND_ORIGIN.split(',')
-      : [];
-
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    }
-
-    callback(new Error('Not allowed by CORS'));
-  },
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin'],
-  exposedHeaders: ['Content-Length', 'Content-Type'],
-  preflightContinue: false,
-  optionsSuccessStatus: 204
-}));
+// CORS configuration - Use centralized CORS middleware
+app.use(corsMiddleware);
 
 // Body parser with increased limit for file uploads
 app.use(express.json({ limit: '50mb' }));

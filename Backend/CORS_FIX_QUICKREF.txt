@@ -1,0 +1,94 @@
+========================================
+CORS PREFLIGHT FIX - QUICK REFERENCE
+========================================
+
+PROBLEM FIXED:
+--------------
+Frontend: https://clamshell-frontend.vercel.app
+Backend:  https://clamshell-backend-7k0m8s74c-mohammed-asrafs-projects.vercel.app/api/health
+Error:    CORS preflight request blocked
+
+SOLUTION IMPLEMENTED:
+---------------------
+1. Created centralized CORS utility (utils/cors.js)
+2. Updated all 12 API handlers with withCors() wrapper
+3. Configured vercel.json with proper CORS headers
+4. Updated frontend config.js with new backend URL
+
+FILES CHANGED:
+--------------
+Backend (C:\Users\Asus\clamshell_ai_project\Backend):
+  + utils/cors.js (NEW - centralized CORS handling)
+  * index.js (use corsMiddleware)
+  * vercel.json (add CORS headers config)
+  * api/health.js
+  * api/upload.js
+  * api/analyze.js
+  * api/strategy.js
+  * api/learning-map.js
+  * api/store-pre-sme-responses.js
+  * api/generate-final-report.js
+  * api/upload-recommendation-docs.js
+  * api/store-recommendation-approval.js
+  * api/enhance-recommendation-content.js
+  * api/generate-strategies.js
+  * api/generate-learning-map-ai.js
+
+Frontend:
+  * AI_ID_Frontend_Clean/js/config.js (backend URL updated)
+
+WHAT THE FIX DOES:
+------------------
+- Allows ALL *.vercel.app origins automatically
+- Properly handles OPTIONS preflight requests
+- Sets correct CORS headers (credentials, methods, headers)
+- Uses 24-hour preflight cache for performance
+- Consistent CORS logic across all endpoints
+
+TEST COMMANDS:
+--------------
+# Test OPTIONS preflight
+curl -X OPTIONS 'https://clamshell-backend-7k0m8s74c-mohammed-asrafs-projects.vercel.app/api/health' \
+  -H 'Origin: https://clamshell-frontend.vercel.app' \
+  -H 'Access-Control-Request-Method: GET' -i
+
+# Test GET request
+curl 'https://clamshell-backend-7k0m8s74c-mohammed-asrafs-projects.vercel.app/api/health' \
+  -H 'Origin: https://clamshell-frontend.vercel.app' -i
+
+# Browser test (run in console on frontend)
+fetch('https://clamshell-backend-7k0m8s74c-mohammed-asrafs-projects.vercel.app/api/health')
+  .then(r => r.json()).then(console.log).catch(console.error)
+
+DEPLOYMENT:
+-----------
+Backend changes are in: C:\Users\Asus\clamshell_ai_project\Backend
+Frontend changes are in: AI_ID_Frontend_Clean/js/config.js
+
+To deploy:
+1. Commit backend changes
+2. Push to Vercel (auto-deploy or `vercel --prod`)
+3. Commit frontend changes
+4. Push frontend to Vercel
+5. Test with commands above
+
+KEY BENEFITS:
+-------------
+✓ Single source of truth for CORS (utils/cors.js)
+✓ Works with Vercel serverless architecture
+✓ Automatic support for all *.vercel.app deployments
+✓ Easy to maintain and extend
+✓ Proper OPTIONS preflight handling
+✓ Performance optimized with caching
+
+MONITORING:
+-----------
+- Check Vercel deployment logs
+- Monitor browser console for CORS errors
+- Verify Access-Control-* headers in Network tab
+- Test from different origins
+
+DOCUMENTATION:
+--------------
+Full details: CORS_FIX_SUMMARY.md
+Quick deploy: DEPLOY.md

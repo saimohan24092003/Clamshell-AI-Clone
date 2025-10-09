@@ -2,8 +2,8 @@
 const API_CONFIG = {
   // Backend URL - automatically detects environment
   BACKEND_URL: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-    ? 'https://clamshell-backend-yxpypzv79-mohammed-asrafs-projects.vercel.app'
-    : 'https://clamshell-backend-yxpypzv79-mohammed-asrafs-projects.vercel.app',
+    ? 'https://clamshell-backend-7k0m8s74c-mohammed-asrafs-projects.vercel.app'
+    : 'https://clamshell-backend-7k0m8s74c-mohammed-asrafs-projects.vercel.app',
 
   // API Endpoints
   ENDPOINTS: {

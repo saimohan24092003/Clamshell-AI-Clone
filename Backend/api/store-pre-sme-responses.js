@@ -1,29 +1,9 @@
+import { withCors } from '../utils/cors.js';
+
 import connectDB from '../lib/mongodb.js';
 import PreSMEResponse from '../models/PreSMEResponse.js';
 
-// Helper function to set CORS headers
-function setCorsHeaders(req, res) {
-  const origin = req.headers.origin;
-  const allowedOrigins = process.env.FRONTEND_ORIGIN
-    ? process.env.FRONTEND_ORIGIN.split(',')
-    : ['http://localhost:5173', 'http://localhost:3000', 'http://localhost:8080'];
-
-  if (allowedOrigins.includes(origin) || !origin) {
-    res.setHeader('Access-Control-Allow-Origin', origin || '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-  }
-}
-
-export default async function handler(req, res) {
-  // Set CORS headers
-  setCorsHeaders(req, res);
-
-  // Handle preflight
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
+async function handler(req, res) {
 
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -89,3 +69,5 @@ export default async function handler(req, res) {
     });
   }
 }
+
+export default withCors(handler);

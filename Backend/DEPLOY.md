@@ -1,5 +1,40 @@
 # Deploying CourseCraft AI Backend to Vercel
 
+## QUICK START - CORS Fix Deployment
+
+### Current Deployment URL
+```
+https://clamshell-backend-7k0m8s74c-mohammed-asrafs-projects.vercel.app
+```
+
+### Quick Test Commands
+
+**Test OPTIONS Preflight:**
+```bash
+curl -X OPTIONS 'https://clamshell-backend-7k0m8s74c-mohammed-asrafs-projects.vercel.app/api/health' \
+  -H 'Origin: https://clamshell-frontend.vercel.app' \
+  -H 'Access-Control-Request-Method: GET' \
+  -i
+```
+
+**Test Health Endpoint:**
+```bash
+curl 'https://clamshell-backend-7k0m8s74c-mohammed-asrafs-projects.vercel.app/api/health' \
+  -H 'Origin: https://clamshell-frontend.vercel.app' \
+  -i
+```
+
+**Browser Test:**
+Open https://clamshell-frontend.vercel.app and run in console:
+```javascript
+fetch('https://clamshell-backend-7k0m8s74c-mohammed-asrafs-projects.vercel.app/api/health')
+  .then(r => r.json())
+  .then(console.log)
+  .catch(console.error)
+```
+
+---
+
 ## Steps to Deploy
 
 ### 1. Push Backend to GitHub

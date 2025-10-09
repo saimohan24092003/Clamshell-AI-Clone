@@ -1,24 +1,8 @@
 import connectDB from '../lib/mongodb.js';
 import mongoose from 'mongoose';
+import { withCors } from '../utils/cors.js';
 
-export default async function handler(req, res) {
-  // Set CORS headers
-  const origin = req.headers.origin;
-  const allowedOrigins = process.env.FRONTEND_ORIGIN
-    ? process.env.FRONTEND_ORIGIN.split(',')
-    : ['https://coursecraft-frontend-mohammed-asrafs-projects.vercel.app'];
-
-  if (allowedOrigins.includes(origin) || !origin) {
-    res.setHeader('Access-Control-Allow-Origin', origin || '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-  }
-
-  // Handle preflight
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
-  }
+async function handler(req, res) {
 
   try {
     await connectDB();
@@ -42,3 +26,5 @@ export default async function handler(req, res) {
     });
   }
 }
+
+export default withCors(handler);
