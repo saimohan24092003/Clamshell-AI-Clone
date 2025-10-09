@@ -1,6 +1,5 @@
 import connectDB from '../lib/mongodb.js';
 import mongoose from 'mongoose';
-import { withCors } from '../utils/cors.js';
 
 async function handler(req, res) {
 
@@ -27,4 +26,4 @@ async function handler(req, res) {
   }
 }
 
-export default withCors(handler);
+export default handler;

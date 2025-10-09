@@ -1,4 +1,3 @@
-import { withCors } from '../utils/cors.js';
 
 // Generate professional learning map based on content, SME answers, and chosen strategy
 function generateLearningMap(content, domain, smeAnswers, selectedStrategy) {
@@ -179,4 +178,4 @@ async function handler(req, res) {
   }
 }
 
-export default withCors(handler);
+export default handler;

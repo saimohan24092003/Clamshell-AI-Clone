@@ -1,4 +1,3 @@
-import { withCors } from '../utils/cors.js';
 
 // Store recommendation approvals in memory (for development)
 const recommendationApprovals = new Map();
@@ -98,4 +97,4 @@ async function handler(req, res) {
 // Export the store for use in other endpoints
 export { recommendationApprovals };
 
-export default withCors(handler);
+export default handler;

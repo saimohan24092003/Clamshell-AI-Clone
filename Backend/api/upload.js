@@ -3,7 +3,6 @@ import formidable from 'formidable';
 import fs from 'fs/promises';
 import pdfParse from 'pdf-parse';
 import { extractContentWithPages } from '../utils/pageExtractor.js';
-import { withCors } from '../utils/cors.js';
 
 // Store uploaded files in memory (for development)
 const uploadedFiles = new Map();
@@ -154,7 +153,7 @@ async function handler(req, res) {
   }
 }
 
-export default withCors(handler);
+export default handler;
 
 // Export the store for use in analyze endpoint
 export { uploadedFiles };

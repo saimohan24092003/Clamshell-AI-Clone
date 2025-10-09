@@ -1,4 +1,3 @@
-import { withCors } from '../utils/cors.js';
 
 import formidable from 'formidable';
 import fs from 'fs/promises';
@@ -120,4 +119,4 @@ async function handler(req, res) {
 // Export the store for use in other endpoints
 export { recommendationDocuments };
 
-export default withCors(handler);
+export default handler;
