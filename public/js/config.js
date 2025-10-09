@@ -1,7 +1,9 @@
 // API Configuration for CourseCraft AI
 const API_CONFIG = {
-  // Local Development Backend URL
-  BACKEND_URL: 'http://localhost:3000',
+  // Backend URL - automatically detects environment
+  BACKEND_URL: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:3000'
+    : 'https://clamshell-backend-1nrb5z5fx-mohammed-asrafs-projects.vercel.app',
 
   // API Endpoints
   ENDPOINTS: {
