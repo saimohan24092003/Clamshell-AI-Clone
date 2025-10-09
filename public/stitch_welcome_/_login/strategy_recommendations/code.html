@@ -343,7 +343,7 @@ Create Personalized Learning Map
 // STRATEGY RECOMMENDATIONS SYSTEM
 // ===================================
 
-const BACKEND_URL = 'https://clamshell-backend-q9lf745gl-mohammed-asrafs-projects.vercel.app';
+const BACKEND_URL = 'https://clamshell-backend-pyblchd15-mohammed-asrafs-projects.vercel.app';
 
 // Strategy global state
 let expertStrategyData = null;
@@ -510,7 +510,7 @@ async function generateStrategyRecommendations() {
 
         // Show error to user - NO FAKE DATA
         if (typeof showBackendError === 'function') {
-            showBackendError('Strategy generation requires AI backend connection. Please ensure the backend server is running at https://clamshell-backend-q9lf745gl-mohammed-asrafs-projects.vercel.app');
+            showBackendError('Strategy generation requires AI backend connection. Please ensure the backend server is running at https://clamshell-backend-pyblchd15-mohammed-asrafs-projects.vercel.app');
         }
 
         // Return empty array - NO FAKE DATA
@@ -664,9 +664,9 @@ function convertComprehensiveAnalysisToStrategies(analysis, contentDomain) {
 function generateEnhancedContentSpecificStrategies(contentDomain, smeAnswers) {
     console.error('❌ FATAL ERROR: generateEnhancedContentSpecificStrategies called without AI backend');
     console.error('This function contains hardcoded fake data and has been disabled');
-    console.error('AI backend must be running at https://clamshell-backend-q9lf745gl-mohammed-asrafs-projects.vercel.app');
+    console.error('AI backend must be running at https://clamshell-backend-pyblchd15-mohammed-asrafs-projects.vercel.app');
 
-    showBackendError('Strategy generation requires AI backend. This function has been disabled to prevent showing fake data. Please start the backend server at https://clamshell-backend-q9lf745gl-mohammed-asrafs-projects.vercel.app');
+    showBackendError('Strategy generation requires AI backend. This function has been disabled to prevent showing fake data. Please start the backend server at https://clamshell-backend-pyblchd15-mohammed-asrafs-projects.vercel.app');
 
     throw new Error('HARDCODED_FALLBACK_DISABLED: AI backend required for strategy generation');
 }
@@ -1455,7 +1455,7 @@ console.log('📊 Flow: SME Interview → Strategy Analysis → Learning Map Cre
 <!-- Add Universal Comment Widget - Expert can click anywhere to add feedback -->
 <script>
 window.commentWidgetConfig = {
-    apiBase: "https://clamshell-backend-q9lf745gl-mohammed-asrafs-projects.vercel.app",
+    apiBase: "https://clamshell-backend-pyblchd15-mohammed-asrafs-projects.vercel.app",
     position: "top-right"
 };
 </script>
@@ -1470,7 +1470,7 @@ function showBackendError(message) {
         <div class="bg-red-900 text-white p-8 rounded-lg max-w-2xl">
             <h2 class="text-2xl font-bold mb-4">⚠️ AI Backend Required</h2>
             <p class="mb-4">${message}</p>
-            <p class="text-sm opacity-80">Backend must be running at https://clamshell-backend-q9lf745gl-mohammed-asrafs-projects.vercel.app</p>
+            <p class="text-sm opacity-80">Backend must be running at https://clamshell-backend-pyblchd15-mohammed-asrafs-projects.vercel.app</p>
             <button onclick="location.reload()" class="mt-4 bg-white text-red-900 px-6 py-2 rounded font-bold">Retry</button>
         </div>
     `;
