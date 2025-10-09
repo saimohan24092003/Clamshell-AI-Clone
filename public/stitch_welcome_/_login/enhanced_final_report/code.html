@@ -294,7 +294,7 @@ async function generateContextualReport() {
     });
 
     // Call backend API for AI-powered report generation
-    const BACKEND_URL = 'http://localhost:3000';
+    const BACKEND_URL = 'https://clamshell-backend-1nrb5z5fx-mohammed-asrafs-projects.vercel.app';
 
     try {
         const response = await fetch(`${BACKEND_URL}/api/generate-final-report`, {
@@ -1023,7 +1023,7 @@ console.log('Enhanced Final Report script loaded successfully');
 <!-- Add Universal Comment Widget - Expert can click anywhere to add feedback -->
 <script>
 window.commentWidgetConfig = {
-    apiBase: "http://localhost:3000",
+    apiBase: "https://clamshell-backend-1nrb5z5fx-mohammed-asrafs-projects.vercel.app",
     position: "top-right"
 };
 </script>

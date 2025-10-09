@@ -4,7 +4,7 @@
  */
 
 // Configuration
-const PROFESSIONAL_BACKEND_URL = 'http://localhost:3000';
+const PROFESSIONAL_BACKEND_URL = 'https://clamshell-backend-1nrb5z5fx-mohammed-asrafs-projects.vercel.app';
 const ANALYSIS_CHECK_INTERVAL = 2000; // 2 seconds
 
 // Global state

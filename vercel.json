@@ -1,18 +1,16 @@
 {
   "version": 2,
+  "name": "clamshell-frontend",
   "builds": [
     {
-      "src": "index.js",
+      "src": "serve_frontend.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/index.js"
+      "dest": "/serve_frontend.js"
     }
-  ],
-  "env": {
-    "NODE_ENV": "production"
-  }
+  ]
 }

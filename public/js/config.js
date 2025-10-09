@@ -2,7 +2,7 @@
 const API_CONFIG = {
   // Backend URL - automatically detects environment
   BACKEND_URL: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
-    ? 'http://localhost:3000'
+    ? 'https://clamshell-backend-1nrb5z5fx-mohammed-asrafs-projects.vercel.app'
     : 'https://clamshell-backend-1nrb5z5fx-mohammed-asrafs-projects.vercel.app',
 
   // API Endpoints

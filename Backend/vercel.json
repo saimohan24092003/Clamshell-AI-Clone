@@ -1,5 +1,6 @@
 {
   "version": 2,
+  "name": "clamshell-backend",
   "builds": [
     {
       "src": "index.js",
