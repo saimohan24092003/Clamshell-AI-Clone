@@ -26,7 +26,7 @@ app.listen(PORT, () => {
     console.log(`📁 Serving files from: ${__dirname}`);
     console.log('✅ CORS enabled - backend connections should work');
     console.log('');
-    console.log('🔧 Make sure your backend is running on https://clamshell-backend-1nrb5z5fx-mohammed-asrafs-projects.vercel.app');
+    console.log('🔧 Make sure your backend is running on https://clamshell-backend-m4sbwxqlw-mohammed-asrafs-projects.vercel.app');
     console.log('📄 Open: http://localhost:8080 in your browser');
 });
 
