@@ -576,7 +576,7 @@ async function generateIntelligentLearningMap() {
 
             // Show error to user - NO FALLBACK DATA
             if (typeof showBackendError === 'function') {
-                showBackendError('Learning map generation requires AI backend connection. Please ensure the backend server is running at https://clamshell-backend-ao2dpyypa-mohammed-asrafs-projects.vercel.app and complete the workflow from content upload.');
+                showBackendError('Learning map generation requires AI backend connection. Please ensure the backend server is running at https://clamshell-backend-q9lf745gl-mohammed-asrafs-projects.vercel.app and complete the workflow from content upload.');
             }
 
             // Set to null - NO FAKE DATA
@@ -589,7 +589,7 @@ async function generateIntelligentLearningMap() {
                     <div style="padding: 40px; text-align: center; background: #fee; border: 2px solid #c00; border-radius: 8px; margin: 20px;">
                         <h2 style="color: #c00;">⚠️ AI Backend Required</h2>
                         <p>Learning map generation requires the AI backend server.</p>
-                        <p>Please ensure the backend is running at <code>https://clamshell-backend-ao2dpyypa-mohammed-asrafs-projects.vercel.app</code></p>
+                        <p>Please ensure the backend is running at <code>https://clamshell-backend-q9lf745gl-mohammed-asrafs-projects.vercel.app</code></p>
                         <button onclick="location.reload()" style="margin-top: 20px; padding: 10px 20px; background: #c00; color: white; border: none; border-radius: 4px; cursor: pointer;">
                             Retry
                         </button>
@@ -636,7 +636,7 @@ async function fetchAILearningMap() {
             hasAnalysis: !!analysisData.data
         });
 
-        const response = await fetch('https://clamshell-backend-ao2dpyypa-mohammed-asrafs-projects.vercel.app/api/generate-learning-map-ai', {
+        const response = await fetch('https://clamshell-backend-q9lf745gl-mohammed-asrafs-projects.vercel.app/api/generate-learning-map-ai', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -676,9 +676,9 @@ async function fetchAILearningMap() {
 function generateContentSpecificLearningMap() {
     console.error('❌ FATAL ERROR: generateContentSpecificLearningMap called without AI backend');
     console.error('This function contains hardcoded fake data and has been disabled');
-    console.error('AI backend must be running at https://clamshell-backend-ao2dpyypa-mohammed-asrafs-projects.vercel.app');
+    console.error('AI backend must be running at https://clamshell-backend-q9lf745gl-mohammed-asrafs-projects.vercel.app');
 
-    showBackendError('Learning map generation requires AI backend. This function has been disabled to prevent showing fake data. Please start the backend server at https://clamshell-backend-ao2dpyypa-mohammed-asrafs-projects.vercel.app');
+    showBackendError('Learning map generation requires AI backend. This function has been disabled to prevent showing fake data. Please start the backend server at https://clamshell-backend-q9lf745gl-mohammed-asrafs-projects.vercel.app');
 
     throw new Error('HARDCODED_FALLBACK_DISABLED: AI backend required for learning map generation');
 }
@@ -725,9 +725,9 @@ function generateCourseStorySummary(domain, strategies) {
 function generateIntelligentModules(domain, strategies, contentData) {
     console.error('❌ FATAL ERROR: generateIntelligentModules called without AI backend');
     console.error('This function contains hardcoded fake data and has been disabled');
-    console.error('AI backend must be running at https://clamshell-backend-ao2dpyypa-mohammed-asrafs-projects.vercel.app');
+    console.error('AI backend must be running at https://clamshell-backend-q9lf745gl-mohammed-asrafs-projects.vercel.app');
 
-    showBackendError('Module generation requires AI backend. This function has been disabled to prevent showing fake data. Please start the backend server at https://clamshell-backend-ao2dpyypa-mohammed-asrafs-projects.vercel.app');
+    showBackendError('Module generation requires AI backend. This function has been disabled to prevent showing fake data. Please start the backend server at https://clamshell-backend-q9lf745gl-mohammed-asrafs-projects.vercel.app');
 
     throw new Error('HARDCODED_FALLBACK_DISABLED: AI backend required for module generation');
 
@@ -1976,7 +1976,7 @@ function showBackendError(message) {
         <div class="bg-red-900 text-white p-8 rounded-lg max-w-2xl">
             <h2 class="text-2xl font-bold mb-4">⚠️ AI Backend Required</h2>
             <p class="mb-4">${message}</p>
-            <p class="text-sm opacity-80">Backend must be running at https://clamshell-backend-ao2dpyypa-mohammed-asrafs-projects.vercel.app</p>
+            <p class="text-sm opacity-80">Backend must be running at https://clamshell-backend-q9lf745gl-mohammed-asrafs-projects.vercel.app</p>
             <button onclick="location.reload()" class="mt-4 bg-white text-red-900 px-6 py-2 rounded font-bold">Retry</button>
         </div>
     `;
