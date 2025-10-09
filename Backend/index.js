@@ -25,21 +25,27 @@ async function connectDB() {
 // Connect to DB on startup (non-blocking)
 connectDB().catch(() => console.log('ℹ️  Running without MongoDB - some features may be limited'));
 
-// CORS configuration - Allow all origins in production or use environment variable
-const allowedOrigins = process.env.FRONTEND_ORIGIN
-  ? process.env.FRONTEND_ORIGIN.split(',')
-  : ['http://localhost:5173', 'http://localhost:3000'];
-
+// CORS configuration - Allow all Vercel deployments and localhost
 app.use(cors({
   origin: (origin, callback) => {
-    // Allow requests with no origin (mobile apps, curl, etc.)
+    // Allow requests with no origin (mobile apps, curl, Postman, etc.)
     if (!origin) return callback(null, true);
 
-    if (allowedOrigins.indexOf(origin) !== -1 || process.env.NODE_ENV !== 'production') {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
+    // Allow all Vercel deployments
+    if (origin.includes('vercel.app') || origin.includes('localhost') || origin.includes('127.0.0.1')) {
+      return callback(null, true);
     }
+
+    // Fallback to environment variable
+    const allowedOrigins = process.env.FRONTEND_ORIGIN
+      ? process.env.FRONTEND_ORIGIN.split(',')
+      : [];
+
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    }
+
+    callback(new Error('Not allowed by CORS'));
   },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
