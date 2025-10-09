@@ -1,7 +1,7 @@
 import express from 'express';
+import cors from 'cors';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
-import { corsMiddleware } from './utils/cors.js';
 
 dotenv.config();
 
@@ -16,17 +16,22 @@ async function connectDB() {
   try {
     await mongoose.connect(MONGODB_URI);
     isConnected = true;
-    console.log('MongoDB connected');
+    console.log('✅ MongoDB connected');
   } catch (err) {
-    console.warn('MongoDB not connected (optional for local dev):', err.message);
+    console.warn('⚠️  MongoDB not connected (optional for local dev):', err.message);
   }
 }
 
 // Connect to DB on startup (non-blocking)
-connectDB().catch(() => console.log('Running without MongoDB - some features may be limited'));
+connectDB().catch(() => console.log('ℹ️  Running without MongoDB - some features may be limited'));
 
-// CORS configuration - Use centralized CORS middleware
-app.use(corsMiddleware);
+// CORS configuration - Allow all origins
+app.use(cors({
+  origin: '*',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept', 'Origin']
+}));
 
 // Body parser with increased limit for file uploads
 app.use(express.json({ limit: '50mb' }));
