@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+<link as="style" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900&amp;family=Spline+Sans%3Awght%40400%3B500%3B700" onload="this.rel='stylesheet'" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<title>Stitch Design</title>
+<link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style type="text/tailwindcss">
+    :root {
+      --primary-color: #ea2a33;
+      --secondary-color: #4f46e5;
+    }
+    body {
+      font-family: "Spline Sans",
+      "Noto Sans",
+      sans-serif;
+    }
+    .bg-grid-pattern {
+      background-image: linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+      background-size: 2rem 2rem;
+    }
+    .glow-effect {
+      position: absolute;
+      width: 200px;
+      height: 200px;
+      background: radial-gradient(circle, var(--primary-color) 0%, rgba(234, 42, 51, 0) 70%);
+      opacity: 0.2;
+      animation: glow-animation 10s infinite alternate;
+    }
+    .glow-effect.blue {
+      background: radial-gradient(circle, var(--secondary-color) 0%, rgba(79, 70, 229, 0) 70%);
+      animation-delay: 5s;
+    }
+    @keyframes glow-animation {
+      0% {
+        transform: translate(0, 0) scale(1);
+      }
+      50% {
+        transform: translate(100px, 100px) scale(1.5);
+      }
+      100% {
+        transform: translate(0, 0) scale(1);
+      }
+    }
+    .loading {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(255,255,255,.3);
+        border-radius: 50%;
+        border-top-color: #fff;
+        animation: spin 1s ease-in-out infinite;
+    }
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body class="bg-[#101010]">
+<div class="relative flex size-full min-h-screen flex-col dark group/design-root overflow-hidden">
+<div class="absolute inset-0 bg-grid-pattern opacity-50 z-0"></div>
+<div class="absolute -top-1/4 -left-1/4 glow-effect"></div>
+<div class="absolute -bottom-1/4 -right-1/4 glow-effect blue"></div>
+<div class="absolute inset-0 bg-gradient-to-br from-[#101010] via-transparent to-[#101010] z-0"></div>
+<div class="relative flex h-full grow flex-col z-10">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-white/10 px-10 py-4">
+<div class="flex items-center gap-3 text-white">
+<svg class="h-6 w-6 text-[var(--primary-color)]" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_6_535)">
+<path clip-rule="evenodd" d="M47.2426 24L24 47.2426L0.757355 24L24 0.757355L47.2426 24ZM12.2426 21H35.7574L24 9.24264L12.2426 21Z" fill="currentColor" fill-rule="evenodd"></path>
+</g>
+<defs>
+<clipPath id="clip0_6_535">
+<rect fill="white" height="48" width="48"></rect>
+</clipPath>
+</defs>
+</svg>
+<h2 class="text-white text-xl font-bold tracking-tight">CourseCraft</h2>
+</div>
+<nav class="hidden md:flex items-center gap-8 text-sm font-medium text-white/80">
+<a class="hover:text-white transition-colors" href="#">Dashboard</a>
+<a class="hover:text-white transition-colors" href="#">Analytics</a>
+<a class="hover:text-white transition-colors" href="#">Content Library</a>
+<a class="hover:text-white transition-colors" href="#">Help</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-white/80 hover:text-white transition-colors">notifications</button>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-white/20" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuChiffqhnEFoPYdYSik9jpdgUppkGddkHKV-b27wOsj_n3arqpL7JSj1NUbhnEF7LYIGjas8yZvADngdw3pSYMG0LLyl0bQpIYK08lKG1mRc61i3KjDvB646mR0T_rEfU8SAbb8jwKxnJwRfBLpO8Db3NqRwURAi-Yz4OxKbb5d79sHLmGNoyEVUu_a2Q2dpqIlGjNG9oxqsaIRhfYyUJBItIUoqZIiZyoe0h_j5CMD8QSow_3cvDgi0Smz8Qdx9mxNBDCE_b3S3MY");'></div>
+</div>
+</header>
+<main class="flex flex-1 items-center justify-center py-16 px-4">
+<div class="flex flex-col items-center w-full max-w-2xl text-center">
+<div class="relative w-full aspect-[16/9] rounded-2xl overflow-hidden mb-8 border border-white/10 bg-black/30 backdrop-blur-xl shadow-2xl shadow-black/50">
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+<div class="absolute w-1/2 h-1/2 bg-[var(--primary-color)]/20 blur-3xl rounded-full -translate-x-1/4"></div>
+<div class="absolute w-1/2 h-1/2 bg-[var(--secondary-color)]/20 blur-3xl rounded-full translate-x-1/4"></div>
+<div class="relative w-20 h-20 bg-gradient-to-br from-white/20 to-transparent rounded-full flex items-center justify-center ring-4 ring-white/10 backdrop-blur-sm">
+<span class="material-symbols-outlined text-5xl text-white">done</span>
+</div>
+</div>
+</div>
+<h1 class="text-white text-4xl md:text-5xl font-bold tracking-tighter mb-4">
+Congratulations, <span id="user-name">User</span>!
+</h1>
+<p class="text-white/70 max-w-lg text-lg mb-8">
+            You're all set. Your account is now fully configured and you can start creating engaging e-learning content right away.
+          </p>
+<button id="dashboard-btn" class="relative flex items-center gap-2 min-w-[84px] cursor-pointer justify-center overflow-hidden rounded-full h-12 px-6 bg-gradient-to-r from-[var(--primary-color)] to-[var(--secondary-color)] text-white text-lg font-bold shadow-[0_0_20px_theme(colors.red.500/0.5),_0_0_20px_theme(colors.blue.500/0.5)] hover:shadow-[0_0_30px_theme(colors.red.500/0.7),_0_0_30px_theme(colors.blue.500/0.7)] transition-all duration-300" onclick="handleGoToDashboard()">
+<span id="dashboard-text">Go to Dashboard</span>
+<span class="material-symbols-outlined" id="dashboard-icon">arrow_forward</span>
+</button>
+</div>
+</main>
+</div>
+</div>
+
+<script>
+// Global variables
+let isNavigating = false;
+
+// Initialize page with user data
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Onboarding Completion page loaded');
+    loadUserData();
+});
+
+// Load and display user data
+function loadUserData() {
+    try {
+        // Get user data from localStorage (from login page)
+        const userData = localStorage.getItem('userData');
+        const coursecraftUser = localStorage.getItem('coursecraftUser');
+        
+        let userName = 'User'; // Default fallback
+        
+        if (userData) {
+            const user = JSON.parse(userData);
+            userName = user.name || user.email?.split('@')[0] || 'User';
+        } else if (coursecraftUser) {
+            const user = JSON.parse(coursecraftUser);
+            userName = user.name || user.email?.split('@')[0] || 'User';
+        }
+        
+        // Update the name in the congratulations message
+        const userNameElement = document.getElementById('user-name');
+        if (userNameElement) {
+            userNameElement.textContent = userName;
+            console.log('User name updated to:', userName);
+        }
+        
+        // Log current user data for debugging
+        console.log('Current user data:', {
+            userData: userData ? JSON.parse(userData) : null,
+            coursecraftUser: coursecraftUser ? JSON.parse(coursecraftUser) : null,
+            displayName: userName
+        });
+        
+    } catch (error) {
+        console.error('Error loading user data:', error);
+        // Keep default "User" if there's an error
+    }
+}
+
+// Handle Go to Dashboard button click
+function handleGoToDashboard() {
+    console.log('Go to Dashboard button clicked');
+    
+    // Prevent double-clicks
+    if (isNavigating) {
+        console.log('Navigation already in progress');
+        return;
+    }
+    
+    // Store completion status
+    localStorage.setItem('onboardingCompleted', 'true');
+    localStorage.setItem('completionDate', new Date().toISOString());
+    
+    // Log completion
+    console.log('Onboarding completed successfully');
+    
+    // Set navigation flag
+    isNavigating = true;
+    
+    // Show loading state
+    showDashboardLoadingState();
+    
+    // Navigate to Dashboard_Landing_Pages folder after delay
+    setTimeout(() => {
+        navigateToDashboardLanding();
+    }, 1000);
+}
+
+// Show loading state on dashboard button
+function showDashboardLoadingState() {
+    const button = document.getElementById('dashboard-btn');
+    const buttonText = document.getElementById('dashboard-text');
+    const buttonIcon = document.getElementById('dashboard-icon');
+    
+    if (button && buttonText && buttonIcon) {
+        button.disabled = true;
+        button.classList.add('opacity-80', 'cursor-not-allowed');
+        buttonText.textContent = 'Loading...';
+        buttonIcon.innerHTML = '<div class="loading"></div>';
+        
+        console.log('Dashboard button loading state activated');
+    }
+}
+
+// Restore dashboard button to original state
+function restoreDashboardButton() {
+    const button = document.getElementById('dashboard-btn');
+    const buttonText = document.getElementById('dashboard-text');
+    const buttonIcon = document.getElementById('dashboard-icon');
+    
+    if (button && buttonText && buttonIcon) {
+        button.disabled = false;
+        button.classList.remove('opacity-80', 'cursor-not-allowed');
+        buttonText.textContent = 'Go to Dashboard';
+        buttonIcon.innerHTML = 'arrow_forward';
+        
+        isNavigating = false;
+        console.log('Dashboard button restored to original state');
+    }
+}
+
+// Navigate to Dashboard_Landing_Pages folder
+function navigateToDashboardLanding() {
+    const targetPath = '../ai_dashboard_landing_page/code.html';
+    
+    try {
+        console.log(`Attempting to navigate to: ${targetPath}`);
+        
+        // Try to navigate
+        window.location.href = targetPath;
+        
+        // Fallback if navigation doesn't work immediately
+        setTimeout(() => {
+            if (window.location.href.indexOf('Dashboard_Landing_Pages') === -1) {
+                console.warn('Navigation may have failed, trying alternative method');
+                window.location.replace(targetPath);
+            }
+        }, 2000);
+        
+    } catch (error) {
+        console.error('Navigation failed:', error);
+        restoreDashboardButton();
+        alert(`Navigation failed. Please manually navigate to: ${targetPath}\n\nError: ${error.message}`);
+    }
+}
+
+// Handle browser back button
+window.addEventListener('popstate', function(event) {
+    console.log('Back button pressed');
+    isNavigating = false;
+});
+
+// Add keyboard support for Enter key
+document.addEventListener('keydown', function(event) {
+    if (event.key === 'Enter' && !isNavigating) {
+        event.preventDefault();
+        handleGoToDashboard();
+    }
+});
+
+// Handle page unload
+window.addEventListener('beforeunload', function(event) {
+    if (isNavigating) {
+        console.log('Page is being unloaded during navigation');
+    }
+});
+
+// Error handling for uncaught errors
+window.addEventListener('error', function(event) {
+    console.error('Uncaught error:', event.error);
+    restoreDashboardButton();
+});
+
+console.log('Onboarding Completion script loaded successfully');
+</script>
+
+<!-- Add Universal Comment Widget - Expert can click anywhere to add feedback -->
+<script>
+window.commentWidgetConfig = {
+    apiBase: "http://localhost:3000",
+    position: "top-right"
+};
+</script>
+<script src="./comment-widget-hybrid.js"></script>
+
+</body></html>

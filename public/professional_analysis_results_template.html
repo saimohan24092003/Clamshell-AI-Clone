@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CourseCraft AI - Professional Analysis Results</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Material+Symbols+Outlined" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --primary-color: #3713ec;
+            --secondary-color: #ff3b5f;
+        }
+
+        .professional-card {
+            background: linear-gradient(145deg, #111318 0%, #1f232e 100%);
+            border: 1px solid #282e39;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .expert-badge {
+            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 700;
+            color: white;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+        }
+
+        .suitability-green {
+            background: linear-gradient(45deg, #22c55e, #16a34a);
+        }
+
+        .suitability-yellow {
+            background: linear-gradient(45deg, #f59e0b, #d97706);
+        }
+
+        .suitability-red {
+            background: linear-gradient(45deg, #ef4444, #dc2626);
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-[#0D0F15] text-white">
+    <div class="min-h-screen bg-[#0D0F15]">
+        <!-- Header -->
+        <header class="flex items-center justify-between px-10 py-6 border-b border-[#282e39]">
+            <div class="flex items-center gap-4">
+                <div class="w-8 h-8 text-[var(--primary-color)]">
+                    <svg fill="currentColor" viewBox="0 0 48 48">
+                        <path d="M24 4L36 16L24 28L12 16L24 4Z"/>
+                    </svg>
+                </div>
+                <h1 class="text-2xl font-bold">CourseCraft AI</h1>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="expert-badge">
+                    <span class="material-symbols-outlined">psychology</span>
+                    Dr. Sarah Mitchell, Ph.D.
+                </div>
+                <div id="connection-status" class="text-neutral-400 text-sm">
+                    Connecting...
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="px-10 py-8">
+            <!-- Analysis Progress -->
+            <div id="analysis-progress" class="mb-8">
+                <div class="professional-card">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-2xl font-bold">Professional Content Analysis</h2>
+                        <span id="status-text" class="text-neutral-400">Initializing...</span>
+                    </div>
+                    <div class="w-full bg-[#282e39] rounded-full h-3 mb-4">
+                        <div id="progress-bar" class="bg-gradient-to-r from-purple-500 to-blue-500 h-3 rounded-full transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                    <p class="text-sm text-neutral-400">Dr. Sarah Mitchell is performing comprehensive instructional design analysis...</p>
+                </div>
+            </div>
+
+            <!-- Analysis Complete Message -->
+            <div id="analysis-complete" class="mb-8">
+                <!-- Will be populated by JavaScript -->
+            </div>
+
+            <!-- Analysis Error -->
+            <div id="analysis-error" class="mb-8">
+                <!-- Will be populated by JavaScript -->
+            </div>
+
+            <!-- Analysis Results Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <!-- Domain Classification -->
+                <div id="domain-classification">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+
+                <!-- Complexity Assessment -->
+                <div id="complexity-assessment">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+
+                <!-- Quality Metrics -->
+                <div id="quality-metrics" class="lg:col-span-2">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+
+                <!-- Suitability Assessment -->
+                <div id="suitability-assessment" class="lg:col-span-2">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Gap Analysis and Recommendations -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                <!-- Gap Analysis -->
+                <div id="gap-analysis">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+
+                <!-- Enhancement Suggestions -->
+                <div id="enhancement-suggestions">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- SME Questions -->
+            <div id="sme-questions" class="mb-8">
+                <!-- Will be populated by JavaScript -->
+            </div>
+
+            <!-- Professional Recommendations -->
+            <div id="professional-recommendations" class="mb-8">
+                <!-- Will be populated by JavaScript -->
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex gap-4 justify-center">
+                <button id="download-report-btn" class="bg-[var(--primary-color)] text-white px-8 py-3 rounded-lg font-bold hover:bg-blue-600 transition-colors" onclick="downloadAnalysisReport()">
+                    <span class="material-symbols-outlined mr-2">download</span>
+                    Download Analysis Report
+                </button>
+                <button id="proceed-btn" class="bg-green-600 text-white px-8 py-3 rounded-lg font-bold hover:bg-green-700 transition-colors" onclick="proceedToNextStep()">
+                    <span class="material-symbols-outlined mr-2">arrow_forward</span>
+                    Proceed to Next Step
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <!-- Load Professional Analysis Integration -->
+    <script src="../js/professionalAnalysisIntegration.js"></script>
+
+    <script>
+        // Initialize professional analysis results page
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🎓 Professional Analysis Results Page Loaded');
+
+            // Check if we have analysis data
+            const analysisData = localStorage.getItem('professionalAnalysisResults');
+
+            if (analysisData) {
+                console.log('✅ Loading existing analysis results');
+                const data = JSON.parse(analysisData);
+                ProfessionalAnalysis.displayResults(data);
+            } else {
+                console.log('⏳ No analysis data found, checking URL parameters');
+                const urlParams = new URLSearchParams(window.location.search);
+                const sessionId = urlParams.get('session');
+
+                if (sessionId) {
+                    console.log(`🔍 Loading analysis for session: ${sessionId}`);
+                    loadAnalysisFromSession(sessionId);
+                } else {
+                    showNoAnalysisMessage();
+                }
+            }
+        });
+
+        // Load analysis from session ID
+        async function loadAnalysisFromSession(sessionId) {
+            try {
+                showAnalysisProgress('loading', 'Loading professional analysis results...');
+
+                const response = await fetch(`http://localhost:3000/api/content/analysis-status/${sessionId}`);
+                if (!response.ok) {
+                    throw new Error(`Failed to load analysis: ${response.status}`);
+                }
+
+                const result = await response.json();
+
+                if (result.data.status === 'completed' && result.data.professionalAnalysis) {
+                    ProfessionalAnalysis.displayResults(result.data);
+                    localStorage.setItem('professionalAnalysisResults', JSON.stringify(result.data));
+                } else {
+                    showAnalysisError('Analysis Not Complete', 'The professional analysis is not yet completed or failed.');
+                }
+
+            } catch (error) {
+                console.error('❌ Failed to load analysis:', error);
+                showAnalysisError('Load Failed', error.message);
+            }
+        }
+
+        // Show message when no analysis data is available
+        function showNoAnalysisMessage() {
+            document.getElementById('analysis-progress').innerHTML = `
+                <div class="professional-card text-center">
+                    <div class="text-6xl text-neutral-500 mb-4">📋</div>
+                    <h2 class="text-2xl font-bold mb-4">No Analysis Results Found</h2>
+                    <p class="text-neutral-400 mb-6">Please upload content for professional analysis first.</p>
+                    <button class="bg-[var(--primary-color)] text-white px-8 py-3 rounded-lg font-bold hover:bg-blue-600 transition-colors" onclick="goToUpload()">
+                        <span class="material-symbols-outlined mr-2">upload_file</span>
+                        Upload Content
+                    </button>
+                </div>
+            `;
+        }
+
+        // Navigation functions
+        function goToUpload() {
+            window.location.href = '../content_upload_&_processing/code.html';
+        }
+
+        function downloadAnalysisReport() {
+            console.log('📥 Downloading professional analysis report...');
+
+            const analysisData = localStorage.getItem('professionalAnalysisResults');
+            if (!analysisData) {
+                alert('No analysis data available to download');
+                return;
+            }
+
+            const data = JSON.parse(analysisData);
+            const analysis = data.professionalAnalysis;
+
+            // Create comprehensive report
+            const report = {
+                title: 'Professional Instructional Design Analysis Report',
+                analyst: 'Dr. Sarah Mitchell, Ph.D.',
+                generatedAt: new Date().toISOString(),
+                sessionId: data.sessionId,
+
+                domainClassification: {
+                    primaryDomain: analysis.domainClassification.primaryDomain,
+                    confidence: analysis.domainClassification.confidence,
+                    reasoning: analysis.domainClassification.reasoning,
+                    subDomain: analysis.domainClassification.subDomain
+                },
+
+                complexityAssessment: {
+                    level: analysis.complexityAssessment.level,
+                    reasoning: analysis.complexityAssessment.reasoning,
+                    prerequisites: analysis.complexityAssessment.prerequisites
+                },
+
+                qualityAssessment: {
+                    overallScore: analysis.qualityAssessment.overallScore,
+                    clarityScore: analysis.qualityAssessment.clarityScore,
+                    clarityJustification: analysis.qualityAssessment.clarityJustification,
+                    completenessScore: analysis.qualityAssessment.completenessScore,
+                    completenessJustification: analysis.qualityAssessment.completenessJustification,
+                    engagementScore: analysis.qualityAssessment.engagementScore,
+                    engagementJustification: analysis.qualityAssessment.engagementJustification
+                },
+
+                suitabilityAssessment: {
+                    level: analysis.suitabilityAssessment.level,
+                    score: analysis.suitabilityAssessment.score,
+                    recommendation: analysis.suitabilityAssessment.recommendation,
+                    reasoning: analysis.suitabilityAssessment.reasoning
+                },
+
+                gapAnalysis: {
+                    totalGaps: analysis.gapAnalysis.totalGaps,
+                    identifiedGaps: analysis.gapAnalysis.identifiedGaps,
+                    recommendations: analysis.gapAnalysis.recommendations
+                },
+
+                enhancementSuggestions: analysis.enhancementSuggestions,
+                contentSpecificSMEQuestions: data.contentSpecificSMEQuestions || [],
+                professionalRecommendations: analysis.professionalRecommendations || []
+            };
+
+            // Download as JSON
+            const blob = new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `professional_analysis_report_${Date.now()}.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+
+            console.log('✅ Professional analysis report downloaded');
+        }
+
+        function proceedToNextStep() {
+            console.log('➡️ Proceeding to next step...');
+
+            // Store that analysis is completed
+            localStorage.setItem('professionalAnalysisCompleted', 'true');
+
+            // Navigate to SME questions or strategy recommendations
+            const analysisData = localStorage.getItem('professionalAnalysisResults');
+            if (analysisData) {
+                const data = JSON.parse(analysisData);
+                if (data.contentSpecificSMEQuestions && data.contentSpecificSMEQuestions.length > 0) {
+                    // Go to SME interview with content-specific questions
+                    window.location.href = '../content_analysis_for_sme_questions/code.html';
+                } else {
+                    // Go directly to strategy recommendations
+                    window.location.href = '../strategy_recommendations/code.html';
+                }
+            } else {
+                // Fallback to general next step
+                window.location.href = '../gap_analysis_dashboard/code.html';
+            }
+        }
+
+        // Utility functions for status display
+        function showAnalysisProgress(stage, message) {
+            const progressElement = document.getElementById('analysis-progress');
+            if (progressElement) {
+                progressElement.innerHTML = `
+                    <div class="professional-card">
+                        <div class="flex items-center justify-center gap-4 py-8">
+                            <div class="loading"></div>
+                            <span class="text-xl font-bold text-[var(--primary-color)]">${message}</span>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function showAnalysisError(title, message) {
+            const errorElement = document.getElementById('analysis-error');
+            if (errorElement) {
+                errorElement.innerHTML = `
+                    <div class="professional-card border-red-400 bg-red-900/20">
+                        <div class="text-center py-8">
+                            <div class="text-6xl text-red-400 mb-4">❌</div>
+                            <h2 class="text-2xl font-bold text-red-400 mb-4">${title}</h2>
+                            <p class="text-neutral-300 mb-6">${message}</p>
+                            <button class="bg-red-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-red-700 transition-colors" onclick="window.location.reload()">
+                                Retry
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        console.log('🎓 Professional Analysis Results Page Ready!');
+    </script>
+<!-- Add Universal Comment Widget - Expert can click anywhere to add feedback -->
+<script>
+window.commentWidgetConfig = {
+    apiBase: "http://localhost:3000",
+    position: "top-right"
+};
+</script>
+<script src="./comment-widget-local.js"></script>
+
+</body>
+</html>

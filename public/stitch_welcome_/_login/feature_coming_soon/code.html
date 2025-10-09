@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CourseCraft AI - Feature Coming Soon</title>
+<link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Spline+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style type="text/tailwindcss">
+    :root {
+      --primary-red: #ea2a33;
+      --primary-blue: #4f46e5;
+      --background-color: #030712;
+      --card-background-color: rgba(255, 255, 255, 0.05); 
+      --text-color: #f9fafb;
+      --muted-text-color: #9ca3af;
+      --border-color: rgba(255, 255, 255, 0.1);
+      --gradient-start: var(--primary-red);
+      --gradient-end: var(--primary-blue);
+    }
+    body {
+      font-family: 'Spline Sans', sans-serif;
+      background-color: var(--background-color);
+      color: var(--text-color);
+    }
+    .background-grid {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image:
+            linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+        background-size: 4rem 4rem;
+        z-index: -1;
+        animation: bg-scroll 20s linear infinite;
+    }
+    @keyframes bg-scroll {
+        from { background-position: 0 0; }
+        to { background-position: 4rem 4rem; }
+    }
+    .radial-gradient-top {
+        position: absolute;
+        top: -20%;
+        left: -20%;
+        width: 140%;
+        height: 140%;
+        background-image: radial-gradient(circle at center, rgba(234, 42, 51, 0.15), transparent 40%);
+        animation: pulse 10s infinite ease-in-out;
+        z-index: -2;
+    }
+    .radial-gradient-bottom {
+        position: absolute;
+        bottom: -50%;
+        right: -50%;
+        width: 150%;
+        height: 150%;
+        background-image: radial-gradient(circle at center, rgba(79, 70, 229, 0.15), transparent 50%);
+        animation: pulse-reverse 12s infinite ease-in-out;
+        z-index: -2;
+    }
+    @keyframes pulse {
+        0% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.2); opacity: 0.7; }
+        100% { transform: scale(1); opacity: 1; }
+    }
+    @keyframes pulse-reverse {
+        0% { transform: scale(1.1); opacity: 0.8; }
+        50% { transform: scale(0.9); opacity: 1; }
+        100% { transform: scale(1.1); opacity: 0.8; }
+    }
+    .coming-soon-icon {
+        font-size: 8rem;
+        background: linear-gradient(45deg, var(--primary-red), var(--primary-blue));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: float 6s ease-in-out infinite;
+    }
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-20px); }
+    }
+    .feature-card {
+        background: var(--card-background-color);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid var(--border-color);
+        border-radius: 1.5rem;
+        transition: all 0.3s ease;
+    }
+    .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    }
+    .btn-gradient {
+        background: linear-gradient(90deg, var(--gradient-start), var(--gradient-end));
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 15px rgba(234, 42, 51, 0.3), 0 4px 15px rgba(79, 70, 229, 0.3);
+    }
+    .btn-gradient:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(234, 42, 51, 0.4), 0 8px 25px rgba(79, 70, 229, 0.4);
+    }
+    .btn-secondary {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid var(--border-color);
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+    }
+    .btn-secondary:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateY(-2px);
+    }
+    .notification-badge {
+        animation: pulse-glow 2s infinite;
+    }
+    @keyframes pulse-glow {
+        0%, 100% { 
+            transform: scale(1);
+            box-shadow: 0 0 15px rgba(234, 42, 51, 0.5);
+        }
+        50% { 
+            transform: scale(1.1);
+            box-shadow: 0 0 25px rgba(234, 42, 51, 0.8);
+        }
+    }
+  </style>
+</head>
+<body class="bg-[var(--background-color)] text-[var(--text-color)]">
+<div class="relative flex size-full min-h-screen flex-col overflow-x-hidden">
+<div class="background-grid"></div>
+<div class="radial-gradient-top"></div>
+<div class="radial-gradient-bottom"></div>
+
+<!-- Header -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-[var(--border-color)] px-10 py-4 bg-black/20 backdrop-blur-sm z-10">
+<div class="flex items-center gap-4">
+<svg class="h-8 w-8 text-white" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_6_543)">
+<path d="M42.1739 20.1739L27.8261 5.82609C29.1366 7.13663 28.3989 10.1876 26.2002 13.7654C24.8538 15.9564 22.9595 18.3449 20.6522 20.6522C18.3449 22.9595 15.9564 24.8538 13.7654 26.2002C10.1876 28.3989 7.13663 29.1366 5.82609 27.8261L20.1739 42.1739C21.4845 43.4845 24.5355 42.7467 28.1133 40.548C30.3042 39.2016 32.6927 37.3073 35 35C37.3073 32.6927 39.2016 30.3042 40.548 28.1133C42.7467 24.5355 43.4845 21.4845 42.1739 20.1739Z" fill="url(#logo-gradient)"></path>
+<path clip-rule="evenodd" d="M7.24189 26.4066C7.31369 26.4411 7.64204 26.5637 8.52504 26.3738C9.59462 26.1438 11.0343 25.5311 12.7183 24.4963C14.7583 23.2426 17.0256 21.4503 19.238 19.238C21.4503 17.0256 23.2426 14.7583 24.4963 12.7183C25.5311 11.0343 26.1438 9.59463 26.3738 8.52504C26.5637 7.64204 26.4411 7.31369 26.4066 7.24189C26.345 7.21246 26.143 7.14535 25.6664 7.1918C24.9745 7.25925 23.9954 7.5498 22.7699 8.14278C20.3369 9.32007 17.3369 11.4915 14.4142 14.4142C11.4915 17.3369 9.32007 20.3369 8.14278 22.7699C7.5498 23.9954 7.25925 24.9745 7.1918 25.6664C7.14534 26.143 7.21246 26.345 7.24189 26.4066ZM29.9001 10.7285C29.4519 12.0322 28.7617 13.4172 27.9042 14.8126C26.465 17.1544 24.4686 19.6641 22.0664 22.0664C19.6641 24.4686 17.1544 26.465 14.8126 27.9042C13.4172 28.7617 12.0322 29.4519 10.7285 29.9001L21.5754 40.747C21.6001 40.7606 21.8995 40.931 22.8729 40.7217C23.9424 40.4916 25.3821 39.879 27.0661 38.8441C29.1062 37.5904 31.3734 35.7982 33.5858 33.5858C35.7982 31.3734 37.5904 29.1062 38.8441 27.0661C39.879 25.3821 40.4916 23.9425 40.7216 22.8729C40.931 21.8995 40.7606 21.6001 40.747 21.5754L29.9001 10.7285ZM29.2403 4.41187L43.5881 18.7597C44.9757 20.1473 44.9743 22.1235 44.6322 23.7139C44.2714 25.3919 43.4158 27.2666 42.252 29.1604C40.8128 31.5022 38.8165 34.012 36.4142 36.4142C34.012 38.8165 31.5022 40.8128 29.1604 42.252C27.2666 43.4158 25.3919 44.2714 23.7139 44.6322C22.1235 44.9743 20.1473 44.9757 18.7597 43.5881L4.41187 29.2403C3.29027 28.1187 3.08209 26.5973 3.21067 25.2783C3.34099 23.9415 3.8369 22.4852 4.54214 21.0277C5.96129 18.0948 8.43335 14.7382 11.5858 11.5858C14.7382 8.43335 18.0948 5.9613 21.0277 4.54214C22.4852 3.8369 23.9415 3.34099 25.2783 3.21067C26.5973 3.08209 28.1187 3.29028 29.2403 4.41187Z" fill="url(#logo-gradient)" fill-rule="evenodd"></path>
+</g>
+<defs>
+<linearGradient gradientUnits="userSpaceOnUse" id="logo-gradient" x1="5.82609" x2="42.1739" y1="27.8261" y2="20.1739">
+<stop stop-color="#EA2A33"></stop>
+<stop offset="1" stop-color="#4F46E5"></stop>
+</linearGradient>
+<clipPath id="clip0_6_543"><rect fill="white" height="48" width="48"></rect></clipPath>
+</defs>
+</svg>
+<h1 class="text-xl font-bold text-white">CourseCraft AI</h1>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative">
+<span class="notification-badge absolute -top-1 -right-1 flex h-3 w-3">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
+<span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
+</span>
+<button class="p-2 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-xl text-white">notifications</span>
+</button>
+</div>
+<div class="size-10 rounded-full bg-cover bg-center border-2 border-white/20" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBpw3uCmzb7KrmPHgSn4N6naS7IskQiy83r1xgEOBEogOgXXVFNo9IDC9V7MxPPrkGCe_ZAIP-jzZoRdSD4X4tmoE2Q5uJRXxyyowk00RYpHKDpzod5mh11lqVbxbq4LULxhsmX3xcr3Tam6YpAsTEma1Hno2tLMZydYGhIDaK8ucMt2hoXz8v_I70YmSQGqLDA_FAYChNznWdjcvk7xzpQ679YNp64TJmBkMDIBvHyBVI7o7m1rQ1YmxgaWESPgu579-hxQlFt8M0");'></div>
+</div>
+</header>
+
+<!-- Main Content -->
+<main class="relative flex flex-1 items-center justify-center px-4 py-12 z-0">
+<div class="w-full max-w-4xl text-center">
+<!-- Coming Soon Icon -->
+<div class="mb-8">
+<div class="coming-soon-icon">
+<span class="material-symbols-outlined" style="font-size: inherit;">construction</span>
+</div>
+</div>
+
+<!-- Main Heading -->
+<h1 class="text-6xl font-bold tracking-tight mb-6 text-white">
+Coming Soon!
+</h1>
+
+<!-- Subheading -->
+<h2 class="text-2xl font-medium mb-8 text-[var(--muted-text-color)]">
+Other Instructional Design Projects
+</h2>
+
+<!-- Description -->
+<p class="text-lg text-[var(--muted-text-color)] mb-12 max-w-2xl mx-auto leading-relaxed">
+We're working hard to bring you comprehensive tools for all types of instructional design projects. This exciting feature will be available soon and will include support for various educational content formats and methodologies.
+</p>
+
+<!-- Feature Preview Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+<div class="feature-card p-6">
+<div class="text-4xl mb-4">
+<span class="material-symbols-outlined text-[var(--primary-red)]" style="font-size: inherit;">psychology</span>
+</div>
+<h3 class="text-lg font-bold text-white mb-2">Training Programs</h3>
+<p class="text-sm text-[var(--muted-text-color)]">Create comprehensive training modules for corporate and educational environments</p>
+</div>
+
+<div class="feature-card p-6">
+<div class="text-4xl mb-4">
+<span class="material-symbols-outlined text-[var(--primary-blue)]" style="font-size: inherit;">quiz</span>
+</div>
+<h3 class="text-lg font-bold text-white mb-2">Assessment Tools</h3>
+<p class="text-sm text-[var(--muted-text-color)]">Build interactive assessments and evaluation frameworks</p>
+</div>
+
+<div class="feature-card p-6">
+<div class="text-4xl mb-4">
+<span class="material-symbols-outlined text-white" style="font-size: inherit;">groups</span>
+</div>
+<h3 class="text-lg font-bold text-white mb-2">Collaborative Learning</h3>
+<p class="text-sm text-[var(--muted-text-color)]">Design group-based learning experiences and workshops</p>
+</div>
+</div>
+
+<!-- Notification Signup -->
+<div class="feature-card p-8 mb-12">
+<h3 class="text-2xl font-bold text-white mb-4">Get Notified When It's Ready</h3>
+<p class="text-[var(--muted-text-color)] mb-6">Be the first to know when other instructional design project types become available.</p>
+<div class="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+<input 
+    type="email" 
+    placeholder="Enter your email address" 
+    class="flex-1 px-4 py-3 rounded-lg bg-white/5 border border-white/10 text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-[var(--primary-blue)] focus:border-transparent"
+    id="email-input"
+/>
+<button 
+    onclick="subscribeForUpdates()" 
+    class="btn-gradient px-6 py-3 rounded-lg font-bold text-white"
+    id="subscribe-btn"
+>
+<span id="subscribe-text">Notify Me</span>
+</button>
+</div>
+</div>
+
+<!-- Action Buttons -->
+<div class="flex flex-col sm:flex-row gap-4 justify-center">
+<button onclick="tryELearning()" class="btn-gradient flex items-center justify-center gap-2 rounded-lg h-12 px-8 text-white text-base font-bold">
+<span class="material-symbols-outlined">school</span>
+<span>Try E-learning Instead</span>
+</button>
+<button onclick="goBack()" class="btn-secondary flex items-center justify-center gap-2 rounded-lg h-12 px-8 text-white text-base font-bold">
+<span class="material-symbols-outlined">arrow_back</span>
+<span>Go Back</span>
+</button>
+</div>
+
+<!-- Timeline -->
+<div class="mt-16 feature-card p-6">
+<h3 class="text-xl font-bold text-white mb-6">Development Timeline</h3>
+<div class="flex flex-col md:flex-row justify-center items-center gap-8">
+<div class="text-center">
+<div class="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center mb-2">
+<span class="material-symbols-outlined text-white">check</span>
+</div>
+<p class="font-bold text-green-400">Phase 1</p>
+<p class="text-sm text-[var(--muted-text-color)]">Planning Complete</p>
+</div>
+<div class="w-full md:w-16 h-0.5 bg-white/20"></div>
+<div class="text-center">
+<div class="w-12 h-12 rounded-full bg-[var(--primary-blue)] flex items-center justify-center mb-2 notification-badge">
+<span class="material-symbols-outlined text-white">construction</span>
+</div>
+<p class="font-bold text-[var(--primary-blue)]">Phase 2</p>
+<p class="text-sm text-[var(--muted-text-color)]">Development</p>
+</div>
+<div class="w-full md:w-16 h-0.5 bg-white/20"></div>
+<div class="text-center opacity-50">
+<div class="w-12 h-12 rounded-full bg-white/20 flex items-center justify-center mb-2">
+<span class="material-symbols-outlined text-white">rocket_launch</span>
+</div>
+<p class="font-bold text-white">Phase 3</p>
+<p class="text-sm text-[var(--muted-text-color)]">Launch</p>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+
+<script>
+// Subscribe for updates functionality
+function subscribeForUpdates() {
+    const emailInput = document.getElementById('email-input');
+    const subscribeBtn = document.getElementById('subscribe-btn');
+    const subscribeText = document.getElementById('subscribe-text');
+    
+    const email = emailInput.value.trim();
+    
+    if (!email) {
+        alert('Please enter your email address');
+        return;
+    }
+    
+    if (!isValidEmail(email)) {
+        alert('Please enter a valid email address');
+        return;
+    }
+    
+    // Show loading state
+    subscribeBtn.disabled = true;
+    subscribeText.textContent = 'Subscribing...';
+    
+    // Simulate subscription (replace with actual API call)
+    setTimeout(() => {
+        // Store email subscription
+        localStorage.setItem('subscribedEmail', email);
+        localStorage.setItem('subscriptionDate', new Date().toISOString());
+        
+        // Show success state
+        subscribeText.textContent = 'Subscribed ✓';
+        subscribeBtn.classList.remove('btn-gradient');
+        subscribeBtn.classList.add('bg-green-500');
+        
+        // Clear input
+        emailInput.value = '';
+        
+        console.log('Email subscription successful:', email);
+        
+        // TODO: Integrate with your email subscription service
+        /*
+        fetch('/api/subscribe-updates', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                email: email,
+                feature: 'other_instructional_design_projects',
+                timestamp: new Date().toISOString()
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log('Subscription successful:', data);
+        })
+        .catch(error => {
+            console.error('Subscription failed:', error);
+        });
+        */
+        
+    }, 2000);
+}
+
+// Validate email format
+function isValidEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
+
+// Try E-learning instead
+function tryELearning() {
+    console.log('Redirecting to e-learning flow...');
+    
+    // Set e-learning as selected project type
+    localStorage.setItem('selectedProjectType', 'e-learning');
+    
+    // Navigate to content development approach
+    const targetPath = '../content_development_approach/code.html';
+    
+    try {
+        window.location.href = targetPath;
+    } catch (error) {
+        console.error('Navigation failed:', error);
+        alert(`Navigation failed. Please manually navigate to: ${targetPath}`);
+    }
+}
+
+// Go back to project selection
+function goBack() {
+    console.log('Going back to project selection...');
+    
+    const targetPath = '../project_type_selection/code.html';
+    
+    try {
+        window.location.href = targetPath;
+    } catch (error) {
+        console.error('Navigation failed:', error);
+        alert(`Navigation failed. Please manually navigate to: ${targetPath}`);
+    }
+}
+
+// Check if user is already subscribed
+document.addEventListener('DOMContentLoaded', function() {
+    const subscribedEmail = localStorage.getItem('subscribedEmail');
+    
+    if (subscribedEmail) {
+        const subscribeBtn = document.getElementById('subscribe-btn');
+        const subscribeText = document.getElementById('subscribe-text');
+        const emailInput = document.getElementById('email-input');
+        
+        // Show already subscribed state
+        emailInput.value = subscribedEmail;
+        subscribeText.textContent = 'Already Subscribed ✓';
+        subscribeBtn.disabled = true;
+        subscribeBtn.classList.remove('btn-gradient');
+        subscribeBtn.classList.add('bg-green-500');
+        
+        console.log('User already subscribed:', subscribedEmail);
+    }
+});
+
+// Log page load
+console.log('Feature Coming Soon page loaded');
+console.log('Selected project type:', localStorage.getItem('selectedProjectType'));
+</script>
+
+<!-- Add Universal Comment Widget - Expert can click anywhere to add feedback -->
+<script>
+window.commentWidgetConfig = {
+    apiBase: "http://localhost:3000",
+    position: "top-right"
+};
+</script>
+<script src="./comment-widget-local.js"></script>
+
+</body></html>

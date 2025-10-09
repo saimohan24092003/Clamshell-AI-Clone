@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expert Feedback Dashboard - CourseCraft AI</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .feedback-card {
+            transition: all 0.3s ease;
+            border-left: 4px solid #e5e7eb;
+        }
+        .feedback-card:hover {
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+        .feedback-card.excellent { border-left-color: #10b981; }
+        .feedback-card.good { border-left-color: #3b82f6; }
+        .feedback-card.average { border-left-color: #f59e0b; }
+        .feedback-card.poor { border-left-color: #ef4444; }
+        .feedback-card.very-poor { border-left-color: #dc2626; }
+
+        .print-friendly {
+            background: white !important;
+            color: black !important;
+        }
+
+        @media print {
+            .no-print { display: none !important; }
+            .print-friendly { background: white !important; }
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b no-print">
+        <div class="max-w-7xl mx-auto px-4 py-6">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900">📊 Expert Feedback Dashboard</h1>
+                    <p class="text-gray-600 mt-2">CourseCraft AI - Subject Matter Expert Reviews</p>
+                </div>
+                <div class="flex gap-3">
+                    <button onclick="refreshData()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                        <i class="fas fa-sync-alt"></i> Refresh
+                    </button>
+                    <button onclick="exportToPDF()" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">
+                        <i class="fas fa-file-pdf"></i> Export PDF
+                    </button>
+                    <button onclick="exportToCSV()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+                        <i class="fas fa-file-csv"></i> Export CSV
+                    </button>
+                    <button onclick="shareWithTeam()" class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700">
+                        <i class="fas fa-share"></i> Share Link
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Statistics Overview -->
+    <div class="max-w-7xl mx-auto px-4 py-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-lg shadow">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-blue-100">
+                        <i class="fas fa-comments text-blue-600 text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Total Reviews</p>
+                        <p class="text-2xl font-semibold text-gray-900" id="totalReviews">-</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-yellow-100">
+                        <i class="fas fa-star text-yellow-600 text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Average Rating</p>
+                        <p class="text-2xl font-semibold text-gray-900" id="avgRating">-</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-green-100">
+                        <i class="fas fa-user-graduate text-green-600 text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Expert Reviews</p>
+                        <p class="text-2xl font-semibold text-gray-900" id="expertCount">-</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-white p-6 rounded-lg shadow">
+                <div class="flex items-center">
+                    <div class="p-3 rounded-full bg-purple-100">
+                        <i class="fas fa-clock text-purple-600 text-xl"></i>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-gray-600">Last Updated</p>
+                        <p class="text-sm font-semibold text-gray-900" id="lastUpdated">-</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="text-lg font-semibold mb-4">Rating Distribution</h3>
+                <canvas id="ratingChart" width="400" height="200"></canvas>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow">
+                <h3 class="text-lg font-semibold mb-4">Feedback by Category</h3>
+                <canvas id="categoryChart" width="400" height="200"></canvas>
+            </div>
+        </div>
+
+        <!-- Filter and Search -->
+        <div class="bg-white p-4 rounded-lg shadow mb-6 no-print">
+            <div class="flex flex-wrap gap-4 items-center">
+                <div class="flex-1 min-w-64">
+                    <input type="text" id="searchInput" placeholder="Search feedback..." class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+                <select id="categoryFilter" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="">All Categories</option>
+                    <option value="learning-map">Learning Map</option>
+                    <option value="content-analysis">Content Analysis</option>
+                    <option value="strategy-recommendations">Strategy Recommendations</option>
+                    <option value="user-experience">User Experience</option>
+                    <option value="general">General</option>
+                </select>
+                <select id="ratingFilter" class="px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <option value="">All Ratings</option>
+                    <option value="5">⭐⭐⭐⭐⭐ Excellent</option>
+                    <option value="4">⭐⭐⭐⭐ Good</option>
+                    <option value="3">⭐⭐⭐ Average</option>
+                    <option value="2">⭐⭐ Poor</option>
+                    <option value="1">⭐ Very Poor</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Feedback Cards -->
+        <div id="feedbackContainer" class="space-y-6">
+            <!-- Feedback items will be loaded here -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="text-center py-12 hidden">
+            <div class="text-gray-400 text-6xl mb-4">
+                <i class="fas fa-comments"></i>
+            </div>
+            <h3 class="text-xl font-medium text-gray-900 mb-2">No Expert Feedback Yet</h3>
+            <p class="text-gray-600 mb-6">Share your demo link with subject matter experts to start collecting feedback.</p>
+            <div class="bg-blue-50 p-4 rounded-lg inline-block">
+                <p class="text-sm font-medium text-blue-900">Demo Link to Share:</p>
+                <p class="text-blue-600 font-mono text-sm" id="demoLink">-</p>
+                <button onclick="copyDemoLink()" class="mt-2 bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700">
+                    Copy Link
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Share Modal -->
+    <div id="shareModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+        <div class="bg-white p-6 rounded-lg shadow-xl max-w-md w-full mx-4">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold">Share Feedback Dashboard</h3>
+                <button onclick="closeShareModal()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="space-y-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Dashboard Link:</label>
+                    <div class="flex">
+                        <input type="text" id="dashboardLink" readonly class="flex-1 px-3 py-2 border border-gray-300 rounded-l-md bg-gray-50 text-sm">
+                        <button onclick="copyDashboardLink()" class="bg-blue-600 text-white px-4 py-2 rounded-r-md hover:bg-blue-700">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Demo Link (for SME):</label>
+                    <div class="flex">
+                        <input type="text" id="demoLinkShare" readonly class="flex-1 px-3 py-2 border border-gray-300 rounded-l-md bg-gray-50 text-sm">
+                        <button onclick="copyDemoLinkShare()" class="bg-green-600 text-white px-4 py-2 rounded-r-md hover:bg-green-700">
+                            <i class="fas fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="text-sm text-gray-600">
+                    <p><strong>Dashboard:</strong> View all feedback and analytics</p>
+                    <p><strong>Demo:</strong> For experts to add new feedback</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Toast -->
+    <div id="successToast" class="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg hidden">
+        <i class="fas fa-check"></i> <span id="toastMessage">Success!</span>
+    </div>
+
+    <script>
+        // API base URL
+        const API_BASE = window.location.origin;
+        let allFeedback = [];
+        let ratingChart, categoryChart;
+
+        // Initialize dashboard
+        document.addEventListener('DOMContentLoaded', () => {
+            loadFeedback();
+            setupFilters();
+            setDemoLink();
+        });
+
+        // Load feedback data
+        async function loadFeedback() {
+            try {
+                const response = await fetch(`${API_BASE}/api/feedback`);
+                const data = await response.json();
+
+                if (data.success) {
+                    allFeedback = data.feedback;
+                    updateStatistics();
+                    updateCharts();
+                    displayFeedback(allFeedback);
+                    updateTimestamp();
+                } else {
+                    showEmptyState();
+                }
+            } catch (error) {
+                console.error('Error loading feedback:', error);
+                showEmptyState();
+            }
+        }
+
+        // Update statistics
+        function updateStatistics() {
+            const total = allFeedback.length;
+            const avgRating = total > 0
+                ? (allFeedback.reduce((sum, f) => sum + f.rating, 0) / total).toFixed(1)
+                : '0';
+            const expertCount = new Set(allFeedback.map(f => f.expertName)).size;
+
+            document.getElementById('totalReviews').textContent = total;
+            document.getElementById('avgRating').textContent = avgRating;
+            document.getElementById('expertCount').textContent = expertCount;
+
+            if (total === 0) {
+                showEmptyState();
+            } else {
+                document.getElementById('emptyState').classList.add('hidden');
+                document.getElementById('feedbackContainer').classList.remove('hidden');
+            }
+        }
+
+        // Update charts
+        function updateCharts() {
+            updateRatingChart();
+            updateCategoryChart();
+        }
+
+        // Rating distribution chart
+        function updateRatingChart() {
+            const ctx = document.getElementById('ratingChart').getContext('2d');
+            const ratingCounts = [0, 0, 0, 0, 0]; // 1-5 stars
+
+            allFeedback.forEach(f => {
+                ratingCounts[f.rating - 1]++;
+            });
+
+            if (ratingChart) ratingChart.destroy();
+
+            ratingChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['⭐ 1 Star', '⭐⭐ 2 Stars', '⭐⭐⭐ 3 Stars', '⭐⭐⭐⭐ 4 Stars', '⭐⭐⭐⭐⭐ 5 Stars'],
+                    datasets: [{
+                        label: 'Number of Reviews',
+                        data: ratingCounts,
+                        backgroundColor: ['#ef4444', '#f97316', '#f59e0b', '#3b82f6', '#10b981'],
+                        borderColor: ['#dc2626', '#ea580c', '#d97706', '#2563eb', '#059669'],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Category distribution chart
+        function updateCategoryChart() {
+            const ctx = document.getElementById('categoryChart').getContext('2d');
+            const categories = {};
+
+            allFeedback.forEach(f => {
+                categories[f.category] = (categories[f.category] || 0) + 1;
+            });
+
+            if (categoryChart) categoryChart.destroy();
+
+            categoryChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(categories),
+                    datasets: [{
+                        data: Object.values(categories),
+                        backgroundColor: ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6']
+                    }]
+                },
+                options: {
+                    responsive: true
+                }
+            });
+        }
+
+        // Display feedback cards
+        function displayFeedback(feedback) {
+            const container = document.getElementById('feedbackContainer');
+
+            if (feedback.length === 0) {
+                showEmptyState();
+                return;
+            }
+
+            container.innerHTML = feedback.map(item => {
+                const ratingClass = getRatingClass(item.rating);
+                const date = new Date(item.createdAt).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                });
+
+                return `
+                    <div class="feedback-card ${ratingClass} bg-white p-6 rounded-lg shadow">
+                        <div class="flex justify-between items-start mb-4">
+                            <div class="flex-1">
+                                <div class="flex items-center mb-2">
+                                    <h3 class="text-lg font-semibold text-gray-900">${item.expertName}</h3>
+                                    ${item.expertEmail ? `<span class="ml-2 text-sm text-gray-500">(${item.expertEmail})</span>` : ''}
+                                </div>
+                                <div class="flex items-center gap-4">
+                                    <div class="flex items-center">
+                                        <span class="text-yellow-400 text-lg">${'⭐'.repeat(item.rating)}</span>
+                                        <span class="ml-2 text-sm text-gray-600">${item.rating}/5</span>
+                                    </div>
+                                    <span class="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">
+                                        ${item.category.replace('-', ' ').replace(/\\b\\w/g, l => l.toUpperCase())}
+                                    </span>
+                                    <span class="text-xs text-gray-500">${date}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3">
+                            <div>
+                                <h4 class="font-medium text-gray-900 mb-2">📝 Feedback:</h4>
+                                <p class="text-gray-700 leading-relaxed">${item.comment}</p>
+                            </div>
+
+                            ${item.suggestions ? `
+                                <div class="bg-green-50 p-4 rounded-lg border-l-4 border-green-400">
+                                    <h4 class="font-medium text-green-900 mb-2">💡 Suggestions:</h4>
+                                    <p class="text-green-800">${item.suggestions}</p>
+                                </div>
+                            ` : ''}
+
+                            ${item.replies && item.replies.length > 0 ? `
+                                <div class="mt-4 pl-4 border-l-2 border-gray-200">
+                                    <h4 class="font-medium text-gray-900 mb-3">💬 Replies:</h4>
+                                    ${item.replies.map(reply => `
+                                        <div class="bg-gray-50 p-3 rounded mb-2">
+                                            <div class="flex justify-between items-center mb-1">
+                                                <span class="font-medium text-sm text-gray-900">${reply.replierName}</span>
+                                                <span class="text-xs text-gray-500">${new Date(reply.createdAt).toLocaleDateString()}</span>
+                                            </div>
+                                            <p class="text-gray-700 text-sm">${reply.text}</p>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Get rating class for styling
+        function getRatingClass(rating) {
+            if (rating === 5) return 'excellent';
+            if (rating === 4) return 'good';
+            if (rating === 3) return 'average';
+            if (rating === 2) return 'poor';
+            return 'very-poor';
+        }
+
+        // Show empty state
+        function showEmptyState() {
+            document.getElementById('emptyState').classList.remove('hidden');
+            document.getElementById('feedbackContainer').classList.add('hidden');
+        }
+
+        // Update timestamp
+        function updateTimestamp() {
+            const now = new Date().toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            document.getElementById('lastUpdated').textContent = now;
+        }
+
+        // Setup filters
+        function setupFilters() {
+            const searchInput = document.getElementById('searchInput');
+            const categoryFilter = document.getElementById('categoryFilter');
+            const ratingFilter = document.getElementById('ratingFilter');
+
+            [searchInput, categoryFilter, ratingFilter].forEach(element => {
+                element.addEventListener('input', applyFilters);
+            });
+        }
+
+        // Apply filters
+        function applyFilters() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const categoryFilter = document.getElementById('categoryFilter').value;
+            const ratingFilter = document.getElementById('ratingFilter').value;
+
+            let filteredFeedback = allFeedback.filter(item => {
+                const matchesSearch = !searchTerm ||
+                    item.expertName.toLowerCase().includes(searchTerm) ||
+                    item.comment.toLowerCase().includes(searchTerm) ||
+                    (item.suggestions && item.suggestions.toLowerCase().includes(searchTerm));
+
+                const matchesCategory = !categoryFilter || item.category === categoryFilter;
+                const matchesRating = !ratingFilter || item.rating === parseInt(ratingFilter);
+
+                return matchesSearch && matchesCategory && matchesRating;
+            });
+
+            displayFeedback(filteredFeedback);
+        }
+
+        // Set demo link
+        function setDemoLink() {
+            const demoUrl = `${window.location.origin}/demo.html`;
+            document.getElementById('demoLink').textContent = demoUrl;
+            document.getElementById('demoLinkShare').value = demoUrl;
+            document.getElementById('dashboardLink').value = window.location.href;
+        }
+
+        // Refresh data
+        function refreshData() {
+            loadFeedback();
+            showToast('Data refreshed successfully!');
+        }
+
+        // Export functions
+        function exportToCSV() {
+            const csv = convertToCSV(allFeedback);
+            downloadFile(csv, 'expert-feedback-report.csv', 'text/csv');
+            showToast('CSV exported successfully!');
+        }
+
+        function exportToPDF() {
+            window.print();
+        }
+
+        // Convert to CSV
+        function convertToCSV(feedback) {
+            const headers = ['Expert Name', 'Email', 'Rating', 'Category', 'Comment', 'Suggestions', 'Date'];
+            const rows = feedback.map(item => [
+                item.expertName,
+                item.expertEmail || '',
+                item.rating,
+                item.category,
+                `"${item.comment.replace(/"/g, '""')}"`,
+                `"${(item.suggestions || '').replace(/"/g, '""')}"`,
+                new Date(item.createdAt).toLocaleDateString()
+            ]);
+
+            return [headers, ...rows].map(row => row.join(',')).join('\\n');
+        }
+
+        // Download file
+        function downloadFile(content, filename, contentType) {
+            const blob = new Blob([content], { type: contentType });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        // Share functions
+        function shareWithTeam() {
+            document.getElementById('shareModal').classList.remove('hidden');
+            document.getElementById('shareModal').classList.add('flex');
+        }
+
+        function closeShareModal() {
+            document.getElementById('shareModal').classList.add('hidden');
+            document.getElementById('shareModal').classList.remove('flex');
+        }
+
+        function copyDemoLink() {
+            const demoUrl = `${window.location.origin}/demo.html`;
+            navigator.clipboard.writeText(demoUrl);
+            showToast('Demo link copied to clipboard!');
+        }
+
+        function copyDemoLinkShare() {
+            const input = document.getElementById('demoLinkShare');
+            input.select();
+            navigator.clipboard.writeText(input.value);
+            showToast('Demo link copied!');
+        }
+
+        function copyDashboardLink() {
+            const input = document.getElementById('dashboardLink');
+            input.select();
+            navigator.clipboard.writeText(input.value);
+            showToast('Dashboard link copied!');
+        }
+
+        // Show toast message
+        function showToast(message) {
+            document.getElementById('toastMessage').textContent = message;
+            document.getElementById('successToast').classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('successToast').classList.add('hidden');
+            }, 3000);
+        }
+    </script>
+<!-- Add Universal Comment Widget - Expert can click anywhere to add feedback -->
+<script>
+window.commentWidgetConfig = {
+    apiBase: "http://localhost:3000",
+    position: "top-right"
+};
+</script>
+<script src="./comment-widget-local.js"></script>
+
+</body>
+</html>

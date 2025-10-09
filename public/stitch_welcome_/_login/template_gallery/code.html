@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8"/>
+<link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+<link as="style" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900&amp;family=Space+Grotesk%3Awght%40400%3B500%3B700" onload="this.rel='stylesheet'" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<title>Template Gallery - CourseCraft AI</title>
+<link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style type="text/tailwindcss">
+      @keyframes particle-animation {
+        0% { transform: translate(0, 0) scale(1); opacity: 1; }
+        100% { transform: translate(var(--end-x), var(--end-y)) scale(0.5); opacity: 0; }
+      }
+      .particle {
+        position: absolute;
+        width: 4px;
+        height: 4px;
+        border-radius: 50%;
+        animation: particle-animation 3s infinite linear;
+      }
+      .template-card {
+        transition: all 0.3s ease;
+        cursor: pointer;
+      }
+      .template-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 15px 35px rgba(19, 91, 236, 0.2);
+      }
+      .template-card.selected {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 30px rgba(34, 197, 94, 0.3);
+        border-color: rgba(34, 197, 94, 0.6);
+      }
+      .template-preview {
+        min-height: 260px;
+        border-radius: 8px;
+        position: relative;
+        overflow: hidden;
+        background: #f8fafc;
+        display: flex;
+        flex-direction: column;
+      }
+      .template-header {
+        background: var(--template-primary, #135bec);
+        color: white;
+        padding: 12px 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 14px;
+        font-weight: 500;
+      }
+      .template-nav {
+        background: var(--template-secondary, #f1f5f9);
+        padding: 8px 20px;
+        display: flex;
+        gap: 16px;
+        font-size: 12px;
+        color: #64748b;
+      }
+      .template-nav span {
+        padding: 4px 8px;
+        background: white;
+        border-radius: 4px;
+        border: 1px solid #e2e8f0;
+      }
+      .template-nav span.active {
+        background: var(--template-primary, #135bec);
+        color: white;
+        border-color: var(--template-primary, #135bec);
+      }
+      .template-main {
+        flex: 1;
+        padding: 20px;
+        background: white;
+        display: flex;
+        gap: 20px;
+      }
+      .template-sidebar {
+        width: 80px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+      .sidebar-item {
+        height: 12px;
+        background: #e2e8f0;
+        border-radius: 3px;
+      }
+      .sidebar-item.active {
+        background: var(--template-primary, #135bec);
+      }
+      .template-content-area {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+      .content-block {
+        height: 8px;
+        background: #f1f5f9;
+        border-radius: 4px;
+      }
+      .content-block.title {
+        height: 14px;
+        background: #334155;
+        width: 70%;
+      }
+      .content-block.subtitle {
+        height: 10px;
+        background: #64748b;
+        width: 50%;
+      }
+      .content-block.full {
+        width: 100%;
+      }
+      .content-block.half {
+        width: 60%;
+      }
+      .brand-applied {
+        border: 2px solid #22c55e;
+        background: rgba(34, 197, 94, 0.05);
+      }
+      .loading-spinner {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(255,255,255,.3);
+        border-radius: 50%;
+        border-top-color: #fff;
+        animation: spin 1s ease-in-out infinite;
+      }
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+      .filter-tab {
+        transition: all 0.3s ease;
+        cursor: pointer;
+      }
+      .filter-tab.active {
+        background: #135bec;
+        color: white;
+      }
+      .filter-tab:hover {
+        background: rgba(19, 91, 236, 0.1);
+      }
+      .template-category {
+        margin-bottom: 40px;
+      }
+      .category-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #282e39;
+      }
+      .category-icon {
+        width: 32px;
+        height: 32px;
+        background: #135bec;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 18px;
+      }
+      .preview-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.8);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        backdrop-filter: blur(4px);
+      }
+      .preview-modal.show {
+        display: flex;
+      }
+      .modal-content {
+        background: #111318;
+        border-radius: 16px;
+        border: 1px solid #282e39;
+        max-width: 90vw;
+        max-height: 90vh;
+        overflow: hidden;
+        position: relative;
+      }
+      .modal-header {
+        padding: 24px;
+        border-bottom: 1px solid #282e39;
+        display: flex;
+        justify-content: between;
+        align-items: center;
+      }
+      .modal-body {
+        padding: 0;
+        height: 70vh;
+        overflow-y: auto;
+      }
+      .template-full-preview {
+        background: white;
+        min-height: 100%;
+        transform: scale(0.8);
+        transform-origin: top left;
+        width: 125%; /* Compensate for scale */
+      }
+    </style>
+</head>
+<body class="bg-[#0D0F12]">
+<div class="relative flex size-full min-h-screen flex-col bg-[#0D0F12] dark group/design-root overflow-hidden" style="--checkbox-tick-svg: url('data:image/svg+xml,%3csvg viewBox=%270 0 16 16%27 fill=%27rgb(255,255,255)%27 xmlns=%27http://www.w3.org/2000/svg%27%3e%3cpath d=%27M12.207 4.793a1 1 0 010 1.414l-5 5a1 1 0 01-1.414 0l-2-2a1 1 0 011.414-1.414L6.5 9.086l4.293-4.293a1 1 0 011.414 0z%27/%3e%3c/svg%3e'); font-family: &quot;Space Grotesk&quot;, &quot;Noto Sans&quot;, sans-serif;">
+<div class="absolute inset-0 z-0">
+<div class="particle bg-[#135bec]" style="--end-x: 100vw; --end-y: 50vh; top: 20%; left: 10%; animation-duration: 4s;"></div>
+<div class="particle bg-[#ff3b5f]" style="--end-x: -50vw; --end-y: 80vh; top: 80%; left: 90%; animation-duration: 5s;"></div>
+<div class="particle bg-white" style="--end-x: 70vw; --end-y: -30vh; top: 50%; left: 50%; animation-duration: 3.5s;"></div>
+</div>
+<div class="layout-container flex h-full grow flex-col z-10">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#282e39] px-10 py-4">
+<div class="flex items-center gap-4 text-white">
+<div class="size-8 text-[#135bec]">
+<svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M24 6L12 12V36L24 42L36 36V12L24 6Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"></path>
+<path d="M24 24L36 18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"></path>
+<path d="M24 24V42" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"></path>
+<path d="M24 24L12 18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"></path>
+<path d="M36 12L12 24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"></path>
+</svg>
+</div>
+<h2 class="text-white text-xl font-bold leading-tight tracking-wide">CourseCraft AI</h2>
+</div>
+<div class="flex flex-1 justify-end gap-6">
+<div class="flex items-center gap-8">
+<a class="text-[#9da6b9] hover:text-white transition-colors text-sm font-medium leading-normal cursor-pointer" onclick="navigateToDashboard()">Dashboard</a>
+<a class="text-[#9da6b9] hover:text-white transition-colors text-sm font-medium leading-normal cursor-pointer" onclick="navigateToCourses()">Courses</a>
+<a class="text-[#9da6b9] hover:text-white transition-colors text-sm font-medium leading-normal cursor-pointer" onclick="navigateToBrand()">Brand</a>
+<a class="text-white text-sm font-medium leading-normal" href="#">Templates</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="flex h-10 w-10 items-center justify-center rounded-full bg-[#1e232b] text-[#9da6b9] hover:text-white transition-colors">
+<span class="material-symbols-outlined">help</span>
+</button>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-[#135bec]" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC089TZVWY1aWhbdOzkjyXYNV95SSiKOTmD9jKoIE8_Zx9zlnyZPaJ6ieAZdvVX5tWrv4ERvKRQQlikVzcwmY4yJXosjZVO-dK0nJir7tHpmo6x1V-uXxK7zuJq8O1B5Sgb0V_FUwFj0Rd2w_OyXQuzkd7_2CYlf0STLSusaFhAr_JbjXcZJkxYI_UKPq0AXvaYigk_rowLvBVGBZsH6EeWRdOX3ZHt_-hJL3E5NVFuLX5kY6k1XE0UQjn4zceG5C2L9p40l5M2IhQ");'></div>
+</div>
+</div>
+</header>
+<div class="px-10 flex flex-1 justify-center py-12">
+<div class="layout-content-container flex flex-col max-w-[1200px] flex-1">
+
+<!-- Header Section -->
+<div class="flex flex-col items-center text-center gap-4 mb-10">
+<div class="flex items-center gap-4">
+<div class="size-16 text-[#135bec]">
+<span class="material-symbols-outlined text-5xl">view_module</span>
+</div>
+<div>
+<h1 class="text-white tracking-tighter text-5xl font-bold">Template Gallery</h1>
+<p class="text-[#9da6b9] text-base font-normal leading-relaxed max-w-3xl mt-2">
+Choose from professional e-learning templates designed for maximum engagement and effectiveness
+</p>
+</div>
+</div>
+</div>
+
+<!-- Brand Status Alert -->
+<div id="brand-status" class="hidden mb-8 p-4 rounded-lg border-l-4">
+<!-- Content filled by JavaScript -->
+</div>
+
+<!-- Filter Tabs -->
+<div class="flex flex-wrap gap-2 mb-8 justify-center">
+<button class="filter-tab active px-6 py-3 rounded-lg text-sm font-medium" data-category="all">All Templates</button>
+<button class="filter-tab px-6 py-3 rounded-lg text-sm font-medium" data-category="business">Business</button>
+<button class="filter-tab px-6 py-3 rounded-lg text-sm font-medium" data-category="education">Education</button>
+<button class="filter-tab px-6 py-3 rounded-lg text-sm font-medium" data-category="healthcare">Healthcare</button>
+<button class="filter-tab px-6 py-3 rounded-lg text-sm font-medium" data-category="technology">Technology</button>
+<button class="filter-tab px-6 py-3 rounded-lg text-sm font-medium" data-category="compliance">Compliance</button>
+</div>
+
+<!-- Templates Grid -->
+<div id="templates-container">
+<!-- Templates will be populated by JavaScript -->
+</div>
+
+<!-- Selection Summary -->
+<div id="selection-summary" class="hidden mt-12 p-6 bg-[#111318]/50 rounded-xl border border-[#282e39]">
+<div class="flex items-center justify-between">
+<div>
+<h3 class="text-white text-xl font-bold mb-2">Selected Template</h3>
+<p id="selected-template-name" class="text-[#9da6b9] text-base"></p>
+</div>
+<div class="flex gap-4">
+<button id="preview-btn" class="px-6 py-3 bg-[#282e39] text-white rounded-lg hover:bg-[#3b4354] transition-colors">
+Preview
+</button>
+<button id="start-creation-btn" class="px-6 py-3 bg-[#135bec] text-white rounded-lg hover:bg-[#0f4acb] transition-colors shadow-[0_0_20px_#135bec]">
+Start Creating
+</button>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+</div>
+
+<!-- Preview Modal -->
+<div id="preview-modal" class="preview-modal">
+<div class="modal-content">
+<div class="modal-header">
+<div>
+<h2 id="modal-template-name" class="text-white text-xl font-bold"></h2>
+<p id="modal-template-description" class="text-[#9da6b9] text-sm mt-1"></p>
+</div>
+<button id="close-modal" class="text-[#9da6b9] hover:text-white ml-8 p-2">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="modal-body">
+<div id="template-full-preview" class="template-full-preview">
+<!-- Full template preview will be inserted here -->
+</div>
+</div>
+<div class="flex justify-between items-center p-6 border-t border-[#282e39]">
+<div class="flex gap-4">
+<span class="text-[#9da6b9] text-sm">Brand Applied:</span>
+<span id="modal-brand-status" class="text-sm font-medium"></span>
+</div>
+<div class="flex gap-4">
+<button id="modal-select-btn" class="px-6 py-2 bg-[#135bec] text-white rounded hover:bg-[#0f4acb] transition-colors">
+Select This Template
+</button>
+</div>
+</div>
+</div>
+</div>
+
+<script>
+let selectedTemplate = null;
+let brandAnalysis = null;
+let templates = [];
+
+// Template data - simulating Articulate Rise style templates
+const templateData = {
+    business: [
+        {
+            id: 'modern_corp_1',
+            name: 'Modern Corporate',
+            description: 'Clean, professional design perfect for corporate training',
+            category: 'business',
+            preview: 'modern-corporate-preview',
+            features: ['Responsive Design', 'Video Integration', 'Interactive Elements', 'Assessment Tools'],
+            style: 'modern',
+            primaryColor: '#135bec',
+            secondaryColor: '#ff3b5f'
+        },
+        {
+            id: 'executive_brief',
+            name: 'Executive Briefing',
+            description: 'Sophisticated template for leadership and management training',
+            category: 'business',
+            preview: 'executive-brief-preview',
+            features: ['Dashboard Views', 'Key Metrics', 'Case Studies', 'Executive Summary'],
+            style: 'executive',
+            primaryColor: '#2563eb',
+            secondaryColor: '#dc2626'
+        },
+        {
+            id: 'startup_growth',
+            name: 'Startup & Innovation',
+            description: 'Dynamic template for entrepreneurship and innovation courses',
+            category: 'business',
+            preview: 'startup-preview',
+            features: ['Pitch Deck Style', 'Growth Charts', 'MVP Exercises', 'Lean Methodology'],
+            style: 'dynamic',
+            primaryColor: '#10b981',
+            secondaryColor: '#f59e0b'
+        }
+    ],
+    education: [
+        {
+            id: 'academic_standard',
+            name: 'Academic Standard',
+            description: 'Traditional educational layout for schools and universities',
+            category: 'education',
+            preview: 'academic-preview',
+            features: ['Lesson Structure', 'Assignment Tracking', 'Grade Book', 'Discussion Forums'],
+            style: 'academic',
+            primaryColor: '#7c3aed',
+            secondaryColor: '#06b6d4'
+        },
+        {
+            id: 'interactive_learning',
+            name: 'Interactive Learning',
+            description: 'Engaging template with gamification elements',
+            category: 'education',
+            preview: 'interactive-preview',
+            features: ['Gamification', 'Progress Badges', 'Interactive Quizzes', 'Peer Learning'],
+            style: 'interactive',
+            primaryColor: '#ec4899',
+            secondaryColor: '#8b5cf6'
+        },
+        {
+            id: 'stem_focused',
+            name: 'STEM Focused',
+            description: 'Science, Technology, Engineering, and Math specialized template',
+            category: 'education',
+            preview: 'stem-preview',
+            features: ['Lab Simulations', 'Formula Editor', '3D Models', 'Data Visualization'],
+            style: 'scientific',
+            primaryColor: '#0ea5e9',
+            secondaryColor: '#22c55e'
+        }
+    ],
+    healthcare: [
+        {
+            id: 'medical_training',
+            name: 'Medical Training',
+            description: 'Professional template for healthcare and medical education',
+            category: 'healthcare',
+            preview: 'medical-preview',
+            features: ['Case Studies', 'Anatomy Models', 'Procedure Guides', 'Clinical Scenarios'],
+            style: 'medical',
+            primaryColor: '#dc2626',
+            secondaryColor: '#059669'
+        },
+        {
+            id: 'patient_education',
+            name: 'Patient Education',
+            description: 'User-friendly template for patient and family education',
+            category: 'healthcare',
+            preview: 'patient-preview',
+            features: ['Simple Language', 'Visual Aids', 'Step-by-Step Guides', 'FAQ Sections'],
+            style: 'friendly',
+            primaryColor: '#0891b2',
+            secondaryColor: '#f97316'
+        }
+    ],
+    technology: [
+        {
+            id: 'software_training',
+            name: 'Software Training',
+            description: 'Technical template for software and IT training courses',
+            category: 'technology',
+            preview: 'software-preview',
+            features: ['Code Examples', 'Screen Recordings', 'API Documentation', 'Hands-on Labs'],
+            style: 'technical',
+            primaryColor: '#1f2937',
+            secondaryColor: '#10b981'
+        },
+        {
+            id: 'cybersecurity',
+            name: 'Cybersecurity',
+            description: 'Specialized template for security awareness and training',
+            category: 'technology',
+            preview: 'security-preview',
+            features: ['Threat Simulations', 'Security Checklists', 'Incident Response', 'Best Practices'],
+            style: 'security',
+            primaryColor: '#991b1b',
+            secondaryColor: '#0369a1'
+        }
+    ],
+    compliance: [
+        {
+            id: 'regulatory_training',
+            name: 'Regulatory Compliance',
+            description: 'Structured template for compliance and regulatory training',
+            category: 'compliance',
+            preview: 'compliance-preview',
+            features: ['Policy Documents', 'Compliance Checklists', 'Audit Trails', 'Certification Tracking'],
+            style: 'structured',
+            primaryColor: '#374151',
+            secondaryColor: '#d97706'
+        },
+        {
+            id: 'safety_training',
+            name: 'Safety Training',
+            description: 'Comprehensive template for workplace safety education',
+            category: 'compliance',
+            preview: 'safety-preview',
+            features: ['Safety Protocols', 'Emergency Procedures', 'Hazard Identification', 'Incident Reporting'],
+            style: 'safety',
+            primaryColor: '#dc2626',
+            secondaryColor: '#eab308'
+        }
+    ]
+};
+
+// Initialize the page
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Template Gallery loaded');
+    loadBrandAnalysis();
+    initializeTemplates();
+    setupFilterTabs();
+    displayTemplates('all');
+});
+
+// Load brand analysis from localStorage
+function loadBrandAnalysis() {
+    const brandData = localStorage.getItem('brandAnalysisResults');
+    const brandSkipped = localStorage.getItem('brandDocumentationSkipped');
+    const brandStatusDiv = document.getElementById('brand-status');
+
+    if (brandData) {
+        brandAnalysis = JSON.parse(brandData);
+        brandStatusDiv.classList.remove('hidden');
+        brandStatusDiv.className += ' bg-green-900/20 border-green-500';
+        brandStatusDiv.innerHTML = `
+            <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-green-400">check_circle</span>
+                <div>
+                    <h4 class="text-green-400 font-medium">Brand Analysis Complete</h4>
+                    <p class="text-green-300/80 text-sm">Templates will be customized with your brand colors, fonts, and style</p>
+                </div>
+            </div>
+        `;
+        console.log('🎨 Brand analysis loaded:', brandAnalysis);
+    } else if (brandSkipped === 'true') {
+        brandStatusDiv.classList.remove('hidden');
+        brandStatusDiv.className += ' bg-blue-900/20 border-blue-500';
+        brandStatusDiv.innerHTML = `
+            <div class="flex items-center gap-3">
+                <span class="material-symbols-outlined text-blue-400">info</span>
+                <div>
+                    <h4 class="text-blue-400 font-medium">Using Default Templates</h4>
+                    <p class="text-blue-300/80 text-sm">Templates will use professional default styling - you can customize later</p>
+                </div>
+            </div>
+        `;
+    }
+}
+
+// Initialize templates data
+function initializeTemplates() {
+    templates = [];
+    Object.keys(templateData).forEach(category => {
+        templates = templates.concat(templateData[category]);
+    });
+    console.log(`📋 Loaded ${templates.length} templates`);
+}
+
+// Setup filter tabs
+function setupFilterTabs() {
+    const filterTabs = document.querySelectorAll('.filter-tab');
+    filterTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            // Remove active class from all tabs
+            filterTabs.forEach(t => t.classList.remove('active'));
+            // Add active class to clicked tab
+            tab.classList.add('active');
+            // Display filtered templates
+            const category = tab.dataset.category;
+            displayTemplates(category);
+        });
+    });
+}
+
+// Display templates based on category
+function displayTemplates(category) {
+    const container = document.getElementById('templates-container');
+    let filteredTemplates = category === 'all' ? templates : templates.filter(t => t.category === category);
+
+    // Group templates by category for display
+    const groupedTemplates = {};
+    filteredTemplates.forEach(template => {
+        if (!groupedTemplates[template.category]) {
+            groupedTemplates[template.category] = [];
+        }
+        groupedTemplates[template.category].push(template);
+    });
+
+    container.innerHTML = '';
+
+    Object.keys(groupedTemplates).forEach(cat => {
+        const categorySection = document.createElement('div');
+        categorySection.className = 'template-category';
+
+        const categoryHeader = document.createElement('div');
+        categoryHeader.className = 'category-header';
+        categoryHeader.innerHTML = `
+            <div class="category-icon">
+                <span class="material-symbols-outlined">${getCategoryIcon(cat)}</span>
+            </div>
+            <h2 class="text-white text-2xl font-bold capitalize">${cat}</h2>
+            <div class="flex-1"></div>
+            <span class="text-[#9da6b9] text-sm">${groupedTemplates[cat].length} template${groupedTemplates[cat].length > 1 ? 's' : ''}</span>
+        `;
+
+        const templatesGrid = document.createElement('div');
+        templatesGrid.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6';
+
+        groupedTemplates[cat].forEach(template => {
+            const templateCard = createTemplateCard(template);
+            templatesGrid.appendChild(templateCard);
+        });
+
+        categorySection.appendChild(categoryHeader);
+        categorySection.appendChild(templatesGrid);
+        container.appendChild(categorySection);
+    });
+}
+
+// Create template card element
+function createTemplateCard(template) {
+    const card = document.createElement('div');
+    card.className = 'template-card bg-[#111318]/50 rounded-xl border border-[#282e39] overflow-hidden';
+    card.dataset.templateId = template.id;
+
+    // Apply brand colors if available
+    const primaryColor = brandAnalysis?.analysisResults?.colors?.primary || template.primaryColor;
+    const secondaryColor = brandAnalysis?.analysisResults?.colors?.secondary || template.secondaryColor;
+
+    card.style.setProperty('--template-primary', primaryColor);
+    card.style.setProperty('--template-secondary', secondaryColor);
+
+    card.innerHTML = `
+        <div class="template-preview">
+            <div class="template-header">
+                <div class="flex items-center gap-2">
+                    <span class="material-symbols-outlined text-lg">${getTemplateIcon(template.style)}</span>
+                    <span>${template.name}</span>
+                </div>
+                <div class="flex items-center gap-2">
+                    ${brandAnalysis ? '<div class="bg-green-400 text-green-900 px-2 py-1 rounded text-xs font-bold">Brand Applied</div>' : ''}
+                </div>
+            </div>
+            <div class="template-nav">
+                <span class="active">Overview</span>
+                <span>Content</span>
+                <span>Quiz</span>
+                <span>Resources</span>
+            </div>
+            <div class="template-main">
+                <div class="template-sidebar">
+                    <div class="sidebar-item active"></div>
+                    <div class="sidebar-item"></div>
+                    <div class="sidebar-item"></div>
+                    <div class="sidebar-item"></div>
+                </div>
+                <div class="template-content-area">
+                    <div class="content-block title"></div>
+                    <div class="content-block subtitle"></div>
+                    <div class="content-block full"></div>
+                    <div class="content-block half"></div>
+                    <div class="content-block full"></div>
+                    <div class="content-block"></div>
+                </div>
+            </div>
+        </div>
+        <div class="p-6">
+            <h3 class="text-white text-lg font-bold mb-2">${template.name}</h3>
+            <p class="text-[#9da6b9] text-sm mb-4">${template.description}</p>
+            <div class="flex flex-wrap gap-2 mb-4">
+                ${template.features.slice(0, 2).map(feature =>
+                    `<span class="bg-[#1e232b] text-[#9da6b9] px-2 py-1 rounded text-xs">${feature}</span>`
+                ).join('')}
+                ${template.features.length > 2 ? `<span class="text-[#9da6b9] text-xs">+${template.features.length - 2} more</span>` : ''}
+            </div>
+            <div class="flex gap-2">
+                <button class="flex-1 bg-[#282e39] text-white py-2 rounded hover:bg-[#3b4354] transition-colors" onclick="previewTemplate('${template.id}')">
+                    Preview
+                </button>
+                <button class="flex-1 bg-[#135bec] text-white py-2 rounded hover:bg-[#0f4acb] transition-colors" onclick="selectTemplate('${template.id}')">
+                    Select
+                </button>
+            </div>
+        </div>
+    `;
+
+    return card;
+}
+
+// Get category icon
+function getCategoryIcon(category) {
+    const icons = {
+        business: 'business_center',
+        education: 'school',
+        healthcare: 'local_hospital',
+        technology: 'computer',
+        compliance: 'verified_user'
+    };
+    return icons[category] || 'view_module';
+}
+
+// Get template style icon
+function getTemplateIcon(style) {
+    const icons = {
+        modern: 'design_services',
+        executive: 'business_center',
+        dynamic: 'trending_up',
+        academic: 'menu_book',
+        interactive: 'sports_esports',
+        scientific: 'science',
+        medical: 'local_hospital',
+        friendly: 'favorite',
+        technical: 'code',
+        security: 'security',
+        structured: 'account_tree',
+        safety: 'warning'
+    };
+    return icons[style] || 'view_module';
+}
+
+// Select template
+function selectTemplate(templateId) {
+    const template = templates.find(t => t.id === templateId);
+    if (!template) return;
+
+    // Remove previous selection
+    document.querySelectorAll('.template-card').forEach(card => {
+        card.classList.remove('selected');
+    });
+
+    // Add selection to new card
+    const selectedCard = document.querySelector(`[data-template-id="${templateId}"]`);
+    selectedCard.classList.add('selected');
+
+    selectedTemplate = template;
+
+    // Show selection summary
+    const summaryDiv = document.getElementById('selection-summary');
+    const templateName = document.getElementById('selected-template-name');
+
+    templateName.textContent = `${template.name} - ${template.description}`;
+    summaryDiv.classList.remove('hidden');
+
+    // Store selection
+    localStorage.setItem('selectedTemplate', JSON.stringify(template));
+
+    console.log('🎨 Template selected:', template.name);
+}
+
+// Preview template function
+function previewTemplate(templateId) {
+    const template = templates.find(t => t.id === templateId);
+    if (!template) return;
+
+    const modal = document.getElementById('preview-modal');
+    const modalName = document.getElementById('modal-template-name');
+    const modalDescription = document.getElementById('modal-template-description');
+    const modalBrandStatus = document.getElementById('modal-brand-status');
+    const modalPreview = document.getElementById('template-full-preview');
+    const modalSelectBtn = document.getElementById('modal-select-btn');
+
+    // Set modal content
+    modalName.textContent = template.name;
+    modalDescription.textContent = template.description;
+    modalBrandStatus.textContent = brandAnalysis ? 'Yes - Custom brand applied' : 'Default styling';
+    modalBrandStatus.className = brandAnalysis ? 'text-green-400 font-medium' : 'text-[#9da6b9]';
+
+    // Create full template preview
+    const primaryColor = brandAnalysis?.analysisResults?.colors?.primary || template.primaryColor;
+    const secondaryColor = brandAnalysis?.analysisResults?.colors?.secondary || template.secondaryColor;
+
+    modalPreview.innerHTML = generateFullTemplatePreview(template, primaryColor, secondaryColor);
+
+    // Set up modal select button
+    modalSelectBtn.onclick = () => {
+        modal.classList.remove('show');
+        selectTemplate(templateId);
+    };
+
+    // Show modal
+    modal.classList.add('show');
+}
+
+// Generate full template preview
+function generateFullTemplatePreview(template, primaryColor, secondaryColor) {
+    const sampleContent = getSampleContent(template.category);
+
+    return `
+        <div style="--template-primary: ${primaryColor}; --template-secondary: ${secondaryColor}; font-family: ${brandAnalysis?.analysisResults?.fonts?.primary || 'Arial, sans-serif'};">
+            <!-- Header -->
+            <div style="background: var(--template-primary); color: white; padding: 20px 40px; display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 16px;">
+                    <div style="width: 48px; height: 48px; background: rgba(255,255,255,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+                        <span style="font-size: 24px;">📚</span>
+                    </div>
+                    <div>
+                        <h1 style="margin: 0; font-size: 24px; font-weight: bold;">${sampleContent.title}</h1>
+                        <p style="margin: 4px 0 0 0; opacity: 0.8; font-size: 14px;">${sampleContent.subtitle}</p>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <div style="background: rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 20px; font-size: 12px;">Progress: 0%</div>
+                    <div style="background: rgba(255,255,255,0.2); padding: 8px 16px; border-radius: 20px; font-size: 12px;">45 min</div>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <div style="background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 0 40px;">
+                <div style="display: flex; gap: 32px;">
+                    <div style="padding: 16px 0; border-bottom: 2px solid var(--template-primary); color: var(--template-primary); font-weight: 500;">Overview</div>
+                    <div style="padding: 16px 0; color: #64748b;">Modules</div>
+                    <div style="padding: 16px 0; color: #64748b;">Assessment</div>
+                    <div style="padding: 16px 0; color: #64748b;">Resources</div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div style="display: flex; min-height: 600px;">
+                <!-- Sidebar -->
+                <div style="width: 280px; background: #f8fafc; border-right: 1px solid #e2e8f0; padding: 32px 24px;">
+                    <h3 style="margin: 0 0 16px 0; font-size: 16px; font-weight: 600; color: #334155;">Course Modules</h3>
+                    ${sampleContent.modules.map((module, index) => `
+                        <div style="margin-bottom: 12px; padding: 12px; border-radius: 8px; background: ${index === 0 ? 'var(--template-primary)' : 'white'}; color: ${index === 0 ? 'white' : '#64748b'}; border: 1px solid #e2e8f0; font-size: 14px; display: flex; align-items: center; gap: 8px;">
+                            <div style="width: 8px; height: 8px; border-radius: 50%; background: ${index === 0 ? 'rgba(255,255,255,0.8)' : '#cbd5e1'};"></div>
+                            ${module}
+                        </div>
+                    `).join('')}
+                </div>
+
+                <!-- Content Area -->
+                <div style="flex: 1; padding: 32px 40px;">
+                    <div style="max-width: 800px;">
+                        <h2 style="margin: 0 0 24px 0; font-size: 28px; font-weight: bold; color: #1e293b;">${sampleContent.mainHeading}</h2>
+
+                        <!-- Content Blocks -->
+                        <div style="margin-bottom: 32px; padding: 24px; background: #f8fafc; border-radius: 12px; border-left: 4px solid var(--template-primary);">
+                            <h3 style="margin: 0 0 12px 0; color: var(--template-primary); font-size: 18px; font-weight: 600;">Learning Objectives</h3>
+                            <ul style="margin: 0; padding-left: 20px; color: #64748b; line-height: 1.6;">
+                                ${sampleContent.objectives.map(obj => `<li style="margin-bottom: 8px;">${obj}</li>`).join('')}
+                            </ul>
+                        </div>
+
+                        <div style="margin-bottom: 32px;">
+                            <p style="color: #475569; line-height: 1.7; margin-bottom: 16px;">${sampleContent.content}</p>
+                        </div>
+
+                        <!-- Interactive Element -->
+                        <div style="margin-bottom: 32px; padding: 24px; background: white; border: 2px solid var(--template-primary); border-radius: 12px;">
+                            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                                <div style="width: 40px; height: 40px; background: var(--template-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">?</div>
+                                <h3 style="margin: 0; color: var(--template-primary); font-size: 18px; font-weight: 600;">Interactive Element</h3>
+                            </div>
+                            <p style="color: #64748b; margin: 0; font-style: italic;">${sampleContent.interactiveElement}</p>
+                        </div>
+
+                        <!-- Progress & Navigation -->
+                        <div style="display: flex; justify-between; align-items: center; padding-top: 32px; border-top: 1px solid #e2e8f0;">
+                            <div style="display: flex; gap: 16px; align-items: center;">
+                                <div style="background: #e2e8f0; height: 8px; width: 200px; border-radius: 4px; overflow: hidden;">
+                                    <div style="background: var(--template-primary); height: 100%; width: 25%; border-radius: 4px;"></div>
+                                </div>
+                                <span style="color: #64748b; font-size: 14px;">25% Complete</span>
+                            </div>
+                            <div style="display: flex; gap: 12px;">
+                                <button style="padding: 12px 24px; background: #f1f5f9; color: #64748b; border: none; border-radius: 8px; cursor: pointer;">Previous</button>
+                                <button style="padding: 12px 24px; background: var(--template-primary); color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 500;">Continue</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
+
+// Get sample content based on category
+function getSampleContent(category) {
+    const sampleContents = {
+        business: {
+            title: "Leadership Excellence Program",
+            subtitle: "Developing Next-Generation Leaders",
+            mainHeading: "Introduction to Strategic Leadership",
+            modules: ["Strategic Thinking", "Team Management", "Decision Making", "Communication", "Performance"],
+            objectives: [
+                "Develop strategic thinking capabilities",
+                "Master effective communication techniques",
+                "Learn advanced decision-making frameworks",
+                "Build high-performing teams"
+            ],
+            content: "Strategic leadership is the ability to influence others to voluntarily make decisions that enhance the prospects for the organization's long-term success while maintaining short-term financial stability. This comprehensive program will guide you through the essential skills and frameworks needed to become an effective strategic leader.",
+            interactiveElement: "Case Study: Analyze a real-world leadership scenario and apply strategic frameworks to develop your solution."
+        },
+        education: {
+            title: "Advanced Mathematics Course",
+            subtitle: "Algebra & Calculus Fundamentals",
+            mainHeading: "Introduction to Linear Algebra",
+            modules: ["Vectors", "Matrices", "Linear Systems", "Eigenvalues", "Applications"],
+            objectives: [
+                "Understand vector operations and properties",
+                "Master matrix algebra and transformations",
+                "Solve complex linear systems",
+                "Apply concepts to real-world problems"
+            ],
+            content: "Linear algebra is a fundamental branch of mathematics that deals with vectors, vector spaces, and linear transformations between these spaces. It has applications in many fields including computer graphics, machine learning, physics, and engineering.",
+            interactiveElement: "Interactive Calculator: Practice matrix operations and see step-by-step solutions."
+        },
+        healthcare: {
+            title: "Patient Care Excellence",
+            subtitle: "Evidence-Based Practice Guidelines",
+            mainHeading: "Patient-Centered Care Principles",
+            modules: ["Assessment", "Care Planning", "Communication", "Safety", "Documentation"],
+            objectives: [
+                "Implement evidence-based care protocols",
+                "Develop effective patient communication skills",
+                "Ensure patient safety and quality outcomes",
+                "Master accurate clinical documentation"
+            ],
+            content: "Patient-centered care is a healthcare approach that focuses on the patient as a whole person, considering their physical, emotional, social, and spiritual needs. This course will teach you how to deliver compassionate, evidence-based care that improves patient outcomes.",
+            interactiveElement: "Virtual Patient Scenario: Practice patient assessment and care planning with realistic case studies."
+        },
+        technology: {
+            title: "Software Development Mastery",
+            subtitle: "Full-Stack Web Development",
+            mainHeading: "Modern Web Application Architecture",
+            modules: ["Frontend", "Backend", "Database", "APIs", "Deployment"],
+            objectives: [
+                "Build responsive user interfaces",
+                "Develop scalable backend systems",
+                "Design efficient database schemas",
+                "Create robust API endpoints"
+            ],
+            content: "Modern web applications require a comprehensive understanding of both frontend and backend technologies. This course covers the complete development lifecycle from planning and design to deployment and maintenance.",
+            interactiveElement: "Code Playground: Practice coding exercises with real-time feedback and solution examples."
+        },
+        compliance: {
+            title: "Regulatory Compliance Training",
+            subtitle: "Industry Standards & Best Practices",
+            mainHeading: "Understanding Compliance Requirements",
+            modules: ["Regulations", "Policies", "Procedures", "Auditing", "Reporting"],
+            objectives: [
+                "Understand key regulatory requirements",
+                "Implement compliance procedures",
+                "Conduct effective compliance audits",
+                "Maintain accurate compliance records"
+            ],
+            content: "Regulatory compliance is critical for organizations to operate legally and ethically. This comprehensive training covers the essential knowledge and skills needed to ensure your organization meets all relevant regulatory requirements.",
+            interactiveElement: "Compliance Checklist: Interactive assessment tool to evaluate your organization's compliance status."
+        }
+    };
+
+    return sampleContents[category] || sampleContents.business;
+}
+
+// Modal event listeners
+document.getElementById('close-modal').addEventListener('click', () => {
+    document.getElementById('preview-modal').classList.remove('show');
+});
+
+// Close modal when clicking outside
+document.getElementById('preview-modal').addEventListener('click', (e) => {
+    if (e.target.id === 'preview-modal') {
+        document.getElementById('preview-modal').classList.remove('show');
+    }
+});
+
+// Preview from selection summary
+document.getElementById('preview-btn').addEventListener('click', () => {
+    if (!selectedTemplate) return;
+    previewTemplate(selectedTemplate.id);
+});
+
+// Start creation
+document.getElementById('start-creation-btn').addEventListener('click', () => {
+    if (!selectedTemplate) return;
+
+    console.log('🚀 Starting course creation with template:', selectedTemplate.name);
+
+    // Store creation start data
+    localStorage.setItem('courseCreationStarted', 'true');
+    localStorage.setItem('courseCreationTime', new Date().toISOString());
+    localStorage.setItem('selectedTemplateId', selectedTemplate.id);
+
+    // Show preparation state
+    const btn = document.getElementById('start-creation-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<div class="loading-spinner mr-2"></div>Preparing Course Builder...';
+
+    setTimeout(() => {
+        // Navigate to course builder
+        console.log('🎯 Navigating to course builder...');
+        window.location.href = '../course_builder/code.html';
+    }, 2000);
+});
+
+// Navigation functions
+function navigateToDashboard() {
+    window.location.href = '../ai_dashboard_landing_page/code.html';
+}
+
+function navigateToCourses() {
+    window.location.href = '../courses/code.html';
+}
+
+function navigateToBrand() {
+    window.location.href = '../brand_document_upload_&_analysis/code.html';
+}
+
+console.log('🎨 Template Gallery System Ready!');
+console.log('📋 Templates Available:', templates.length);
+console.log('🎯 Brand Integration:', brandAnalysis ? 'Enabled' : 'Default Styling');
+</script>
+
+<!-- Add Universal Comment Widget - Expert can click anywhere to add feedback -->
+<script>
+window.commentWidgetConfig = {
+    apiBase: "http://localhost:3000",
+    position: "top-right"
+};
+</script>
+<script src="./comment-widget-hybrid.js"></script>
+
+</body></html>

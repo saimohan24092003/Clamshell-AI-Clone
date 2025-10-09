@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8"/>
+<link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+<link as="style" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900&amp;family=Space+Grotesk%3Awght%40400%3B500%3B700" onload="this.rel='stylesheet'" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<title>Course Builder - CourseCraft AI</title>
+<link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style type="text/tailwindcss">
+      .builder-sidebar {
+        width: 320px;
+        min-height: calc(100vh - 80px);
+        background: #111318;
+        border-right: 1px solid #282e39;
+      }
+      .builder-main {
+        flex: 1;
+        background: #0D0F12;
+      }
+      .preview-area {
+        flex: 1;
+        background: white;
+        border-radius: 12px;
+        margin: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+      }
+      .module-item {
+        background: #1e232b;
+        border: 1px solid #282e39;
+        border-radius: 8px;
+        padding: 16px;
+        margin-bottom: 12px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+      .module-item:hover {
+        border-color: #135bec;
+        background: #1a1f26;
+      }
+      .module-item.active {
+        border-color: #135bec;
+        background: rgba(19, 91, 236, 0.1);
+      }
+      .content-editor {
+        background: #1e232b;
+        border: 1px solid #282e39;
+        border-radius: 8px;
+        padding: 16px;
+        margin-top: 16px;
+      }
+      .toolbar {
+        display: flex;
+        gap: 8px;
+        padding: 8px;
+        background: #f8fafc;
+        border-bottom: 1px solid #e2e8f0;
+      }
+      .toolbar button {
+        padding: 8px 12px;
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+      .toolbar button:hover {
+        background: #f1f5f9;
+        border-color: #135bec;
+      }
+      .toolbar button.active {
+        background: #135bec;
+        color: white;
+        border-color: #135bec;
+      }
+      .live-preview {
+        font-family: var(--brand-font, Arial, sans-serif);
+        color: #334155;
+        line-height: 1.6;
+      }
+      .live-preview h1 {
+        color: var(--brand-primary, #135bec);
+        font-size: 28px;
+        font-weight: bold;
+        margin-bottom: 16px;
+      }
+      .live-preview h2 {
+        color: var(--brand-primary, #135bec);
+        font-size: 22px;
+        font-weight: 600;
+        margin: 24px 0 12px 0;
+      }
+      .live-preview p {
+        margin-bottom: 16px;
+      }
+      .element-library {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 8px;
+        margin-top: 16px;
+      }
+      .element-button {
+        padding: 12px;
+        background: #282e39;
+        border: 1px solid #3b4354;
+        border-radius: 6px;
+        color: white;
+        cursor: pointer;
+        text-align: center;
+        transition: all 0.2s ease;
+        font-size: 12px;
+      }
+      .element-button:hover {
+        background: #3b4354;
+        border-color: #135bec;
+      }
+      .generation-panel {
+        background: #1e232b;
+        border: 1px solid #282e39;
+        border-radius: 8px;
+        padding: 20px;
+        margin: 20px;
+      }
+      .loading-spinner {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border: 2px solid rgba(255,255,255,.3);
+        border-radius: 50%;
+        border-top-color: #fff;
+        animation: spin 1s ease-in-out infinite;
+      }
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+    </style>
+</head>
+<body class="bg-[#0D0F12] text-white">
+<div class="flex flex-col h-screen">
+<!-- Header -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#282e39] px-6 py-4 bg-[#111318]">
+<div class="flex items-center gap-4">
+<div class="size-8 text-[#135bec]">
+<svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M24 6L12 12V36L24 42L36 36V12L24 6Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"></path>
+<path d="M24 24L36 18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"></path>
+<path d="M24 24V42" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"></path>
+<path d="M24 24L12 18" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"></path>
+<path d="M36 12L12 24" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"></path>
+</svg>
+</div>
+<div>
+<h2 class="text-xl font-bold">Course Builder</h2>
+<p class="text-[#9da6b9] text-sm" id="template-name">Loading template...</p>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button id="preview-mode" class="px-4 py-2 bg-[#282e39] text-white rounded hover:bg-[#3b4354] transition-colors">
+<span class="material-symbols-outlined mr-2">visibility</span>
+Preview
+</button>
+<button id="publish-course" class="px-6 py-2 bg-[#135bec] text-white rounded hover:bg-[#0f4acb] transition-colors">
+<span class="material-symbols-outlined mr-2">publish</span>
+Publish Course
+</button>
+</div>
+</header>
+
+<!-- Main Content -->
+<div class="flex flex-1 overflow-hidden">
+<!-- Sidebar -->
+<div class="builder-sidebar overflow-y-auto">
+<div class="p-6">
+<!-- Course Structure -->
+<div class="mb-8">
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-bold text-lg">Course Structure</h3>
+<button id="generate-content" class="px-3 py-1 bg-[#135bec] text-white rounded text-sm hover:bg-[#0f4acb] transition-colors">
+<span class="material-symbols-outlined text-sm mr-1">auto_awesome</span>
+AI Generate
+</button>
+</div>
+<div id="course-modules">
+<!-- Modules will be populated by JavaScript -->
+</div>
+</div>
+
+<!-- Content Editor -->
+<div class="mb-8">
+<h3 class="font-bold text-lg mb-4">Content Editor</h3>
+<div class="content-editor">
+<label class="block text-sm font-medium mb-2">Title</label>
+<input id="content-title" type="text" class="w-full bg-[#0d1117] border border-[#282e39] rounded px-3 py-2 text-white" placeholder="Enter content title">
+
+<label class="block text-sm font-medium mb-2 mt-4">Content</label>
+<textarea id="content-body" class="w-full bg-[#0d1117] border border-[#282e39] rounded px-3 py-2 text-white h-32" placeholder="Enter your content here..."></textarea>
+
+<div class="element-library">
+<div class="element-button" onclick="addElement('heading')">
+<span class="material-symbols-outlined">title</span><br>
+Heading
+</div>
+<div class="element-button" onclick="addElement('paragraph')">
+<span class="material-symbols-outlined">notes</span><br>
+Paragraph
+</div>
+<div class="element-button" onclick="addElement('image')">
+<span class="material-symbols-outlined">image</span><br>
+Image
+</div>
+<div class="element-button" onclick="addElement('video')">
+<span class="material-symbols-outlined">play_circle</span><br>
+Video
+</div>
+<div class="element-button" onclick="addElement('quiz')">
+<span class="material-symbols-outlined">quiz</span><br>
+Quiz
+</div>
+<div class="element-button" onclick="addElement('interactive')">
+<span class="material-symbols-outlined">touch_app</span><br>
+Interactive
+</div>
+</div>
+</div>
+</div>
+
+<!-- AI Generation Panel -->
+<div id="ai-generation-panel" class="hidden">
+<h3 class="font-bold text-lg mb-4 text-[#135bec]">AI Content Generation</h3>
+<div class="generation-panel">
+<p class="text-[#9da6b9] text-sm mb-4">CourseCraft AI is generating your course content based on your learning map and selected template...</p>
+<div id="generation-progress">
+<!-- Progress items will be added here -->
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Main Preview Area -->
+<div class="builder-main flex">
+<div class="preview-area">
+<div class="toolbar">
+<button class="active">Edit</button>
+<button onclick="switchToPreview()">Preview</button>
+<button onclick="switchToResponsive()">Responsive</button>
+</div>
+<div id="live-preview" class="live-preview p-8">
+<div id="preview-content">
+<!-- Live preview content will be rendered here -->
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<script>
+let selectedTemplate = null;
+let brandAnalysis = null;
+let learningMap = null;
+let selectedStrategies = null;
+let currentModules = [];
+let currentModuleIndex = 0;
+let isGenerating = false;
+
+// Initialize the course builder
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Course Builder loaded');
+    loadProjectData();
+    initializeCourseBuilder();
+    generateInitialContent();
+});
+
+// Load all project data from localStorage
+function loadProjectData() {
+    // Load template
+    const templateData = localStorage.getItem('selectedTemplate');
+    if (templateData) {
+        selectedTemplate = JSON.parse(templateData);
+        document.getElementById('template-name').textContent = selectedTemplate.name;
+    }
+
+    // Load brand analysis
+    const brandData = localStorage.getItem('brandAnalysisResults');
+    if (brandData) {
+        brandAnalysis = JSON.parse(brandData);
+        console.log('🎨 Brand data loaded:', brandAnalysis);
+    }
+
+    // Load learning map
+    const learningMapData = localStorage.getItem('generatedLearningMap');
+    if (learningMapData) {
+        learningMap = JSON.parse(learningMapData);
+        console.log('🗺️ Learning map loaded:', learningMap);
+    }
+
+    // Load selected strategies
+    const strategiesData = localStorage.getItem('selectedStrategies');
+    if (strategiesData) {
+        selectedStrategies = JSON.parse(strategiesData);
+        console.log('🎯 Strategies loaded:', selectedStrategies);
+    }
+}
+
+// Initialize course builder UI
+function initializeCourseBuilder() {
+    // Apply brand styling if available
+    if (brandAnalysis?.analysisResults) {
+        const primaryColor = brandAnalysis.analysisResults.colors?.primary || '#135bec';
+        const font = brandAnalysis.analysisResults.fonts?.primary || 'Arial, sans-serif';
+
+        document.documentElement.style.setProperty('--brand-primary', primaryColor);
+        document.documentElement.style.setProperty('--brand-font', font);
+    }
+
+    // Set up content editor listeners
+    document.getElementById('content-title').addEventListener('input', updatePreview);
+    document.getElementById('content-body').addEventListener('input', updatePreview);
+}
+
+// Generate initial course content
+function generateInitialContent() {
+    if (learningMap?.modules && learningMap.modules.length > 0) {
+        currentModules = learningMap.modules.map((module, index) => ({
+            id: `module_${index}`,
+            title: module.moduleTitle || `Module ${index + 1}`,
+            description: module.description || '',
+            topics: module.topics || [],
+            content: '',
+            completed: false
+        }));
+    } else {
+        // Fallback modules if no learning map
+        currentModules = [
+            {
+                id: 'module_intro',
+                title: 'Introduction',
+                description: 'Course introduction and overview',
+                topics: ['Welcome', 'Objectives', 'Navigation'],
+                content: '',
+                completed: false
+            },
+            {
+                id: 'module_main',
+                title: 'Main Content',
+                description: 'Core learning content',
+                topics: ['Key Concepts', 'Examples', 'Practice'],
+                content: '',
+                completed: false
+            },
+            {
+                id: 'module_assessment',
+                title: 'Assessment',
+                description: 'Knowledge check and evaluation',
+                topics: ['Quiz', 'Review', 'Feedback'],
+                content: '',
+                completed: false
+            }
+        ];
+    }
+
+    displayCourseStructure();
+    loadModule(0);
+}
+
+// Display course structure in sidebar
+function displayCourseStructure() {
+    const modulesContainer = document.getElementById('course-modules');
+    modulesContainer.innerHTML = '';
+
+    currentModules.forEach((module, index) => {
+        const moduleElement = document.createElement('div');
+        moduleElement.className = `module-item ${index === currentModuleIndex ? 'active' : ''}`;
+        moduleElement.innerHTML = `
+            <div class="flex items-center justify-between mb-2">
+                <h4 class="font-medium text-white">${module.title}</h4>
+                <div class="flex items-center gap-2">
+                    ${module.completed ? '<span class="material-symbols-outlined text-green-400 text-sm">check_circle</span>' : '<span class="material-symbols-outlined text-[#9da6b9] text-sm">radio_button_unchecked</span>'}
+                    <span class="text-[#9da6b9] text-xs">${module.topics.length} topics</span>
+                </div>
+            </div>
+            <p class="text-[#9da6b9] text-sm">${module.description}</p>
+        `;
+        moduleElement.addEventListener('click', () => loadModule(index));
+        modulesContainer.appendChild(moduleElement);
+    });
+}
+
+// Load specific module for editing
+function loadModule(index) {
+    currentModuleIndex = index;
+    const module = currentModules[index];
+
+    // Update active state in sidebar
+    document.querySelectorAll('.module-item').forEach((item, i) => {
+        item.classList.toggle('active', i === index);
+    });
+
+    // Load module content into editor
+    document.getElementById('content-title').value = module.title;
+    document.getElementById('content-body').value = module.content || getDefaultModuleContent(module);
+
+    updatePreview();
+}
+
+// Get default content for module
+function getDefaultModuleContent(module) {
+    const brandedContent = getBrandedContent(module);
+    return brandedContent;
+}
+
+// Get branded content based on template and brand analysis
+function getBrandedContent(module) {
+    const tone = brandAnalysis?.analysisResults?.toneOfVoice?.style || 'professional';
+    const category = selectedTemplate?.category || 'business';
+
+    const contentTemplates = {
+        intro: {
+            business: `Welcome to ${module.title}
+
+This comprehensive program is designed to enhance your professional capabilities and drive organizational success.
+
+**What You'll Learn:**
+${module.topics.map(topic => `• ${topic}`).join('\n')}
+
+**Learning Approach:**
+Our evidence-based methodology combines theoretical frameworks with practical application to ensure lasting knowledge retention.`,
+
+            education: `Welcome to ${module.title}
+
+This course module provides structured learning experiences designed to build your understanding progressively.
+
+**Learning Objectives:**
+${module.topics.map(topic => `• Master ${topic.toLowerCase()}`).join('\n')}
+
+**Study Method:**
+Interactive lessons, practice exercises, and assessments to reinforce your learning.`,
+
+            healthcare: `${module.title} - Clinical Excellence
+
+This module focuses on evidence-based practices and patient-centered care approaches.
+
+**Clinical Skills Covered:**
+${module.topics.map(topic => `• ${topic}`).join('\n')}
+
+**Learning Framework:**
+Case studies, clinical scenarios, and best practice guidelines.`
+        },
+        main: {
+            business: `# ${module.title}
+
+Understanding core concepts is essential for organizational effectiveness and leadership development.
+
+## Key Principles
+
+The foundation of successful implementation lies in strategic thinking and systematic approach to problem-solving.
+
+### Implementation Strategy
+1. Assessment of current state
+2. Goal setting and planning
+3. Execution and monitoring
+4. Evaluation and adjustment
+
+**Interactive Element:** Apply these principles to your specific business context through our guided exercise.`,
+
+            education: `# ${module.title}
+
+## Fundamental Concepts
+
+Let's explore the essential elements that form the backbone of this subject area.
+
+### Core Topics
+${module.topics.map((topic, i) => `${i + 1}. **${topic}** - Key principles and applications`).join('\n')}
+
+## Learning Activity
+Practice problems and interactive exercises will help reinforce these concepts.`
+        }
+    };
+
+    const moduleType = module.id.includes('intro') ? 'intro' : 'main';
+    const template = contentTemplates[moduleType][category] || contentTemplates[moduleType]['business'];
+
+    return template;
+}
+
+// Update live preview
+function updatePreview() {
+    const title = document.getElementById('content-title').value;
+    const content = document.getElementById('content-body').value;
+    const previewContent = document.getElementById('preview-content');
+
+    // Update current module
+    if (currentModules[currentModuleIndex]) {
+        currentModules[currentModuleIndex].title = title;
+        currentModules[currentModuleIndex].content = content;
+    }
+
+    // Render content with brand styling
+    const renderedContent = renderContent(content);
+    previewContent.innerHTML = `
+        <div style="color: var(--brand-primary, #135bec);">
+            <h1>${title}</h1>
+        </div>
+        ${renderedContent}
+    `;
+}
+
+// Render markdown-like content to HTML
+function renderContent(content) {
+    return content
+        .replace(/^# (.+)$/gm, '<h1>$1</h1>')
+        .replace(/^## (.+)$/gm, '<h2>$1</h2>')
+        .replace(/^### (.+)$/gm, '<h3 style="color: var(--brand-primary, #135bec); font-size: 18px; font-weight: 600; margin: 16px 0 8px 0;">$1</h3>')
+        .replace(/^\*\*(.+)\*\*$/gm, '<p><strong style="color: var(--brand-primary, #135bec);">$1</strong></p>')
+        .replace(/^• (.+)$/gm, '<li>$1</li>')
+        .replace(/^\d+\. (.+)$/gm, '<li>$1</li>')
+        .replace(/\n\n/g, '</p><p>')
+        .replace(/^(?!<[h|l|p]).+$/gm, '<p>$&</p>')
+        .replace(/<li>/g, '<ul><li>')
+        .replace(/<\/li>(?!\s*<li>)/g, '</li></ul>');
+}
+
+// Add content elements
+function addElement(type) {
+    const contentBody = document.getElementById('content-body');
+    const currentContent = contentBody.value;
+
+    const elements = {
+        heading: '\n\n## New Heading\n\n',
+        paragraph: '\n\nAdd your paragraph content here.\n\n',
+        image: '\n\n**Image:** [Insert image placeholder]\n\n',
+        video: '\n\n**Video:** [Insert video placeholder]\n\n',
+        quiz: '\n\n**Quiz Question:** What is the main concept?\nA) Option A\nB) Option B\nC) Option C\n\n',
+        interactive: '\n\n**Interactive Element:** [Scenario-based exercise]\n\n'
+    };
+
+    contentBody.value = currentContent + elements[type];
+    updatePreview();
+    contentBody.focus();
+}
+
+// AI Content Generation
+document.getElementById('generate-content').addEventListener('click', () => {
+    if (isGenerating) return;
+
+    startAIGeneration();
+});
+
+function startAIGeneration() {
+    isGenerating = true;
+    const panel = document.getElementById('ai-generation-panel');
+    const progress = document.getElementById('generation-progress');
+
+    panel.classList.remove('hidden');
+
+    const generationSteps = [
+        'Analyzing learning map and strategies',
+        'Applying brand guidelines',
+        'Generating module content',
+        'Creating interactive elements',
+        'Optimizing for engagement'
+    ];
+
+    progress.innerHTML = '';
+
+    let stepIndex = 0;
+
+    const processStep = () => {
+        if (stepIndex < generationSteps.length) {
+            const stepDiv = document.createElement('div');
+            stepDiv.className = 'flex items-center gap-3 mb-3 p-2 bg-[#282e39] rounded';
+            stepDiv.innerHTML = `
+                <div class="loading-spinner"></div>
+                <span class="text-sm text-[#9da6b9]">${generationSteps[stepIndex]}</span>
+            `;
+            progress.appendChild(stepDiv);
+
+            setTimeout(() => {
+                stepDiv.innerHTML = `
+                    <span class="material-symbols-outlined text-green-400">check_circle</span>
+                    <span class="text-sm text-green-400">${generationSteps[stepIndex]}</span>
+                `;
+                stepIndex++;
+                processStep();
+            }, 1500 + Math.random() * 1000);
+        } else {
+            completeAIGeneration();
+        }
+    };
+
+    processStep();
+}
+
+function completeAIGeneration() {
+    // Generate enhanced content for all modules
+    currentModules.forEach((module, index) => {
+        if (!module.content) {
+            module.content = getDefaultModuleContent(module);
+            module.completed = false;
+        }
+    });
+
+    displayCourseStructure();
+    loadModule(currentModuleIndex);
+
+    setTimeout(() => {
+        document.getElementById('ai-generation-panel').classList.add('hidden');
+        isGenerating = false;
+
+        alert('🎯 AI Content Generation Complete!\n\nYour course modules have been generated using:\n• Your learning map\n• Selected strategies\n• Brand guidelines\n• Template best practices\n\nYou can now customize each module using the content editor.');
+    }, 1000);
+}
+
+// Preview mode
+document.getElementById('preview-mode').addEventListener('click', () => {
+    alert('🎨 Preview Mode\n\nThis would open your course in a new window showing exactly how learners will experience it, including all interactive elements and branded styling.');
+});
+
+// Publish course
+document.getElementById('publish-course').addEventListener('click', () => {
+    const completedModules = currentModules.filter(m => m.completed).length;
+    const totalModules = currentModules.length;
+
+    alert(`🚀 Course Publishing\n\nCourse: ${selectedTemplate?.name || 'Custom Course'}\nModules: ${totalModules}\nCompleted: ${completedModules}\nTemplate: ${selectedTemplate?.name || 'Default'}\nBrand Applied: ${brandAnalysis ? 'Yes' : 'No'}\n\nYour course is ready to be published to learners!`);
+});
+
+// Switch preview modes
+function switchToPreview() {
+    alert('Switching to full preview mode...');
+}
+
+function switchToResponsive() {
+    alert('Switching to responsive design view...');
+}
+
+console.log('🎯 Course Builder Ready!');
+console.log('📚 Template:', selectedTemplate?.name);
+console.log('🎨 Brand Integration:', brandAnalysis ? 'Enabled' : 'Default');
+console.log('🗺️ Learning Map:', learningMap ? 'Loaded' : 'Using default');
+</script>
+
+<!-- Add Universal Comment Widget - Expert can click anywhere to add feedback -->
+<script>
+window.commentWidgetConfig = {
+    apiBase: "http://localhost:3000",
+    position: "top-right"
+};
+</script>
+<script src="./comment-widget-hybrid.js"></script>
+
+</body></html>

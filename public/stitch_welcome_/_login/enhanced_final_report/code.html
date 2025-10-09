@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8"/>
+<link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+<link as="style" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900&amp;family=Space+Grotesk%3Awght%40400%3B500%3B700" onload="this.rel='stylesheet'" rel="stylesheet"/>
+<title>Stitch Design</title>
+<link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<style type="text/tailwindcss">
+      :root {
+        --primary-color: #3b82f6;--secondary-color: #ef4444;--pink-color: #ec4899;
+        --white-color: #ffffff;
+      }
+      .chart-bar {
+        transition: height 1s ease-in-out, background-color 0.5s ease;
+        animation: rise 1s ease-in-out forwards;
+      }
+      .glassmorphism {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .glowing-effect {
+        box-shadow: 0 0 10px rgba(59, 130, 246, 0.3), 0 0 20px rgba(236, 72, 153, 0.2), 0 0 30px rgba(239, 68, 68, 0.1);
+      }
+      .animated-icon {
+        transition: transform 0.3s ease-in-out;
+      }
+      .animated-icon:hover {
+        transform: scale(1.2) rotate(15deg);
+      }
+      @keyframes rise {
+        from { height: 0; }
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .fade-in-item {
+        animation: fadeIn 0.5s ease-out forwards;
+      }
+      .loading {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border: 2px solid rgba(255,255,255,.3);
+        border-radius: 50%;
+        border-top-color: #fff;
+        animation: spin 1s ease-in-out infinite;
+      }
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+      .generating {
+        animation: pulse-generate 2s infinite;
+      }
+      @keyframes pulse-generate {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.7; transform: scale(1.02); }
+      }
+    </style>
+</head>
+<body class="bg-[#111318]" style='font-family: "Space Grotesk", "Noto Sans", sans-serif;'>
+<div class="relative flex size-full min-h-screen flex-col dark group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#282e39] px-10 py-3">
+<div class="flex items-center gap-4 text-white">
+<svg class="size-8 text-[var(--primary-color)]" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_6_543)">
+<path d="M42.1739 20.1739L27.8261 5.82609C29.1366 7.13663 28.3989 10.1876 26.2002 13.7654C24.8538 15.9564 22.9595 18.3449 20.6522 20.6522C18.3449 22.9595 15.9564 24.8538 13.7654 26.2002C10.1876 28.3989 7.13663 29.1366 5.82609 27.8261L20.1739 42.1739C21.4845 43.4845 24.5355 42.7467 28.1133 40.548C30.3042 39.2016 32.6927 37.3073 35 35C37.3073 32.6927 39.2016 30.3042 40.548 28.1133C42.7467 24.5355 43.4845 21.4845 42.1739 20.1739Z" fill="currentColor"></path>
+<path clip-rule="evenodd" d="M7.24189 26.4066C7.31369 26.4411 7.64204 26.5637 8.52504 26.3738C9.59462 26.1438 11.0343 25.5311 12.7183 24.4963C14.7583 23.2426 17.0256 21.4503 19.238 19.238C21.4503 17.0256 23.2426 14.7583 24.4963 12.7183C25.5311 11.0343 26.1438 9.59463 26.3738 8.52504C26.5637 7.64204 26.4411 7.31369 26.4066 7.24189C26.345 7.21246 26.143 7.14535 25.6664 7.1918C24.9745 7.25925 23.9954 7.5498 22.7699 8.14278C20.3369 9.32007 17.3369 11.4915 14.4142 14.4142C11.4915 17.3369 9.32007 20.3369 8.14278 22.7699C7.5498 23.9954 7.25925 24.9745 7.1918 25.6664C7.14534 26.143 7.21246 26.345 7.24189 26.4066ZM29.9001 10.7285C29.4519 12.0322 28.7617 13.4172 27.9042 14.8126C26.465 17.1544 24.4686 19.6641 22.0664 22.0664C19.6641 24.4686 17.1544 26.465 14.8126 27.9042C13.4172 28.7617 12.0322 29.4519 10.7285 29.9001L21.5754 40.747C21.6001 40.7606 21.8995 40.931 22.8729 40.7217C23.9424 40.4916 25.3821 39.879 27.0661 38.8441C29.1062 37.5904 31.3734 35.7982 33.5858 33.5858C35.7982 31.3734 37.5904 29.1062 38.8441 27.0661C39.879 25.3821 40.4916 23.9425 40.7216 22.8729C40.931 21.8995 40.7606 21.6001 40.747 21.5754L29.9001 10.7285ZM29.2403 4.41187L43.5881 18.7597C44.9757 20.1473 44.9743 22.1235 44.6322 23.7139C44.2714 25.3919 43.4158 27.2666 42.252 29.1604C40.8128 31.5022 38.8165 34.012 36.4142 36.4142C34.012 38.8165 31.5022 40.8128 29.1604 42.252C27.2666 43.4158 25.3919 44.2714 23.7139 44.6322C22.1235 44.9743 20.1473 44.9757 18.7597 43.5881L4.41187 29.2403C3.29027 28.1187 3.08209 26.5973 3.21067 25.2783C3.34099 23.9415 3.8369 22.4852 4.54214 21.0277C5.96129 18.0948 8.43335 14.7382 11.5858 11.5858C14.7382 8.43335 18.0948 5.9613 21.0277 4.54214C22.4852 3.8369 23.9415 3.34099 25.2783 3.21067C26.5973 3.08209 28.1187 3.29028 29.2403 4.41187Z" fill="currentColor" fill-rule="evenodd"></path>
+</g>
+<defs>
+<clipPath id="clip0_6_543"><rect fill="white" height="48" width="48"></rect></clipPath>
+</defs>
+</svg>
+<h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">CourseCraft AI</h2>
+</div>
+<div class="flex flex-1 justify-end gap-2">
+<div class="flex items-center gap-2">
+<a class="text-white/80 hover:text-white transition-colors text-sm font-medium leading-normal px-4 py-2 rounded-md cursor-pointer" onclick="navigateToDashboard()">Dashboard</a>
+<a class="text-white/80 hover:text-white transition-colors text-sm font-medium leading-normal px-4 py-2 rounded-md cursor-pointer" onclick="navigateToProjects()">Projects</a>
+<a class="text-white/80 hover:text-white transition-colors text-sm font-medium leading-normal px-4 py-2 rounded-md cursor-pointer" onclick="navigateToResources()">Resources</a>
+<a class="text-white/80 hover:text-white transition-colors text-sm font-medium leading-normal px-4 py-2 rounded-md cursor-pointer" onclick="navigateToHelp()">Help</a>
+</div>
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-md h-10 w-10 bg-transparent hover:bg-[#282e39] text-white/80 hover:text-white transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCJCdqmjOYt_NEoQHe-gh9K8LQi4-lVf4etW1bswnvew4-IF6FojgA4ExTiMOEfNxPUU_6Wo83wPqKR2FlchjRrfJP_1YhveOZmeTVAUZQHhvHo0qbaGriHiMhw41WMdiOQaCGAUDfQj_SJYsmAVIqeMPG8ZJ0EsOFTOZPWyDKSQfpzpaMP91IC6ahhk-X9Lr7zYkrZDiGYOcjG4sBjhp_f9NmA-urHa2q5zfktR1kTuAUw2wa0WZPUS3nyEfsPYlxTcCCYIMsb2_I");'></div>
+</div>
+</header>
+<main class="px-10 md:px-20 lg:px-40 flex flex-1 justify-center py-8">
+<div class="layout-content-container flex flex-col max-w-[960px] flex-1 gap-8">
+<div class="flex flex-wrap justify-between items-center gap-4">
+<div class="flex flex-col gap-2">
+<h1 class="text-white tracking-tight text-4xl font-bold">Enhanced Final Report</h1>
+<p id="content-description" class="text-[#9da6b9] text-base font-normal">Comprehensive analysis and recommendations for your instructional design project.</p>
+</div>
+<div class="flex gap-2">
+<button id="download-docx-btn" class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-md h-10 px-4 bg-[#282e39] text-white text-sm font-bold leading-normal tracking-[0.015em] gap-2 hover:bg-[#3b4354] transition-colors" onclick="downloadDOCX()">
+<span class="material-symbols-outlined text-base">download</span>
+<span id="docx-text" class="truncate">Download DOCX</span>
+</button>
+<button id="download-pdf-btn" class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-md h-10 px-4 bg-gradient-to-r from-[var(--pink-color)] to-[var(--primary-color)] text-white text-sm font-bold leading-normal tracking-[0.015em] gap-2 hover:opacity-90 transition-opacity glowing-effect" onclick="downloadPDF()">
+<span class="material-symbols-outlined text-base">download</span>
+<span id="pdf-text" class="truncate">Download PDF</span>
+</button>
+</div>
+</div>
+
+<!-- Overview Section -->
+<section id="overview-section">
+<h2 class="text-white text-2xl font-bold leading-tight tracking-tight mb-4">Overview</h2>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="metrics-grid">
+<!-- Dynamic metrics will be inserted here -->
+</div>
+</section>
+
+<!-- Bloom's Taxonomy Section -->
+<section id="taxonomy-section">
+<h2 class="text-white text-2xl font-bold leading-tight tracking-tight mb-4">Bloom's Taxonomy Analysis</h2>
+<div class="flex flex-col lg:flex-row gap-4">
+<div class="flex-1 flex-col gap-4 rounded-lg p-6 glassmorphism glowing-effect">
+<p class="text-white text-base font-medium leading-normal mb-6">Distribution Across Cognitive Levels</p>
+<div id="bloom-chart" class="grid min-h-[240px] grid-flow-col gap-6 grid-rows-[1fr_auto] items-end justify-items-center px-3">
+<!-- Dynamic chart will be inserted here -->
+</div>
+</div>
+<div class="flex-1 overflow-hidden rounded-lg glassmorphism glowing-effect">
+<table class="w-full">
+<thead class="bg-white/10">
+<tr>
+<th class="px-4 py-3 text-left text-white text-sm font-medium">Cognitive Level</th>
+<th class="px-4 py-3 text-left text-white text-sm font-medium">Distribution</th>
+<th class="px-4 py-3 text-right text-white text-sm font-medium">Actions</th>
+</tr>
+</thead>
+<tbody id="taxonomy-table">
+<!-- Dynamic taxonomy data will be inserted here -->
+</tbody>
+</table>
+</div>
+</div>
+</section>
+
+<!-- Gap Analysis Section -->
+<section id="gap-section">
+<h2 class="text-white text-2xl font-bold leading-tight tracking-tight mb-4">Gap Analysis</h2>
+<div class="flex flex-col gap-3" id="gaps-container">
+<!-- Dynamic gap analysis will be inserted here -->
+</div>
+</section>
+
+<!-- Strategy & Recommendations Section -->
+<section id="strategy-section">
+<h2 class="text-white text-2xl font-bold leading-tight tracking-tight mb-4">Strategy &amp; Recommendations</h2>
+<div class="rounded-lg p-6 glassmorphism glowing-effect">
+<p id="strategy-summary" class="text-white/90 text-base leading-relaxed mb-6">
+<!-- Dynamic strategy summary will be inserted here -->
+</p>
+<div class="flex flex-col gap-4" id="recommendations-container">
+<!-- Dynamic recommendations will be inserted here -->
+</div>
+</div>
+</section>
+
+<!-- Next Steps Section -->
+<section id="next-steps" class="mt-8 bg-green-900/20 border border-green-400 rounded-2xl p-8 text-center hidden">
+<div class="mb-4">
+<span class="material-symbols-outlined text-6xl text-green-400">task_alt</span>
+</div>
+<h3 class="text-2xl font-bold text-white mb-2">Analysis Complete!</h3>
+<p class="text-[#9da6b9] mb-6">Your enhanced final report is ready. Proceed to gather user feedback.</p>
+<button id="proceed-feedback" class="bg-[var(--primary-color)] hover:bg-blue-500 transition-all duration-300 text-white font-bold py-3 px-8 rounded-lg text-lg shadow-[0_0_20px_rgba(59,130,246,0.4)] hover:shadow-[0_0_30px_rgba(59,130,246,0.6)]" onclick="proceedToUserFeedback()">
+Proceed to User Feedback
+</button>
+</section>
+</div>
+</main>
+</div>
+</div>
+
+<script>
+// Global variables
+let uploadedFiles = [];
+let reportData = {};
+let bloomTaxonomyData = {};
+let gapAnalysisData = {};
+let strategyData = {};
+let isGeneratingReport = false;
+
+// Initialize the page
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Enhanced Final Report page loaded');
+    initializePage();
+});
+
+// Initialize page with data from all previous steps
+function initializePage() {
+    // Load all data from previous steps
+    loadDataFromPreviousSteps();
+    
+    // Generate contextual report based on uploaded content
+    generateContextualReport();
+    
+    // Show next steps section
+    setTimeout(() => {
+        document.getElementById('next-steps').classList.remove('hidden');
+    }, 2000);
+    
+    console.log('Page initialized successfully');
+}
+
+// Load data from previous steps
+function loadDataFromPreviousSteps() {
+    const uploadedFilesData = localStorage.getItem('uploadedFiles');
+    const contentAnalysisData = localStorage.getItem('contentAnalysisData');
+    const gapAnalysisResults = localStorage.getItem('finalGapAnalysisResults');
+    const brandAnalysisResults = localStorage.getItem('brandAnalysisResults');
+    const smeResults = localStorage.getItem('smeInterviewResults');
+    
+    if (uploadedFilesData) {
+        uploadedFiles = JSON.parse(uploadedFilesData);
+        console.log('Loaded uploaded files:', uploadedFiles);
+    }
+    
+    if (contentAnalysisData) {
+        const contentData = JSON.parse(contentAnalysisData);
+        console.log('Loaded content analysis data:', contentData);
+    }
+    
+    if (gapAnalysisResults) {
+        gapAnalysisData = JSON.parse(gapAnalysisResults);
+        console.log('Loaded gap analysis data:', gapAnalysisData);
+    }
+    
+    // Update content description
+    updateContentDescription();
+}
+
+// Update content description based on uploaded files
+function updateContentDescription() {
+    const descriptionElement = document.getElementById('content-description');
+    
+    if (uploadedFiles && uploadedFiles.length > 0) {
+        const fileTypes = uploadedFiles.map(file => getFileType(file.name));
+        const uniqueTypes = [...new Set(fileTypes)];
+        
+        descriptionElement.textContent = `Comprehensive analysis and recommendations based on your ${uploadedFiles.length} uploaded file(s): ${uniqueTypes.join(', ')} content.`;
+    } else {
+        descriptionElement.textContent = 'Comprehensive analysis and recommendations for your instructional design project.';
+    }
+}
+
+// Get file type from filename
+function getFileType(filename) {
+    const extension = filename.toLowerCase().split('.').pop();
+    if (['pdf'].includes(extension)) return 'PDF';
+    if (['ppt', 'pptx'].includes(extension)) return 'Presentation';
+    if (['doc', 'docx'].includes(extension)) return 'Document';
+    if (['mp4', 'mov'].includes(extension)) return 'Video';
+    if (['mp3', 'wav'].includes(extension)) return 'Audio';
+    return 'Document';
+}
+
+// Generate contextual report based on uploaded content
+async function generateContextualReport() {
+    console.log('🧠 Generating AI-powered comprehensive report...');
+
+    // Get data from previous steps
+    const professionalAnalysisData = localStorage.getItem('professionalAnalysisResults');
+    const smeInterviewData = localStorage.getItem('smeInterviewResults');
+    const preSMEData = localStorage.getItem('preSMEAnswers');
+    const domainClassificationData = localStorage.getItem('domainClassificationResults');
+
+    if (!professionalAnalysisData) {
+        console.warn('⚠️ No analysis data found, using fallback generation');
+        generateFallbackReport();
+        return;
+    }
+
+    const analysisData = JSON.parse(professionalAnalysisData);
+    const smeData = smeInterviewData ? JSON.parse(smeInterviewData) : null;
+    const preSME = preSMEData ? JSON.parse(preSMEData) : null;
+    const domainClassification = domainClassificationData ? JSON.parse(domainClassificationData) : null;
+
+    console.log('📊 Loaded data:', {
+        analysis: analysisData.data,
+        smeResponses: smeData?.answers?.length || 0,
+        preSME: !!preSME,
+        domain: domainClassification?.domain || domainClassification?.data?.domain || analysisData.data?.domain || 'General'
+    });
+
+    // Call backend API for AI-powered report generation
+    const BACKEND_URL = 'http://localhost:3000';
+
+    try {
+        const response = await fetch(`${BACKEND_URL}/api/generate-final-report`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                content: analysisData.data?.content || '',
+                analysisData: analysisData.data || analysisData.analysis,
+                smeAnswers: smeData?.answers ? Object.values(smeData.answers) : [],
+                preSMEAnswers: preSME,
+                domainClassification: domainClassification
+            })
+        });
+
+        if (!response.ok) {
+            throw new Error(`API returned ${response.status}`);
+        }
+
+        const result = await response.json();
+        console.log('✅ AI-powered report generated:', result);
+
+        if (result.success && result.report) {
+            // Store the AI-generated report
+            aiGeneratedReport = result.report;
+
+            // Update all sections with AI-generated data
+            updateOverviewSectionWithAI(result.report);
+            updateGapAnalysisSectionWithAI(result.report.gapAnalysis);
+            updateRecommendationsSectionWithAI(result.report.keyRecommendations);
+
+            // Still generate Bloom's taxonomy and generic strategies for additional sections
+            bloomTaxonomyData = generateBloomTaxonomy({ totalFiles: uploadedFiles.length });
+            updateBloomTaxonomySection(bloomTaxonomyData);
+
+            console.log('✅ AI report integrated successfully');
+        } else {
+            throw new Error('Invalid response format');
+        }
+    } catch (error) {
+        console.error('❌ AI report generation failed:', error);
+        console.log('📋 Falling back to local generation');
+        generateFallbackReport();
+    }
+}
+
+// Fallback report generation
+function generateFallbackReport() {
+    const reportContext = {
+        uploadedFiles: uploadedFiles,
+        fileTypes: uploadedFiles.map(file => getFileType(file.name)),
+        totalFiles: uploadedFiles.length,
+        contentTypes: getContentTypes()
+    };
+
+    reportData = generateReportData(reportContext);
+    bloomTaxonomyData = generateBloomTaxonomy(reportContext);
+    const gaps = generateGapAnalysis(reportContext);
+    strategyData = generateStrategyRecommendations(reportContext);
+
+    updateOverviewSection(reportData);
+    updateBloomTaxonomySection(bloomTaxonomyData);
+    updateGapAnalysisSection(gaps);
+    updateStrategySection(strategyData);
+
+    console.log('Local report generated');
+}
+
+// Update sections with AI-generated data
+function updateOverviewSectionWithAI(aiReport) {
+    const qualityAssessment = aiReport.qualityAssessment;
+
+    // Helper function to safely extract string from object or string
+    const safeString = (value) => {
+        if (typeof value === 'string') return value;
+        if (typeof value === 'object' && value !== null) {
+            // If it's an object, try to get a meaningful string representation
+            return value.text || value.content || value.description || JSON.stringify(value);
+        }
+        return String(value || '');
+    };
+
+    const metrics = [
+        {
+            label: 'Content Clarity',
+            value: `${qualityAssessment.contentClarity.score}%`,
+            reasoning: safeString(qualityAssessment.contentClarity.reasoning)
+        },
+        {
+            label: 'Content Completeness',
+            value: `${qualityAssessment.contentCompleteness.score}%`,
+            reasoning: safeString(qualityAssessment.contentCompleteness.reasoning)
+        },
+        {
+            label: 'Engagement Potential',
+            value: `${qualityAssessment.engagementPotential.score}%`,
+            reasoning: safeString(qualityAssessment.engagementPotential.reasoning)
+        },
+        {
+            label: 'Content Currency',
+            value: `${qualityAssessment.contentCurrency.score}%`,
+            reasoning: safeString(qualityAssessment.contentCurrency.reasoning)
+        },
+        {
+            label: 'Overall Quality',
+            value: `${aiReport.executiveSummary.overallQualityScore}%`,
+            reasoning: safeString(aiReport.executiveSummary.assessment)
+        },
+        {
+            label: 'E-Learning Suitability',
+            value: `${aiReport.eLearningSuitabilityAnalysis.score}%`,
+            reasoning: safeString(aiReport.eLearningSuitabilityAnalysis.reasoning)
+        }
+    ];
+
+    updateMetricsGrid(metrics);
+}
+
+function updateMetricsGrid(metrics) {
+    const metricsGrid = document.getElementById('metrics-grid');
+    if (!metricsGrid) return;
+
+    metricsGrid.innerHTML = metrics.map(metric => `
+        <div class="flex flex-col gap-3 rounded-lg p-4 glassmorphism hover:bg-white/10 transition-colors">
+            <div class="flex items-center justify-between">
+                <p class="text-white/80 text-sm font-medium">${metric.label}</p>
+            </div>
+            <div class="flex items-baseline gap-2">
+                <p class="text-white text-2xl font-bold">${metric.value}</p>
+            </div>
+            ${metric.reasoning ? `<p class="text-white/60 text-xs">${metric.reasoning}</p>` : ''}
+        </div>
+    `).join('');
+}
+
+function updateGapAnalysisSectionWithAI(gapAnalysis) {
+    const gapsContainer = document.getElementById('gaps-container');
+    if (!gapsContainer || !gapAnalysis || !gapAnalysis.gaps) return;
+
+    gapsContainer.innerHTML = gapAnalysis.gaps.map((gap, index) => `
+        <div class="flex gap-4 rounded-lg p-4 glassmorphism hover:bg-white/10 transition-colors fade-in-item" style="animation-delay: ${index * 0.1}s">
+            <div class="flex-1">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-[var(--secondary-color)] font-bold">${gap.category}</span>
+                </div>
+                <p class="text-white text-base font-medium mb-2">${gap.gap}</p>
+                <p class="text-white/70 text-sm mb-2"><strong>Impact:</strong> ${gap.impact}</p>
+                <p class="text-[var(--primary-color)] text-sm"><strong>Recommendation:</strong> ${gap.recommendation}</p>
+            </div>
+        </div>
+    `).join('');
+}
+
+function updateRecommendationsSectionWithAI(recommendations) {
+    const recommendationsContainer = document.getElementById('recommendations-container');
+    const strategySummary = document.getElementById('strategy-summary');
+
+    if (strategySummary && aiGeneratedReport?.expertValidationSummary) {
+        strategySummary.textContent = aiGeneratedReport.expertValidationSummary.summary;
+    }
+
+    if (!recommendationsContainer || !recommendations) return;
+
+    const priorityColors = {
+        'High': 'var(--secondary-color)',
+        'Medium': 'var(--pink-color)',
+        'Low': 'var(--primary-color)'
+    };
+
+    recommendationsContainer.innerHTML = recommendations.map((rec, index) => `
+        <div class="flex gap-4 rounded-lg p-4 glassmorphism hover:bg-white/10 transition-colors fade-in-item" style="animation-delay: ${index * 0.1}s">
+            <div class="flex-shrink-0 w-2 rounded" style="background-color: ${priorityColors[rec.priority] || 'var(--primary-color)'}"></div>
+            <div class="flex-1">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-white font-bold">${rec.recommendation}</span>
+                    <span class="px-2 py-1 rounded text-xs font-medium" style="background-color: ${priorityColors[rec.priority] || 'var(--primary-color)'}20; color: ${priorityColors[rec.priority] || 'var(--primary-color)'}">${rec.priority} Priority</span>
+                </div>
+                <p class="text-white/70 text-sm mb-2"><strong>Rationale:</strong> ${rec.rationale}</p>
+                <p class="text-[var(--primary-color)] text-sm"><strong>Expected Impact:</strong> ${rec.expectedImpact}</p>
+            </div>
+        </div>
+    `).join('');
+}
+
+// Store AI-generated report
+let aiGeneratedReport = null;
+
+// Get content types from uploaded files
+function getContentTypes() {
+    if (!uploadedFiles || uploadedFiles.length === 0) return ['general'];
+    
+    return uploadedFiles.map(file => {
+        const extension = file.name.toLowerCase().split('.').pop();
+        if (['ppt', 'pptx'].includes(extension)) return 'presentation';
+        if (['pdf', 'doc', 'docx'].includes(extension)) return 'document';
+        if (['mp4', 'mov'].includes(extension)) return 'video';
+        if (['mp3', 'wav'].includes(extension)) return 'audio';
+        return 'document';
+    });
+}
+
+// Generate report data based on content type
+function generateReportData(context) {
+    let metrics = {
+        contentQuality: 85,
+        contentCompleteness: 78,
+        readabilityScore: 72,
+        engagementLikelihood: 'Medium',
+        alignmentToObjectives: 88,
+        overallScore: 79
+    };
+    
+    // Adjust based on content type
+    if (context.contentTypes.includes('presentation')) {
+        metrics.contentQuality += 7;
+        metrics.engagementLikelihood = 'High';
+        metrics.overallScore += 6;
+    }
+    
+    if (context.contentTypes.includes('video')) {
+        metrics.engagementLikelihood = 'Very High';
+        metrics.contentQuality += 5;
+        metrics.overallScore += 8;
+    }
+    
+    if (context.totalFiles > 3) {
+        metrics.contentCompleteness += 10;
+        metrics.overallScore += 5;
+    }
+    
+    return metrics;
+}
+
+// Generate Bloom's taxonomy analysis
+function generateBloomTaxonomy(context) {
+    let taxonomy = {
+        remember: 20,
+        understand: 25,
+        apply: 20,
+        analyze: 15,
+        evaluate: 10,
+        create: 10
+    };
+    
+    // Adjust based on content type
+    if (context.contentTypes.includes('presentation')) {
+        taxonomy.understand += 5;
+        taxonomy.apply += 5;
+        taxonomy.remember -= 5;
+        taxonomy.analyze -= 5;
+    }
+    
+    if (context.contentTypes.includes('document')) {
+        taxonomy.analyze += 5;
+        taxonomy.evaluate += 5;
+        taxonomy.remember -= 5;
+        taxonomy.understand -= 5;
+    }
+    
+    if (context.contentTypes.includes('video')) {
+        taxonomy.apply += 8;
+        taxonomy.create += 7;
+        taxonomy.remember -= 8;
+        taxonomy.understand -= 7;
+    }
+    
+    return taxonomy;
+}
+
+// Generate gap analysis based on content
+function generateGapAnalysis(context) {
+    const gaps = [];
+    
+    if (!context.contentTypes.includes('video')) {
+        gaps.push({
+            title: 'Limited Visual Learning Support',
+            description: 'Content lacks video demonstrations and visual explanations.',
+            solution: 'Add instructional videos and visual aids to enhance understanding.'
+        });
+    }
+    
+    if (context.contentTypes.includes('document') && !context.contentTypes.includes('presentation')) {
+        gaps.push({
+            title: 'Lack of Interactive Elements',
+            description: 'Document-heavy content needs more interactive components.',
+            solution: 'Create interactive presentations and multimedia content.'
+        });
+    }
+    
+    gaps.push({
+        title: 'Insufficient Self-Assessment',
+        description: 'Content lacks opportunities for self-assessment and feedback.',
+        solution: 'Integrate quizzes, reflection prompts, and peer review activities.'
+    });
+    
+    return gaps;
+}
+
+// Generate strategy recommendations based on content
+function generateStrategyRecommendations(context) {
+    const strategies = [];
+    
+    // Content-specific strategies
+    if (context.contentTypes.includes('presentation')) {
+        strategies.push({
+            name: 'Microlearning Modules',
+            description: 'Break down presentation content into bite-sized learning modules for better retention.'
+        });
+    }
+    
+    if (context.contentTypes.includes('document')) {
+        strategies.push({
+            name: 'E-Learning Enhancement',
+            description: 'Transform document content into interactive e-learning experiences.'
+        });
+    }
+    
+    if (!context.contentTypes.includes('video')) {
+        strategies.push({
+            name: 'Video-Based Learning',
+            description: 'Create video content to supplement existing materials and cater to visual learners.'
+        });
+    }
+    
+    // Universal strategies
+    strategies.push({
+        name: 'Gamification',
+        description: 'Add game elements like badges, points, and leaderboards to increase engagement.'
+    });
+    
+    strategies.push({
+        name: 'Social Learning',
+        description: 'Implement peer-to-peer learning and collaborative activities.'
+    });
+    
+    strategies.push({
+        name: 'Adaptive Learning',
+        description: 'Personalize learning paths based on individual progress and performance.'
+    });
+    
+    return {
+        summary: `Based on your ${context.contentTypes.join(', ')} content, the recommended strategy focuses on enhancing interactivity, adding multimedia elements, and implementing modern learning methodologies to improve engagement and effectiveness.`,
+        strategies: strategies
+    };
+}
+
+// Update overview section
+function updateOverviewSection(data) {
+    const metricsGrid = document.getElementById('metrics-grid');
+    
+    const metrics = [
+        { label: 'Content Quality', value: `${data.contentQuality}%`, change: '+5%', positive: true },
+        { label: 'Content Completeness', value: `${data.contentCompleteness}%`, change: '+3%', positive: true },
+        { label: 'Readability Score', value: `${data.readabilityScore}/100`, change: '-2%', positive: false },
+        { label: 'Engagement Likelihood', value: data.engagementLikelihood, change: '+10%', positive: true },
+        { label: 'Alignment to Objectives', value: `${data.alignmentToObjectives}%`, change: '+5%', positive: true },
+        { label: 'Overall Score', value: `${data.overallScore}%`, change: '+7%', positive: true }
+    ];
+    
+    metricsGrid.innerHTML = '';
+    
+    metrics.forEach((metric, index) => {
+        const delay = index * 0.1;
+        const changeColor = metric.positive ? 'text-green-500' : 'text-[var(--secondary-color)]';
+        const arrow = metric.positive ? 'arrow_upward' : 'arrow_downward';
+        
+        const metricCard = document.createElement('div');
+        metricCard.className = 'flex flex-col gap-2 rounded-lg p-6 glassmorphism glowing-effect fade-in-item';
+        metricCard.style.animationDelay = `${delay}s`;
+        metricCard.innerHTML = `
+            <p class="text-white/80 text-sm font-medium">${metric.label}</p>
+            <p class="text-[var(--white-color)] tracking-light text-3xl font-bold">${metric.value}</p>
+            <p class="${changeColor} text-sm font-medium flex items-center">
+                <span class="material-symbols-outlined text-base">${arrow}</span>${metric.change}
+            </p>
+        `;
+        metricsGrid.appendChild(metricCard);
+    });
+}
+
+// Update Bloom's taxonomy section
+function updateBloomTaxonomySection(data) {
+    const chartContainer = document.getElementById('bloom-chart');
+    const tableBody = document.getElementById('taxonomy-table');
+    
+    const levels = [
+        { name: 'Remember', key: 'remember', color: 'var(--primary-color)' },
+        { name: 'Understand', key: 'understand', color: 'var(--primary-color)' },
+        { name: 'Apply', key: 'apply', color: 'var(--primary-color)' },
+        { name: 'Analyze', key: 'analyze', color: 'var(--secondary-color)' },
+        { name: 'Evaluate', key: 'evaluate', color: 'var(--secondary-color)' },
+        { name: 'Create', key: 'create', color: 'var(--secondary-color)' }
+    ];
+    
+    // Update chart
+    chartContainer.innerHTML = '';
+    levels.forEach(level => {
+        const percentage = data[level.key];
+        
+        chartContainer.innerHTML += `
+            <div class="bg-[${level.color}] w-full rounded-t-md chart-bar hover:bg-[var(--pink-color)]" style="height: ${percentage}%;"></div>
+            <p class="text-[#9da6b9] text-xs font-medium">${level.name}</p>
+        `;
+    });
+    
+    // Update table
+    tableBody.innerHTML = '';
+    levels.forEach(level => {
+        const percentage = data[level.key];
+        const row = document.createElement('tr');
+        row.className = 'border-t border-t-white/10';
+        row.innerHTML = `
+            <td class="px-4 py-3 text-white text-sm">${level.name}ing</td>
+            <td class="px-4 py-3 text-sm">
+                <div class="flex items-center gap-3">
+                    <div class="w-20 overflow-hidden rounded-full bg-white/20">
+                        <div class="h-1.5 rounded-full" style="width: ${percentage}%; background-color: ${level.color};"></div>
+                    </div>
+                    <p class="text-white text-sm font-medium">${percentage}%</p>
+                </div>
+            </td>
+            <td class="px-4 py-3 text-right">
+                <button class="text-white/60 hover:text-[var(--pink-color)] transition-colors">
+                    <span class="material-symbols-outlined text-xl animated-icon">edit</span>
+                </button>
+            </td>
+        `;
+        tableBody.appendChild(row);
+    });
+}
+
+// Update gap analysis section
+function updateGapAnalysisSection(gaps) {
+    const gapsContainer = document.getElementById('gaps-container');
+    gapsContainer.innerHTML = '';
+    
+    gaps.forEach((gap, index) => {
+        const delay = index * 0.1;
+        const gapCard = document.createElement('div');
+        gapCard.className = 'flex items-start gap-4 rounded-lg p-4 glassmorphism glowing-effect fade-in-item';
+        gapCard.style.animationDelay = `${delay}s`;
+        gapCard.innerHTML = `
+            <div class="text-[var(--secondary-color)] flex items-center justify-center rounded-full bg-[var(--secondary-color)]/20 shrink-0 size-10 animated-icon">
+                <span class="material-symbols-outlined">error</span>
+            </div>
+            <div class="flex flex-1 flex-col">
+                <h3 class="text-[var(--white-color)] text-base font-medium">${gap.title}</h3>
+                <p class="text-[#9da6b9] text-sm">${gap.description}</p>
+                <p class="text-white/80 mt-2 text-sm">
+                    <span class="font-semibold text-[var(--pink-color)]">Solution:</span> ${gap.solution}
+                </p>
+            </div>
+        `;
+        gapsContainer.appendChild(gapCard);
+    });
+}
+
+// Update strategy section
+function updateStrategySection(data) {
+    const summarySElement = document.getElementById('strategy-summary');
+    const recommendationsContainer = document.getElementById('recommendations-container');
+    
+    // Update summary
+    summarySElement.textContent = data.summary;
+    
+    // Update recommendations
+    recommendationsContainer.innerHTML = '';
+    
+    data.strategies.forEach((strategy, index) => {
+        const delay = index * 0.1;
+        const strategyCard = document.createElement('div');
+        strategyCard.className = 'flex items-start gap-4 fade-in-item';
+        strategyCard.style.animationDelay = `${delay}s`;
+        strategyCard.innerHTML = `
+            <div class="text-[var(--primary-color)] flex items-center justify-center rounded-full bg-[var(--primary-color)]/20 shrink-0 size-10 animated-icon">
+                <span class="material-symbols-outlined">lightbulb</span>
+            </div>
+            <div class="flex flex-col">
+                <h3 class="text-[var(--white-color)] text-base font-medium">${strategy.name}</h3>
+                <p class="text-[#9da6b9] text-sm">${strategy.description}</p>
+            </div>
+        `;
+        recommendationsContainer.appendChild(strategyCard);
+    });
+}
+
+// Download DOCX functionality
+function downloadDOCX() {
+    console.log('Generating DOCX report...');
+    
+    const button = document.getElementById('download-docx-btn');
+    const text = document.getElementById('docx-text');
+    
+    // Show loading state
+    button.disabled = true;
+    button.classList.add('opacity-80', 'cursor-not-allowed');
+    text.innerHTML = '<div class="loading mr-2"></div>Generating...';
+    
+    // Simulate DOCX generation (replace with actual implementation)
+    setTimeout(() => {
+        // Create comprehensive DOCX content
+        const docxContent = generateDOCXContent();
+        
+        // Here you would integrate with a library like docx.js or send to backend
+        console.log('DOCX content generated:', docxContent);
+        
+        // Restore button state
+        button.disabled = false;
+        button.classList.remove('opacity-80', 'cursor-not-allowed');
+        text.textContent = 'Download DOCX';
+        
+        // Show success message
+        alert('DOCX report generated successfully! (Integration with docx library required for actual download)');
+        
+        // Store download log
+        localStorage.setItem('docxReportGenerated', 'true');
+        localStorage.setItem('lastDocxGeneration', new Date().toISOString());
+        
+    }, 3000);
+}
+
+// Download PDF functionality
+function downloadPDF() {
+    console.log('Generating PDF report...');
+    
+    const button = document.getElementById('download-pdf-btn');
+    const text = document.getElementById('pdf-text');
+    
+    // Show loading state
+    button.disabled = true;
+    button.classList.add('opacity-80', 'cursor-not-allowed');
+    text.innerHTML = '<div class="loading mr-2"></div>Generating...';
+    
+    // Generate PDF using jsPDF
+    setTimeout(() => {
+        try {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            // Add comprehensive report content
+            generatePDFContent(doc);
+            
+            // Save PDF
+            const filename = `enhanced_final_report_${new Date().getTime()}.pdf`;
+            doc.save(filename);
+            
+            console.log(`PDF saved: ${filename}`);
+            
+        } catch (error) {
+            console.error('PDF generation failed:', error);
+            alert('PDF generation failed. Please try again.');
+        }
+        
+        // Restore button state
+        button.disabled = false;
+        button.classList.remove('opacity-80', 'cursor-not-allowed');
+        text.textContent = 'Download PDF';
+        
+        // Store download log
+        localStorage.setItem('pdfReportGenerated', 'true');
+        localStorage.setItem('lastPdfGeneration', new Date().toISOString());
+        
+    }, 2000);
+}
+
+// Generate DOCX content
+function generateDOCXContent() {
+    return {
+        title: 'Enhanced Final Report',
+        sections: [
+            {
+                title: 'Executive Summary',
+                content: `This comprehensive analysis is based on your ${uploadedFiles.length} uploaded file(s) and provides detailed insights into content quality, Bloom's taxonomy distribution, gap analysis, and strategic recommendations.`
+            },
+            {
+                title: 'Content Overview',
+                metrics: reportData
+            },
+            {
+                title: 'Bloom\'s Taxonomy Analysis',
+                taxonomy: bloomTaxonomyData
+            },
+            {
+                title: 'Gap Analysis',
+                gaps: document.getElementById('gaps-container').children.length
+            },
+            {
+                title: 'Strategy & Recommendations',
+                strategies: strategyData.strategies
+            }
+        ],
+        generatedAt: new Date().toISOString(),
+        fileTypes: uploadedFiles.map(f => getFileType(f.name))
+    };
+}
+
+// Generate PDF content
+function generatePDFContent(doc) {
+    let yPosition = 30;
+    
+    // Title
+    doc.setFontSize(20);
+    doc.text('Enhanced Final Report', 20, yPosition);
+    yPosition += 20;
+    
+    // Generated date and content info
+    doc.setFontSize(12);
+    doc.text(`Generated: ${new Date().toLocaleDateString()}`, 20, yPosition);
+    yPosition += 10;
+    
+    if (uploadedFiles.length > 0) {
+        doc.text(`Based on ${uploadedFiles.length} uploaded file(s): ${uploadedFiles.map(f => getFileType(f.name)).join(', ')}`, 20, yPosition);
+        yPosition += 20;
+    }
+    
+    // Overview Section
+    doc.setFontSize(16);
+    doc.text('Content Overview', 20, yPosition);
+    yPosition += 15;
+    
+    doc.setFontSize(12);
+    doc.text(`Content Quality: ${reportData.contentQuality}%`, 20, yPosition);
+    yPosition += 8;
+    doc.text(`Content Completeness: ${reportData.contentCompleteness}%`, 20, yPosition);
+    yPosition += 8;
+    doc.text(`Overall Score: ${reportData.overallScore}%`, 20, yPosition);
+    yPosition += 20;
+    
+    // Bloom's Taxonomy Section
+    doc.setFontSize(16);
+    doc.text('Bloom\'s Taxonomy Analysis', 20, yPosition);
+    yPosition += 15;
+    
+    doc.setFontSize(12);
+    Object.entries(bloomTaxonomyData).forEach(([level, percentage]) => {
+        doc.text(`${level.charAt(0).toUpperCase() + level.slice(1)}: ${percentage}%`, 20, yPosition);
+        yPosition += 8;
+    });
+    yPosition += 15;
+    
+    // Strategy Recommendations
+    doc.setFontSize(16);
+    doc.text('Strategy & Recommendations', 20, yPosition);
+    yPosition += 15;
+    
+    doc.setFontSize(12);
+    doc.text(strategyData.summary, 20, yPosition, { maxWidth: 170 });
+    yPosition += 30;
+    
+    strategyData.strategies.forEach((strategy, index) => {
+        if (yPosition > 250) {
+            doc.addPage();
+            yPosition = 30;
+        }
+        
+        doc.setFont(undefined, 'bold');
+        doc.text(`${index + 1}. ${strategy.name}`, 20, yPosition);
+        yPosition += 8;
+        
+        doc.setFont(undefined, 'normal');
+        doc.text(strategy.description, 30, yPosition, { maxWidth: 160 });
+        yPosition += 15;
+    });
+}
+
+// Proceed to user feedback
+function proceedToUserFeedback() {
+    console.log('Proceeding to User Feedback and Iteration...');
+    
+    // Store completion data
+    localStorage.setItem('finalReportCompleted', 'true');
+    localStorage.setItem('reportCompletionTime', new Date().toISOString());
+    
+    // Navigate to user feedback page
+    navigateToUserFeedback();
+}
+
+// Navigate to user feedback and iteration
+function navigateToUserFeedback() {
+    const targetPath = '../user_feedback_&_rating/code.html';
+    
+    try {
+        console.log(`Navigating to: ${targetPath}`);
+        window.location.href = targetPath;
+        
+        // Fallback navigation
+        setTimeout(() => {
+            if (window.location.href.indexOf('user_feedback_and_iteration') === -1) {
+                console.warn('Navigation may have failed, trying alternative method');
+                window.location.replace(targetPath);
+            }
+        }, 2000);
+        
+    } catch (error) {
+        console.error('Navigation failed:', error);
+        alert(`Navigation failed. Please manually navigate to: ${targetPath}\n\nError: ${error.message}`);
+    }
+}
+
+// Header navigation functions
+function navigateToDashboard() {
+    window.location.href = '../Dashboard_Landing_Pages/code.html';
+}
+
+function navigateToProjects() {
+    window.location.href = '../projects/code.html';
+}
+
+function navigateToResources() {
+    window.location.href = '../resources/code.html';
+}
+
+function navigateToHelp() {
+    window.location.href = '../help/code.html';
+}
+
+// Error handling
+window.addEventListener('error', function(event) {
+    console.error('Uncaught error:', event.error);
+});
+
+console.log('Enhanced Final Report script loaded successfully');
+</script>
+
+<!-- Add Universal Comment Widget - Expert can click anywhere to add feedback -->
+<script>
+window.commentWidgetConfig = {
+    apiBase: "http://localhost:3000",
+    position: "top-right"
+};
+</script>
+<script src="./comment-widget-hybrid.js"></script>
+
+</body></html>

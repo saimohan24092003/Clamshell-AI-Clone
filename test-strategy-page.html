@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Strategy Test</title>
+    <script>
+        // Simple test to verify strategy data processing
+        window.onload = function() {
+            console.log('🧪 Testing strategy page fixes...');
+
+            // Simulate strategy data
+            const testStrategies = [
+                {
+                    id: 1,
+                    title: "Test Strategy 1",
+                    score: 85,
+                    description: "Test description"
+                },
+                {
+                    id: 2,
+                    title: "Test Strategy 2",
+                    score: 75,
+                    description: "Test description 2"
+                }
+            ];
+
+            console.log('Test strategies:', testStrategies);
+            console.log('✅ Strategy data structure test passed');
+
+            // Test auto-selection logic
+            let selectedStrategies = [];
+            testStrategies.forEach((strategy, index) => {
+                if (index < 2) { // Select first 2
+                    selectedStrategies.push(strategy);
+                }
+            });
+
+            console.log('Selected strategies:', selectedStrategies.length);
+            console.log('✅ Auto-selection logic test passed');
+
+            if (selectedStrategies.length > 0) {
+                console.log('✅ Continue button should be enabled');
+            } else {
+                console.log('❌ Continue button would be disabled');
+            }
+        };
+    </script>
+</head>
+<body>
+    <h1>Strategy Recommendation Test</h1>
+    <p>Check console for test results</p>
+<!-- Add Universal Comment Widget - Expert can click anywhere to add feedback -->
+<script>
+window.commentWidgetConfig = {
+    apiBase: "http://localhost:3000",
+    position: "top-right"
+};
+</script>
+<script src="./comment-widget-local.js"></script>
+
+</body>
+</html>

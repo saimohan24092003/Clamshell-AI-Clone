@@ -1,0 +1,1988 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+<link as="style" href="https://fonts.googleapis.com/css2?display=swap&family=Noto+Sans:wght@400;500;700;900&family=Space+Grotesk:wght@400;500;700" onload="this.rel='stylesheet'" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<title>CourseCraft AI - Comprehensive Learning Map</title>
+<link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- ExcelJS for professional Excel with colors -->
+<script src="https://cdn.jsdelivr.net/npm/exceljs@4.3.0/dist/exceljs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+<style type="text/tailwindcss">
+    :root {
+      --primary-color: #3713ec;
+      --red-glow: #ff4d4d;
+      --blue-glow: #4d94ff;
+      --white-glow: #ffffff;
+      --success-color: #22c55e;
+      --warning-color: #f59e0b;
+      --error-color: #ef4444;
+      --ai-purple: #8b5cf6;
+      --ai-teal: #14b8a6;
+      --gradient-primary: linear-gradient(135deg, var(--ai-purple) 0%, var(--blue-glow) 100%);
+    }
+    
+    /* Learning Map Styling */
+    .learning-map-panel {
+        background: linear-gradient(135deg, #1a1823 0%, #2b2839 100%);
+        border: 2px solid rgba(139, 92, 246, 0.4);
+        border-radius: 24px;
+        padding: 32px;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .learning-map-panel::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 3px;
+        background: linear-gradient(90deg, var(--ai-purple), var(--blue-glow), var(--ai-teal));
+    }
+
+    /* PROFESSIONAL LEARNING MAP FORMAT - Matching Reference Images */
+    .professional-learning-map {
+        background: white;
+        color: #000;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+
+    .learning-map-header-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+        background: white;
+    }
+
+    .learning-map-header-table td {
+        padding: 8px 12px;
+        border: 1px solid #ccc;
+    }
+
+    .header-label-cell {
+        background-color: #D3D3D3;
+        color: #000;
+        font-weight: bold;
+        width: 200px;
+    }
+
+    .header-value-cell {
+        background-color: #fff;
+        color: #000;
+    }
+
+    .header-value-cell.learner-persona-highlight {
+        background-color: #FFFF00;
+    }
+
+    .module-header-row {
+        background-color: #FFFF00;
+        font-weight: bold;
+        font-size: 1.1rem;
+    }
+
+    .module-story-row {
+        background-color: #E6F2FF;
+        font-style: italic;
+    }
+
+    .topics-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        margin-bottom: 20px;
+    }
+
+    .topics-table th {
+        background-color: #D3D3D3;
+        color: #000;
+        font-weight: bold;
+        padding: 8px 12px;
+        border: 1px solid #999;
+        text-align: left;
+    }
+
+    .topics-table td {
+        padding: 8px 12px;
+        border: 1px solid #ccc;
+        color: #000;
+    }
+
+    .topics-table tr.table-row-even {
+        background-color: #FFFFFF;
+    }
+
+    .topics-table tr.table-row-odd {
+        background-color: #F9F9F9;
+    }
+
+    .topics-table tr.module-total-row {
+        background-color: #d4edda;
+        font-weight: bold;
+    }
+
+    .document-objective-section {
+        background: white;
+        padding: 16px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        margin-top: 20px;
+    }
+
+    .document-objective-section h4 {
+        color: #000;
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+
+    .document-objective-section p {
+        color: #333;
+    }
+    
+    .learning-map-badge {
+        background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+    
+    .map-analyzing {
+        background: linear-gradient(45deg, #f59e0b, #f97316);
+        animation: pulse 2s infinite;
+    }
+    
+    .map-ready {
+        background: linear-gradient(45deg, #22c55e, #16a34a);
+    }
+    
+    .map-complete {
+        background: linear-gradient(45deg, #3b82f6, #2563eb);
+    }
+    
+    @keyframes pulse {
+        0%, 100% { 
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+            transform: scale(1);
+        }
+        50% { 
+            box-shadow: 0 8px 25px rgba(245, 158, 11, 0.6);
+            transform: scale(1.02);
+        }
+    }
+    
+    .btn-learning-map {
+        background: linear-gradient(135deg, var(--ai-purple), var(--blue-glow));
+        color: white;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        border-radius: 16px;
+        padding: 16px 32px;
+        font-weight: 700;
+        font-size: 1.1rem;
+        transition: all 0.4s ease;
+        position: relative;
+        overflow: hidden;
+        cursor: pointer;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+    }
+    
+    .btn-learning-map:hover:not(:disabled) {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 30px rgba(139, 92, 246, 0.5);
+        border-color: rgba(255, 255, 255, 0.4);
+    }
+
+    .btn-download-excel {
+        background: linear-gradient(135deg, #22c55e, #16a34a);
+        color: white;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        border-radius: 16px;
+        padding: 20px 40px;
+        font-weight: 700;
+        font-size: 1.2rem;
+        transition: all 0.4s ease;
+        cursor: pointer;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        display: inline-flex;
+        align-items: center;
+        gap: 16px;
+        box-shadow: 0 8px 25px rgba(34, 197, 94, 0.4);
+    }
+    
+    .btn-download-excel:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 16px 40px rgba(34, 197, 94, 0.6);
+        border-color: rgba(255, 255, 255, 0.4);
+    }
+    
+    .learning-map-spinner {
+        width: 20px;
+        height: 20px;
+        border: 3px solid transparent;
+        border-top: 3px solid currentColor;
+        border-radius: 50%;
+        animation: spin 1.5s linear infinite;
+        display: inline-block;
+    }
+    
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    .module-preview {
+        background: linear-gradient(135deg, rgba(139, 92, 246, 0.1) 0%, rgba(20, 184, 166, 0.1) 100%);
+        border: 2px solid rgba(139, 92, 246, 0.3);
+        border-radius: 16px;
+        padding: 20px;
+        margin: 12px 0;
+    }
+
+    .topic-item {
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(139, 92, 246, 0.2);
+        border-radius: 8px;
+        padding: 12px;
+        margin: 8px 0;
+    }
+
+    .duration-badge {
+        background: rgba(34, 197, 94, 0.2);
+        color: #22c55e;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+
+    .content-type-badge {
+        background: rgba(59, 130, 246, 0.2);
+        color: #3b82f6;
+        padding: 4px 12px;
+        border-radius: 12px;
+        font-size: 0.75rem;
+        font-weight: 600;
+    }
+</style>
+</head>
+<body>
+<div class="relative flex size-full min-h-screen flex-col bg-[#121118] overflow-hidden" style='font-family: "Space Grotesk", "Noto Sans", sans-serif;'>
+
+<!-- Enhanced Animated Background -->
+<div class="absolute inset-0 opacity-25">
+<div class="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-600 rounded-full mix-blend-multiply filter blur-xl animate-pulse"></div>
+<div class="absolute top-3/4 right-1/4 w-96 h-96 bg-blue-600 rounded-full mix-blend-multiply filter blur-xl animate-pulse animation-delay-1000"></div>
+<div class="absolute bottom-1/4 left-1/3 w-96 h-96 bg-teal-600 rounded-full mix-blend-multiply filter blur-xl animate-pulse animation-delay-2000"></div>
+</div>
+
+<div class="relative z-10 layout-container flex h-full grow flex-col">
+
+<!-- Learning Map Header -->
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#2b2839]/70 px-10 py-6 backdrop-blur-md">
+<div class="flex items-center gap-6 text-white">
+<div class="size-10 text-[var(--ai-purple)]">
+<svg fill="currentColor" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M24 4C12.95 4 4 12.95 4 24s8.95 20 20 20 20-8.95 20-20S35.05 4 24 4zm-2 32l-8-8 2.83-2.83L22 30.34l9.17-9.17L34 24 22 36z"/>
+</svg>
+</div>
+<div>
+<h1 class="text-white text-2xl font-bold leading-tight tracking-[-0.015em]">CourseCraft AI</h1>
+<p class="text-gray-400 text-sm">Comprehensive Learning Map • Dr. Elena Rodriguez</p>
+</div>
+<div id="learning-map-status" class="learning-map-badge map-analyzing">
+<div class="learning-map-spinner"></div>
+<span>Creating Learning Map...</span>
+</div>
+</div>
+</header>
+
+<!-- Main Learning Map Panel -->
+<main class="flex flex-1 justify-center py-12 px-6">
+<div class="w-full max-w-7xl">
+
+<!-- Learning Map Title Section -->
+<div class="text-center mb-12">
+<h2 class="text-white tracking-tight text-5xl font-bold leading-tight mb-4">
+Comprehensive Learning Map
+</h2>
+<p class="text-gray-400 text-xl leading-relaxed max-w-4xl mx-auto">
+Dr. Elena Rodriguez • Complete Course Structure • Detailed Module Breakdown
+</p>
+<p id="learning-map-summary" class="text-gray-500 text-lg mt-4 max-w-3xl mx-auto">
+Creating comprehensive learning map with detailed topics, timing, and activities...
+</p>
+</div>
+
+<!-- Professional Course Overview Section -->
+<div id="project-info-section" class="hidden mb-8">
+<div class="learning-map-panel">
+<h3 class="text-white text-2xl font-bold mb-6 flex items-center gap-3">
+<span class="material-symbols-outlined text-purple-400">description</span>
+Course Overview
+</h3>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+<div class="bg-purple-900/40 border border-purple-500/30 rounded-lg p-4">
+<h4 class="text-purple-300 font-semibold text-sm mb-1">Client</h4>
+<p id="overview-client" class="text-white text-lg font-bold">--</p>
+</div>
+<div class="bg-blue-900/40 border border-blue-500/30 rounded-lg p-4">
+<h4 class="text-blue-300 font-semibold text-sm mb-1">Domain</h4>
+<p id="overview-domain" class="text-white text-lg font-bold">--</p>
+</div>
+<div class="bg-green-900/40 border border-green-500/30 rounded-lg p-4">
+<h4 class="text-green-300 font-semibold text-sm mb-1">Project Name</h4>
+<p id="overview-project" class="text-white text-lg font-bold">--</p>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+<div class="bg-yellow-900/40 border border-yellow-500/30 rounded-lg p-4">
+<h4 class="text-yellow-300 font-semibold text-sm mb-1">Total Modules</h4>
+<p id="overview-modules" class="text-white text-lg font-bold">--</p>
+</div>
+<div class="bg-red-900/40 border border-red-500/30 rounded-lg p-4">
+<h4 class="text-red-300 font-semibold text-sm mb-1">Total Duration</h4>
+<p id="overview-duration" class="text-white text-lg font-bold">--</p>
+</div>
+<div class="bg-teal-900/40 border border-teal-500/30 rounded-lg p-4">
+<h4 class="text-teal-300 font-semibold text-sm mb-1">Strategy</h4>
+<p id="overview-strategy" class="text-white text-lg font-bold">--</p>
+</div>
+</div>
+<div class="bg-gray-800/40 border border-gray-600/30 rounded-lg p-4 mb-4">
+<h4 class="text-gray-300 font-semibold mb-2">Learning Summary</h4>
+<p id="overview-summary" class="text-white text-sm">--</p>
+</div>
+<div class="bg-gray-800/40 border border-gray-600/30 rounded-lg p-4">
+<h4 class="text-gray-300 font-semibold mb-2">Learner Profile</h4>
+<p id="overview-learner" class="text-white text-sm">--</p>
+</div>
+</div>
+</div>
+
+<!-- PROMINENT DOWNLOAD SECTION -->
+<div id="download-section" class="hidden mb-8 text-center">
+<div class="learning-map-panel">
+<h3 class="text-white text-3xl font-bold mb-6 flex items-center justify-center gap-3">
+<span class="material-symbols-outlined text-green-400 text-4xl">download</span>
+Download Comprehensive Learning Map
+</h3>
+<p class="text-gray-300 text-xl mb-8">
+Complete learning map with detailed topics, timing, and activities - matching your reference format
+</p>
+<button id="download-excel-btn" onclick="downloadComprehensiveLearningMap()"
+        class="btn-download-excel">
+<span class="material-symbols-outlined text-3xl">file_download</span>
+Download Professional Excel
+</button>
+<p class="text-gray-400 text-sm mt-4">
+Includes: Project details, module breakdown, topics, timing, learning formats, and screen activities
+</p>
+</div>
+</div>
+
+<!-- Professional Learning Map Table - NEW FORMAT -->
+<div id="modules-preview-section" class="hidden mb-8">
+<div class="learning-map-panel">
+<h3 class="text-white text-2xl font-bold mb-6 flex items-center gap-3">
+<span class="material-symbols-outlined text-purple-400">table_chart</span>
+Professional Learning Map - Detailed Topics View
+</h3>
+<p class="text-gray-400 text-sm mb-4">
+Complete learning map with module breakdown, topics, timing, formats, and screen activities - matching the professional reference format
+</p>
+<div class="overflow-x-auto">
+<!-- Professional format container -->
+<div class="professional-learning-map p-6">
+<!-- Header Section Table -->
+<table class="learning-map-header-table" id="learning-map-header-table">
+<!-- Will be populated by JavaScript -->
+</table>
+
+<!-- Modules Section -->
+<div id="learning-map-modules-container">
+<!-- Will be populated by JavaScript -->
+</div>
+
+<!-- Document Objective -->
+<div class="document-objective-section" id="document-objective-section" style="display: none;">
+<h4>Document Objective</h4>
+<p id="document-objective-text"></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Learning Map Completion Section -->
+<div id="learning-map-completion-section" class="hidden text-center">
+<div class="learning-map-panel">
+<div class="flex flex-col items-center gap-8">
+<div class="w-32 h-32 rounded-full bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center border-4 border-white/20">
+<span class="material-symbols-outlined text-6xl text-white">map</span>
+</div>
+<div>
+<h3 class="text-white text-4xl font-bold mb-4">Learning Map Complete!</h3>
+<p class="text-gray-300 text-xl max-w-2xl">
+Dr. Elena has created your comprehensive learning map with detailed module breakdown, topics, and activities.
+</p>
+</div>
+<div class="flex gap-6 mt-8">
+<button id="regenerate-map-btn" onclick="regenerateLearningMap()" 
+        class="btn-learning-map">
+<span class="material-symbols-outlined">refresh</span>
+Regenerate Map
+</button>
+<button id="proceed-to-development" onclick="proceedToDevelopment()" 
+        class="btn-learning-map">
+<span class="material-symbols-outlined">build</span>
+Start Course Development
+</button>
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</main>
+</div>
+
+<script>
+// ===================================
+// INTELLIGENT LEARNING MAP CREATION SYSTEM
+// ===================================
+
+// Learning Map global state
+let comprehensiveLearningMapData = null;
+let contentAnalysisData = null;
+let selectedStrategies = [];
+let smeResponses = null;
+
+// Initialize intelligent learning map system
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🗺️ Intelligent Learning Map System Starting...');
+    console.log('👩‍🏫 Expert: Dr. Elena Rodriguez - Instructional Designer');
+    console.log('🎯 Purpose: Content-Specific Learning Map with AI-Generated Modules');
+
+    // Load previous stage data and generate intelligent learning map
+    loadPreviousStageData();
+});
+
+// Utility function to get session ID
+function getSessionId() {
+    let sessionId = sessionStorage.getItem('courseSessionId');
+    if (!sessionId) {
+        sessionId = 'session-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+        sessionStorage.setItem('courseSessionId', sessionId);
+    }
+    return sessionId;
+}
+
+// Load data from previous stages
+function loadPreviousStageData() {
+    console.log('📊 Loading previous stage data from localStorage...');
+    console.log('🔍 Checking localStorage keys:', Object.keys(localStorage));
+
+    // Load from localStorage (persistent storage)
+    try {
+        const professionalAnalysisData = localStorage.getItem('professionalAnalysisResults');
+        const finalizedStrategiesData = localStorage.getItem('finalizedStrategies');
+        const smeInterviewData = localStorage.getItem('smeInterviewResults');
+        const domainClassificationData = localStorage.getItem('domainClassificationResults');
+        const preSMEData = localStorage.getItem('preSMEAnswers');
+
+        contentAnalysisData = professionalAnalysisData ? JSON.parse(professionalAnalysisData) : null;
+        const strategiesData = finalizedStrategiesData ? JSON.parse(finalizedStrategiesData) : null;
+        smeResponses = smeInterviewData ? JSON.parse(smeInterviewData) : null;
+        const domainData = domainClassificationData ? JSON.parse(domainClassificationData) : null;
+        const preSME = preSMEData ? JSON.parse(preSMEData) : null;
+
+        console.log('DEBUG: preSME object from localStorage:', preSME);
+
+        // Extract selected strategies
+        selectedStrategies = strategiesData?.selectedStrategies || [];
+
+        console.log('📋 Content Analysis:', contentAnalysisData ? 'Loaded ✅' : '❌ Not found');
+        console.log('🎯 Selected Strategies:', selectedStrategies.length, 'strategies', selectedStrategies.length > 0 ? '✅' : '❌');
+        console.log('🎙️ SME Responses:', smeResponses ? 'Loaded ✅' : '❌ Not found');
+
+        const extractedDomain = domainData?.domain || domainData?.data?.domain;
+        console.log('📊 Domain:', extractedDomain || '❌ Not found');
+        console.log('📊 Domain data structure:', domainData);
+
+        console.log('👤 Pre-SME (Client/Project):', preSME ? 'Loaded ✅' : '❌ Not found');
+        if (preSME) {
+            console.log('👤 Pre-SME data:', preSME);
+        }
+
+        if (!contentAnalysisData && !strategiesData && !smeResponses) {
+            console.warn('⚠️⚠️⚠️ NO DATA FOUND IN LOCALSTORAGE!');
+            console.warn('⚠️ This usually means you opened this page directly without going through the workflow.');
+            console.warn('⚠️ Please start from Content Upload → Analysis → Strategy Selection → Learning Map');
+        }
+
+    } catch (error) {
+        console.error('⚠️ Error loading previous stage data:', error);
+        console.log('🔄 Will use fallback data');
+    }
+
+    // Generate intelligent learning map
+    generateIntelligentLearningMap();
+}
+
+// Generate intelligent learning map with AI-powered content-specific modules
+async function generateIntelligentLearningMap() {
+    console.log('🧠 Generating intelligent content-specific learning map...');
+
+    updateLearningMapStatus('Analyzing Content & Strategies...', 'map-analyzing');
+
+    try {
+        // Try to fetch AI-generated learning map
+        const aiLearningMap = await fetchAILearningMap();
+        if (aiLearningMap) {
+            comprehensiveLearningMapData = aiLearningMap;
+            displayIntelligentLearningMap();
+            return;
+        }
+    } catch (error) {
+        console.log('⚠️ AI learning map generation failed, using intelligent fallback');
+    }
+
+    updateLearningMapStatus('Creating Content-Specific Modules...', 'map-analyzing');
+
+    setTimeout(() => {
+        updateLearningMapStatus('Adding Strategy-Based Activities...', 'map-analyzing');
+
+        setTimeout(() => {
+            // ERROR: Backend required for learning map generation
+            console.error('❌ Learning map generation requires AI backend');
+            console.error('This appears to be offline mode - AI backend must be running');
+
+            // Show error to user - NO FALLBACK DATA
+            if (typeof showBackendError === 'function') {
+                showBackendError('Learning map generation requires AI backend connection. Please ensure the backend server is running at http://localhost:3000 and complete the workflow from content upload.');
+            }
+
+            // Set to null - NO FAKE DATA
+            comprehensiveLearningMapData = null;
+
+            // Show error state instead of fake data
+            const container = document.getElementById('learning-map-container');
+            if (container) {
+                container.innerHTML = `
+                    <div style="padding: 40px; text-align: center; background: #fee; border: 2px solid #c00; border-radius: 8px; margin: 20px;">
+                        <h2 style="color: #c00;">⚠️ AI Backend Required</h2>
+                        <p>Learning map generation requires the AI backend server.</p>
+                        <p>Please ensure the backend is running at <code>http://localhost:3000</code></p>
+                        <button onclick="location.reload()" style="margin-top: 20px; padding: 10px 20px; background: #c00; color: white; border: none; border-radius: 4px; cursor: pointer;">
+                            Retry
+                        </button>
+                    </div>
+                `;
+            }
+        }, 1500);
+    }, 1000);
+}
+
+// Fetch AI-generated learning map from backend
+async function fetchAILearningMap() {
+    try {
+        console.log('🧠 Generating AI Learning Map with backend integration...');
+
+        // Get ALL real data from localStorage including SME
+        const professionalAnalysisData = localStorage.getItem('professionalAnalysisResults');
+        const domainClassificationData = localStorage.getItem('domainClassificationResults');
+        const finalizedStrategiesData = localStorage.getItem('finalizedStrategies');
+        const preSMEData = localStorage.getItem('preSMEAnswers');
+        const smeInterviewData = localStorage.getItem('smeInterviewResults');
+        const courseId = localStorage.getItem('courseId');
+
+        const analysisData = professionalAnalysisData ? JSON.parse(professionalAnalysisData) : {};
+        const domainData = domainClassificationData ? JSON.parse(domainClassificationData) : {};
+        const strategiesData = finalizedStrategiesData ? JSON.parse(finalizedStrategiesData) : {};
+        const preSME = preSMEData ? JSON.parse(preSMEData) : {};
+        const smeData = smeInterviewData ? JSON.parse(smeInterviewData) : {};
+
+        // Extract selected strategy
+        const selectedStrategy = strategiesData.selectedStrategies && strategiesData.selectedStrategies.length > 0
+            ? strategiesData.selectedStrategies[0]
+            : null;
+
+        if (!selectedStrategy) {
+            console.warn('⚠️ No selected strategy found');
+            return null;
+        }
+
+        console.log('📊 Real data loaded for learning map:', {
+            domain: domainData.domain || domainData.data?.domain,
+            strategy: selectedStrategy.name,
+            courseId,
+            hasAnalysis: !!analysisData.data
+        });
+
+        const response = await fetch('http://localhost:3000/api/generate-learning-map-ai', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                selectedStrategy: selectedStrategy,
+                content: analysisData.data?.content || '',
+                analysisData: analysisData || {},
+                domain: domainData.domain || domainData.data?.domain || 'General',
+                recommendations: analysisData.recommendations || [],
+                courseId: courseId,
+                smeAnswers: smeData.answers ? Object.values(smeData.answers) : [],
+                preSMEAnswers: preSME,
+                clientName: preSME.clientName || 'To Be Determined',
+                projectName: preSME.projectName || courseId || 'Unnamed Project',
+                contentTopics: analysisData.data?.topics || analysisData.data?.mainTopics || 'Not specified',
+                wordCount: analysisData.data?.wordCount || 0,
+                qualityMetrics: analysisData.data || {}
+            })
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            console.log('✅ AI Learning Map received from backend:', data);
+            return data.learningMap;
+        } else {
+            throw new Error(`Backend error: ${response.status} ${response.statusText}`);
+        }
+
+    } catch (error) {
+        console.log('❌ AI Learning Map fetch failed:', error);
+        return null;
+    }
+}
+
+// Generate content-specific learning map - DISABLED (Requires AI Backend)
+function generateContentSpecificLearningMap() {
+    console.error('❌ FATAL ERROR: generateContentSpecificLearningMap called without AI backend');
+    console.error('This function contains hardcoded fake data and has been disabled');
+    console.error('AI backend must be running at http://localhost:3000');
+
+    showBackendError('Learning map generation requires AI backend. This function has been disabled to prevent showing fake data. Please start the backend server at http://localhost:3000');
+
+    throw new Error('HARDCODED_FALLBACK_DISABLED: AI backend required for learning map generation');
+}
+
+// Generate teaching approach based on selected strategies
+function getTeachingApproach() {
+    if (!selectedStrategies.length) return 'interactive learning and practical examples';
+
+    const approaches = {
+        'action_mapping': 'action-based scenarios and real-world problem solving',
+        'microlearning': 'bite-sized modules and just-in-time learning',
+        'scenario_based': 'immersive scenarios and case-study analysis',
+        'gamification': 'engaging gamified experiences and achievement systems',
+        'social_learning': 'collaborative learning and peer interaction',
+        'adaptive_learning': 'personalized learning paths and adaptive content'
+    };
+
+    return approaches[selectedStrategies[0]] || 'interactive learning and practical examples';
+}
+
+// Generate learner persona based on content analysis
+function generateLearnerPersona(contentData, strategies) {
+    if (!contentData) {
+        return "Professionals who need comprehensive training on the subject matter. They have basic knowledge but need advanced concepts and practical implementation skills.";
+    }
+
+    const domain = contentData.contentDomain || 'the subject matter';
+    const complexity = contentData.complexityLevel || 'intermediate';
+    const audience = contentData.audienceType || 'professionals';
+
+    return `${audience.charAt(0).toUpperCase() + audience.slice(1)} who need to understand ${domain} principles and applications. They have ${complexity === 'beginner' ? 'limited' : complexity === 'advanced' ? 'extensive' : 'basic'} knowledge but need ${complexity === 'beginner' ? 'fundamental concepts' : 'comprehensive training on advanced concepts'} and practical implementation skills.`;
+}
+
+// Generate course story summary based on domain and strategies
+function generateCourseStorySummary(domain, strategies) {
+    const strategyContext = strategies.length > 0 ?
+        `using ${strategies.map(s => s.replace('_', ' ')).join(', ')} approaches` :
+        'through interactive learning';
+
+    return `Throughout this course, learners will follow a structured journey of implementing ${domain} best practices, from foundational understanding to advanced application ${strategyContext}, creating a comprehensive framework for effective implementation that can be applied in real-world scenarios.`;
+}
+
+// Generate intelligent modules - DISABLED (Requires AI Backend)
+function generateIntelligentModules(domain, strategies, contentData) {
+    console.error('❌ FATAL ERROR: generateIntelligentModules called without AI backend');
+    console.error('This function contains hardcoded fake data and has been disabled');
+    console.error('AI backend must be running at http://localhost:3000');
+
+    showBackendError('Module generation requires AI backend. This function has been disabled to prevent showing fake data. Please start the backend server at http://localhost:3000');
+
+    throw new Error('HARDCODED_FALLBACK_DISABLED: AI backend required for module generation');
+
+    const modules = [];
+
+    // Module 1: Foundation (always included)
+    modules.push({
+        moduleNumber: 1,
+        title: `Introduction to ${domain}`,
+        duration: calculateModuleDuration(45, strategies),
+        moduleStory: `In the first module, learners discover the fundamental concepts of ${domain} and explore how these principles can be effectively applied in their professional context.`,
+        topics: generateModuleTopics('foundation', domain, strategies, contentData)
+    });
+
+    // Module 2: Deep Dive (content-specific)
+    modules.push({
+        moduleNumber: 2,
+        title: `${domain} Deep Dive`,
+        duration: calculateModuleDuration(60, strategies),
+        moduleStory: `In this module, learners explore advanced concepts and practical applications of ${domain}, focusing on real-world implementation and best practices.`,
+        topics: generateModuleTopics('deep_dive', domain, strategies, contentData)
+    });
+
+    // Module 3: Application (strategy-dependent)
+    modules.push({
+        moduleNumber: 3,
+        title: generateModule3Title(domain, strategies),
+        duration: calculateModuleDuration(75, strategies),
+        moduleStory: generateModule3Story(domain, strategies),
+        topics: generateModuleTopics('application', domain, strategies, contentData)
+    });
+
+    // Add additional modules based on content complexity and strategies
+    if (contentData?.complexityLevel === 'advanced' || strategies.includes('comprehensive_training')) {
+        modules.push({
+            moduleNumber: 4,
+            title: `Advanced ${domain} Mastery`,
+            duration: calculateModuleDuration(90, strategies),
+            moduleStory: `In the advanced module, learners master complex scenarios and develop expertise in ${domain} through challenging real-world applications.`,
+            topics: generateModuleTopics('mastery', domain, strategies, contentData)
+        });
+    }
+
+    return modules;
+}
+
+// Generate module topics based on type, domain, and strategies
+function generateModuleTopics(moduleType, domain, strategies, contentData) {
+    const topics = [];
+
+    switch(moduleType) {
+        case 'foundation':
+            topics.push(
+                {
+                    title: "Opening Video",
+                    sourceContentRef: "Introduction Materials",
+                    estimatedTime: 3,
+                    learningFormat: getFormatForStrategy('video', strategies),
+                    screenActivity: `Dynamic visualization showing different aspects of ${domain} and their applications`
+                },
+                {
+                    title: "Welcome and Course Overview",
+                    sourceContentRef: "Course Introduction",
+                    estimatedTime: 2,
+                    learningFormat: getFormatForStrategy('static', strategies),
+                    screenActivity: `Course introduction with visual ${domain} representation and personalized learning path`
+                },
+                {
+                    title: `Understanding ${domain} Fundamentals`,
+                    sourceContentRef: contentData?.sourceFiles || "Content Framework Docs",
+                    estimatedTime: strategies.includes('microlearning') ? 5 : 8,
+                    learningFormat: getFormatForStrategy('interactive', strategies),
+                    screenActivity: `${getInteractionStyle(strategies)} showing different ${domain} concepts and their characteristics`
+                },
+                {
+                    title: `The ${domain} Challenge`,
+                    sourceContentRef: "Context Documentation",
+                    estimatedTime: strategies.includes('scenario_based') ? 8 : 5,
+                    learningFormat: getFormatForStrategy('scenario', strategies),
+                    screenActivity: `${getScenarioStyle(strategies)} about ${domain} challenges and practical solutions`
+                },
+                {
+                    title: "Learning Objectives",
+                    sourceContentRef: "Course Goals",
+                    estimatedTime: 2,
+                    learningFormat: getFormatForStrategy('objectives', strategies),
+                    screenActivity: `Clear presentation of learning outcomes with ${domain} examples`
+                }
+            );
+
+            // Add strategy-specific foundation topics
+            if (strategies.includes('action_mapping')) {
+                topics.push({
+                    title: `${domain} Action Framework`,
+                    sourceContentRef: "Action Framework",
+                    estimatedTime: 10,
+                    learningFormat: "Interactive Action Map",
+                    screenActivity: `Interactive mapping of ${domain} actions to business outcomes`
+                });
+            }
+
+            if (strategies.includes('microlearning')) {
+                topics.push({
+                    title: `${domain} Quick Reference`,
+                    sourceContentRef: "Quick Reference Guide",
+                    estimatedTime: 5,
+                    learningFormat: "Micro-Module",
+                    screenActivity: `Bite-sized ${domain} concepts with instant application examples`
+                });
+            }
+
+            // Always end with knowledge check
+            topics.push({
+                title: "Knowledge Check",
+                sourceContentRef: "Assessment Materials",
+                estimatedTime: 3,
+                learningFormat: getFormatForStrategy('assessment', strategies),
+                screenActivity: `${getAssessmentStyle(strategies)} testing understanding of key ${domain} concepts`
+            });
+
+            break;
+
+        case 'deep_dive':
+            topics.push(
+                {
+                    title: "Introduction and Recap",
+                    sourceContentRef: "Module Transition",
+                    estimatedTime: 3,
+                    learningFormat: getFormatForStrategy('transition', strategies),
+                    screenActivity: `Recap of previous learning with ${getTransitionStyle(strategies)} to advanced ${domain} concepts`
+                },
+                {
+                    title: `${domain} Architecture Framework`,
+                    sourceContentRef: contentData?.sourceFiles || "Architecture Documentation",
+                    estimatedTime: strategies.includes('microlearning') ? 8 : 12,
+                    learningFormat: getFormatForStrategy('framework', strategies),
+                    screenActivity: `Detailed exploration of ${domain} structure and organization principles`
+                },
+                {
+                    title: `${domain} Implementation Process`,
+                    sourceContentRef: "Implementation Guidelines",
+                    estimatedTime: strategies.includes('action_mapping') ? 20 : 15,
+                    learningFormat: getFormatForStrategy('process', strategies),
+                    screenActivity: `${getProcessStyle(strategies)} walkthrough of ${domain} implementation workflow`
+                }
+            );
+
+            // Add strategy-specific deep dive topics
+            if (strategies.includes('scenario_based')) {
+                topics.push({
+                    title: `${domain} Case Studies`,
+                    sourceContentRef: "Case Study Library",
+                    estimatedTime: 15,
+                    learningFormat: "Interactive Case Study",
+                    screenActivity: `Real-world ${domain} scenarios with decision-making and outcome analysis`
+                });
+            }
+
+            if (strategies.includes('gamification')) {
+                topics.push({
+                    title: `${domain} Challenge Arena`,
+                    sourceContentRef: "Challenge Materials",
+                    estimatedTime: 12,
+                    learningFormat: "Gamified Challenge",
+                    screenActivity: `Points-based ${domain} challenges with leaderboards and achievement unlocks`
+                });
+            }
+
+            topics.push({
+                title: "Advanced Knowledge Check",
+                sourceContentRef: "Advanced Assessment",
+                estimatedTime: 5,
+                learningFormat: getFormatForStrategy('advanced_assessment', strategies),
+                screenActivity: `${getAdvancedAssessmentStyle(strategies)} testing deep ${domain} understanding`
+            });
+
+            break;
+
+        case 'application':
+            topics.push(
+                {
+                    title: `${domain} Implementation Planning`,
+                    sourceContentRef: "Planning Templates",
+                    estimatedTime: strategies.includes('action_mapping') ? 15 : 10,
+                    learningFormat: getFormatForStrategy('planning', strategies),
+                    screenActivity: `${getPlanningStyle(strategies)} for ${domain} implementation strategy`
+                },
+                {
+                    title: `${domain} Practical Workshop`,
+                    sourceContentRef: "Workshop Materials",
+                    estimatedTime: strategies.includes('microlearning') ? 15 : 20,
+                    learningFormat: getFormatForStrategy('workshop', strategies),
+                    screenActivity: `${getWorkshopStyle(strategies)} ${domain} application using real-world tools and templates`
+                }
+            );
+
+            // Add strategy-specific application topics
+            if (strategies.includes('social_learning')) {
+                topics.push({
+                    title: `${domain} Collaboration Lab`,
+                    sourceContentRef: "Collaboration Tools",
+                    estimatedTime: 18,
+                    learningFormat: "Collaborative Exercise",
+                    screenActivity: `Team-based ${domain} projects with peer feedback and group problem-solving`
+                });
+            }
+
+            if (strategies.includes('adaptive_learning')) {
+                topics.push({
+                    title: `Personalized ${domain} Path`,
+                    sourceContentRef: "Adaptive Content",
+                    estimatedTime: 15,
+                    learningFormat: "Adaptive Learning Path",
+                    screenActivity: `AI-driven personalized ${domain} learning experience based on individual progress`
+                });
+            }
+
+            topics.push(
+                {
+                    title: `${domain} Implementation Challenges`,
+                    sourceContentRef: "Challenge Library",
+                    estimatedTime: 15,
+                    learningFormat: getFormatForStrategy('challenges', strategies),
+                    screenActivity: `${getChallengeStyle(strategies)} for common ${domain} implementation obstacles`
+                },
+                {
+                    title: `${domain} Best Practices Framework`,
+                    sourceContentRef: "Framework Documentation",
+                    estimatedTime: 10,
+                    learningFormat: getFormatForStrategy('framework_build', strategies),
+                    screenActivity: `Building a personalized ${domain} best practices framework`
+                },
+                {
+                    title: "Final Assessment",
+                    sourceContentRef: "Assessment Materials",
+                    estimatedTime: strategies.includes('performance_assessment') ? 12 : 8,
+                    learningFormat: getFormatForStrategy('final_assessment', strategies),
+                    screenActivity: `${getFinalAssessmentStyle(strategies)} demonstrating mastery of all ${domain} concepts`
+                }
+            );
+
+            break;
+
+        case 'mastery':
+            topics.push(
+                {
+                    title: `Advanced ${domain} Scenarios`,
+                    sourceContentRef: "Advanced Scenarios",
+                    estimatedTime: 20,
+                    learningFormat: "Complex Scenario Simulation",
+                    screenActivity: `Multi-layered ${domain} challenges requiring advanced problem-solving skills`
+                },
+                {
+                    title: `${domain} Leadership Applications`,
+                    sourceContentRef: "Leadership Content",
+                    estimatedTime: 18,
+                    learningFormat: "Leadership Simulation",
+                    screenActivity: `Leading ${domain} initiatives and managing organizational change`
+                },
+                {
+                    title: `${domain} Innovation Lab`,
+                    sourceContentRef: "Innovation Materials",
+                    estimatedTime: 25,
+                    learningFormat: "Innovation Workshop",
+                    screenActivity: `Creating innovative ${domain} solutions for emerging challenges`
+                },
+                {
+                    title: "Mastery Certification",
+                    sourceContentRef: "Certification Assessment",
+                    estimatedTime: 15,
+                    learningFormat: "Comprehensive Portfolio Assessment",
+                    screenActivity: `Portfolio-based demonstration of ${domain} mastery across all competency areas`
+                }
+            );
+            break;
+    }
+
+    return topics;
+}
+
+// Comprehensive learning format specifications matching template system
+function getFormatForStrategy(baseType, strategies, complexity = 'intermediate') {
+    // Strategy-specific format mappings using actual template names
+    const strategyFormats = {
+        'gamification': {
+            'video': 'Games',
+            'interactive': 'Button Click and Learn',
+            'assessment': 'Knowledge Checks',
+            'scenario': 'Scenario With Activity',
+            'static': 'Static',
+            'quiz': 'Games'
+        },
+        'microlearning': {
+            'video': 'Videos',
+            'interactive': 'Icon Click and Learn',
+            'static': 'Static',
+            'assessment': 'Knowledge Checks',
+            'scenario': 'Scenario With Question'
+        },
+        'scenario_based': {
+            'scenario': 'Scenario With Activity',
+            'assessment': 'Scenario With Question',
+            'process': 'Branching',
+            'interactive': 'Hotspot',
+            'video': 'Video Activity',
+            'conversation': 'Conversational'
+        },
+        'action_mapping': {
+            'interactive': 'Simulations',
+            'scenario': 'Simulations',
+            'assessment': 'Activities',
+            'process': 'Timeline',
+            'workshop': 'Activities'
+        },
+        'social_learning': {
+            'interactive': 'Activities',
+            'assessment': 'Assessment',
+            'scenario': 'Scenario With Activity',
+            'workshop': 'Activities'
+        },
+        'adaptive_learning': {
+            'interactive': 'Branching',
+            'assessment': 'Knowledge Checks',
+            'scenario': 'Scenario With Question',
+            'path': 'Branching'
+        }
+    };
+
+    // Check strategy-specific formats first
+    for (let strategy of strategies) {
+        if (strategyFormats[strategy] && strategyFormats[strategy][baseType]) {
+            return strategyFormats[strategy][baseType];
+        }
+    }
+
+    // Comprehensive default formats using exact template names
+    const defaultFormats = {
+        'video': 'Videos',
+        'static': 'Static',
+        'interactive': 'Button Click and Learn',
+        'scenario': 'Scenario With Activity',
+        'objectives': 'Static',
+        'assessment': 'Knowledge Checks',
+        'quiz': 'Knowledge Checks',
+        'transition': 'Animations',
+        'framework': 'Tab Click and Learn',
+        'process': 'Timeline',
+        'planning': 'Activities',
+        'workshop': 'Activities',
+        'challenges': 'Activities',
+        'framework_build': 'Drag and Drops',
+        'final_assessment': 'Assessment',
+        'advanced_assessment': 'Scenario With Question',
+        'case_study': 'Scenario With Activity',
+        'simulation': 'Simulations',
+        'conversation': 'Conversational',
+        'branching': 'Branching',
+        'carousel': 'Carousel',
+        'accordion': 'Accordions',
+        'slider': 'Slider',
+        'flip': 'Flip Types',
+        'hotspot': 'Hotspot',
+        'toggle': 'Toggle',
+        'summary': 'Summary',
+        'drag_drop': 'Drag and Drops',
+        'timeline': 'Timeline',
+        'ar_video': 'AR Video',
+        'vr': 'VR',
+        'games': 'Games'
+    };
+
+    return defaultFormats[baseType] || 'Button Click and Learn';
+}
+
+// Enhanced helper functions for precise activity descriptions
+function getInteractionStyle(strategies) {
+    if (strategies.includes('gamification')) return 'Points-based interactive diagram with achievement unlocks';
+    if (strategies.includes('scenario_based')) return 'Character-driven scenario exploration with decision consequences';
+    if (strategies.includes('action_mapping')) return 'Action-focused interactive mapping with outcome visualization';
+    if (strategies.includes('microlearning')) return 'Focused single-concept clickable exploration';
+    return 'Interactive clickable diagram with hover details and progressive disclosure';
+}
+
+function getScenarioStyle(strategies) {
+    if (strategies.includes('action_mapping')) return 'Performance-driven workplace scenarios with clear action-outcome connections';
+    if (strategies.includes('gamification')) return 'Challenge-based scenarios with scoring system and multiple achievement paths';
+    if (strategies.includes('social_learning')) return 'Collaborative team scenarios with group decision-making elements';
+    if (strategies.includes('microlearning')) return 'Focused mini-scenarios with single learning objective';
+    return 'Realistic workplace scenarios with multiple decision points and feedback';
+}
+
+function getAssessmentStyle(strategies) {
+    if (strategies.includes('gamification')) return 'Achievement-based quiz challenges with instant feedback and leaderboard';
+    if (strategies.includes('scenario_based')) return 'Contextual scenario questions with branching consequences';
+    if (strategies.includes('action_mapping')) return 'Performance-based skill demonstration tasks';
+    if (strategies.includes('microlearning')) return 'Quick knowledge validation with immediate remediation';
+    if (strategies.includes('social_learning')) return 'Peer-reviewed assessment with collaborative feedback';
+    return 'Interactive knowledge check with detailed explanations and remediation';
+}
+
+function getTransitionStyle(strategies) {
+    if (strategies.includes('gamification')) return 'gamified transitions';
+    if (strategies.includes('microlearning')) return 'quick visual transitions';
+    return 'animated transitions';
+}
+
+function getProcessStyle(strategies) {
+    if (strategies.includes('action_mapping')) return 'Action-focused step-by-step';
+    if (strategies.includes('scenario_based')) return 'Scenario-driven';
+    return 'Step-by-step';
+}
+
+function getPlanningStyle(strategies) {
+    if (strategies.includes('action_mapping')) return 'Action mapping guided planning exercise';
+    if (strategies.includes('scenario_based')) return 'Scenario-based planning simulation';
+    return 'Guided planning exercise';
+}
+
+function getWorkshopStyle(strategies) {
+    if (strategies.includes('social_learning')) return 'Collaborative hands-on';
+    if (strategies.includes('gamification')) return 'Gamified interactive';
+    return 'Step-by-step hands-on';
+}
+
+function getChallengeStyle(strategies) {
+    if (strategies.includes('gamification')) return 'Challenge-based problem-solving games';
+    if (strategies.includes('scenario_based')) return 'Immersive problem scenarios';
+    return 'Analysis and solution development';
+}
+
+function getFinalAssessmentStyle(strategies) {
+    if (strategies.includes('action_mapping')) return 'Action-based comprehensive assessment';
+    if (strategies.includes('scenario_based')) return 'Complex scenario-based assessment';
+    return 'Comprehensive assessment';
+}
+
+function getAdvancedAssessmentStyle(strategies) {
+    if (strategies.includes('scenario_based')) return 'Complex scenario questions';
+    if (strategies.includes('gamification')) return 'Advanced challenge questions';
+    return 'Advanced scenario-based questions';
+}
+
+// Module title and story generators
+function generateModule3Title(domain, strategies) {
+    if (strategies.includes('action_mapping')) return `${domain} Action Implementation`;
+    if (strategies.includes('scenario_based')) return `${domain} Scenario Mastery`;
+    if (strategies.includes('gamification')) return `${domain} Challenge Arena`;
+    return `Practical Application and Implementation`;
+}
+
+function generateModule3Story(domain, strategies) {
+    if (strategies.includes('action_mapping')) {
+        return `In this module, learners apply ${domain} through action-focused exercises, mapping business outcomes to specific behaviors and creating actionable implementation plans.`;
+    }
+    if (strategies.includes('scenario_based')) {
+        return `In this module, learners master ${domain} through immersive scenarios, making complex decisions and experiencing the consequences of their choices in a safe learning environment.`;
+    }
+    if (strategies.includes('gamification')) {
+        return `In this gamified module, learners compete in ${domain} challenges, earning points and unlocking achievements while mastering practical application skills.`;
+    }
+    return `In the final module, learners apply their knowledge through practical exercises and create their own ${domain} framework for real-world implementation.`;
+}
+
+// Validate strategy-content alignment for coherent learning maps
+function validateStrategyContentAlignment(strategies, contentData) {
+    if (!strategies || strategies.length === 0) {
+        return ['interactive_learning']; // Default fallback
+    }
+
+    const validatedStrategies = [...strategies];
+    const domain = contentData?.contentDomain || '';
+    const complexity = contentData?.complexityLevel || 'intermediate';
+
+    // Add domain-appropriate strategies if missing
+    if (domain.toLowerCase().includes('healthcare') && !strategies.includes('scenario_based')) {
+        console.log('🏥 Adding scenario-based strategy for healthcare content');
+        validatedStrategies.push('scenario_based');
+    }
+
+    if (domain.toLowerCase().includes('technology') && !strategies.includes('action_mapping')) {
+        console.log('💻 Adding action-mapping strategy for technology content');
+        validatedStrategies.push('action_mapping');
+    }
+
+    if (complexity === 'beginner' && strategies.includes('advanced_simulation')) {
+        console.log('📚 Removing advanced simulation for beginner content');
+        return validatedStrategies.filter(s => s !== 'advanced_simulation');
+    }
+
+    return validatedStrategies;
+}
+
+// Calculate module duration based on strategies
+function calculateModuleDuration(baseDuration, strategies) {
+    let duration = baseDuration;
+
+    if (strategies.includes('microlearning')) duration *= 0.8; // Shorter modules
+    if (strategies.includes('scenario_based')) duration *= 1.2; // Longer for scenarios
+    if (strategies.includes('gamification')) duration *= 1.1; // Slightly longer for gamification
+    if (strategies.includes('action_mapping')) duration *= 1.15; // More time for action exercises
+    if (strategies.includes('social_learning')) duration *= 1.3; // More time for collaboration
+
+    return Math.round(duration);
+}
+
+// Display the intelligent learning map
+function displayIntelligentLearningMap() {
+    console.log('📋 Preparing to display learning map...');
+    console.log('🔍 Learning map data:', comprehensiveLearningMapData);
+
+    // Get real data from localStorage to fill in missing fields
+    const domainClassificationData = localStorage.getItem('domainClassificationResults');
+    const preSMEData = localStorage.getItem('preSMEAnswers');
+    const professionalAnalysisData = localStorage.getItem('professionalAnalysisResults');
+    const finalizedStrategiesData = localStorage.getItem('finalizedStrategies');
+
+    const domainData = domainClassificationData ? JSON.parse(domainClassificationData) : {};
+    const preSME = preSMEData ? JSON.parse(preSMEData) : {};
+    const analysisData = professionalAnalysisData ? JSON.parse(professionalAnalysisData) : {};
+    const strategiesData = finalizedStrategiesData ? JSON.parse(finalizedStrategiesData) : {};
+
+    // Extract real values if not present in AI response
+    if (!comprehensiveLearningMapData.customerName) {
+        comprehensiveLearningMapData.customerName = preSME.clientName || preSME['Client Name'] || preSME['client name']
+            || analysisData.data?.clientName || 'CourseCraft Client';
+    }
+
+    if (!comprehensiveLearningMapData.projectName) {
+        comprehensiveLearningMapData.projectName = preSME.projectName || preSME['Project Name'] || preSME['project name']
+            || analysisData.data?.projectName || comprehensiveLearningMapData.courseOverview?.title || 'Professional Training Program';
+    }
+
+    if (!comprehensiveLearningMapData.contentDomain) {
+        comprehensiveLearningMapData.contentDomain = domainData.domain || domainData.data?.domain || 'Professional Development';
+    }
+
+    if (!comprehensiveLearningMapData.learnerPersona) {
+        comprehensiveLearningMapData.learnerPersona = comprehensiveLearningMapData.courseOverview?.description
+            || `Professionals seeking to develop skills in ${comprehensiveLearningMapData.contentDomain}. This course is designed for ${comprehensiveLearningMapData.courseOverview?.targetAudience || 'working professionals'} who want to enhance their capabilities through structured learning.`;
+    }
+
+    if (!comprehensiveLearningMapData.courseStorySummary) {
+        const selectedStrategy = strategiesData.selectedStrategies?.[0];
+        comprehensiveLearningMapData.courseStorySummary = `This comprehensive ${comprehensiveLearningMapData.contentDomain} course follows a ${selectedStrategy?.name || 'structured learning'} approach. Learners will progress through ${comprehensiveLearningMapData.modules?.length || 'multiple'} carefully designed modules, each building upon previous knowledge to achieve mastery. The course combines ${selectedStrategy?.deliveryFormat || 'interactive learning'} with practical application to ensure real-world readiness.`;
+    }
+
+    // Calculate totals from modules
+    comprehensiveLearningMapData.totalModules = comprehensiveLearningMapData.modules?.length || 0;
+
+    // Calculate total duration from module total times (already in minutes)
+    let totalDuration = 0;
+    if (comprehensiveLearningMapData.modules) {
+        comprehensiveLearningMapData.modules.forEach(mod => {
+            // New format: use moduleTotalTime (already in minutes)
+            if (mod.moduleTotalTime) {
+                totalDuration += mod.moduleTotalTime;
+            }
+            // Fallback: calculate from topics
+            else if (mod.topics && mod.topics.length > 0) {
+                const moduleTime = mod.topics.reduce((sum, topic) => {
+                    return sum + (topic.estimatedSeatTime || 0);
+                }, 0);
+                totalDuration += moduleTime;
+            }
+            // Last fallback: parse duration string
+            else if (typeof mod.duration === 'string') {
+                const match = mod.duration.match(/(\d+)/);
+                if (match) {
+                    totalDuration += parseInt(match[1]);
+                }
+            }
+
+            // Ensure topics array exists
+            if (!mod.topics) mod.topics = [];
+        });
+    }
+    comprehensiveLearningMapData.totalDuration = totalDuration || 120; // Default 2 hours (120 min)
+
+    comprehensiveLearningMapData.totalTopics = comprehensiveLearningMapData.modules?.reduce((total, mod) => {
+        return total + (mod.topics?.length || 0);
+    }, 0) || 0;
+
+    console.log('✅ Learning map data prepared:', {
+        clientName: comprehensiveLearningMapData.customerName,
+        projectName: comprehensiveLearningMapData.projectName,
+        domain: comprehensiveLearningMapData.contentDomain,
+        modules: comprehensiveLearningMapData.totalModules,
+        topics: comprehensiveLearningMapData.totalTopics,
+        duration: comprehensiveLearningMapData.totalDuration
+    });
+
+    // Store the complete learning map data for Excel generation
+    try {
+        localStorage.setItem('generatedLearningMap', JSON.stringify(comprehensiveLearningMapData));
+        console.log('💾 Learning map stored in localStorage');
+    } catch (error) {
+        console.error('⚠️ Failed to store learning map:', error);
+    }
+
+    // Display the learning map
+    displayProjectInformation();
+    displayModulesPreview();
+    showDownloadSection();
+
+    updateLearningMapStatus('Learning Map Ready', 'map-ready');
+
+    setTimeout(() => {
+        showLearningMapCompletion();
+    }, 2000);
+}
+
+// Update learning map status
+function updateLearningMapStatus(text, className) {
+    const statusEl = document.getElementById('learning-map-status');
+    if (!statusEl) return;
+    
+    statusEl.className = `learning-map-badge ${className}`;
+    
+    const icon = className === 'map-analyzing' ? '<div class="learning-map-spinner"></div>' :
+                 className === 'map-ready' ? '<span class="material-symbols-outlined">map</span>' :
+                 '<span class="material-symbols-outlined">check_circle</span>';
+    
+    statusEl.innerHTML = `${icon}<span>${text}</span>`;
+}
+
+// Display professional course overview
+function displayProjectInformation() {
+    console.log('📋 Displaying professional course overview...');
+
+    // Get header section from new format
+    const header = comprehensiveLearningMapData.headerSection || {};
+    const overview = comprehensiveLearningMapData.courseOverview || {};
+
+    document.getElementById('overview-client').textContent = header.customerName || overview.clientName || comprehensiveLearningMapData.customerName || 'TBD';
+    document.getElementById('overview-domain').textContent = comprehensiveLearningMapData.contentDomain || overview.domain || 'General';
+    document.getElementById('overview-project').textContent = header.projectName || overview.projectName || comprehensiveLearningMapData.projectName || 'Training Course';
+    document.getElementById('overview-modules').textContent = comprehensiveLearningMapData.totalModules || 0;
+    document.getElementById('overview-duration').textContent = comprehensiveLearningMapData.totalDuration + ' min' || '0 minutes';
+    document.getElementById('overview-strategy').textContent = overview.strategyApplied || 'Interactive Learning';
+    document.getElementById('overview-summary').textContent = header.courseStorySummary || overview.learningSummary || 'Comprehensive professional training';
+    document.getElementById('overview-learner').textContent = header.learnerPersona || overview.learnerProfile || 'Professional learners';
+
+    document.getElementById('learning-map-summary').textContent =
+        `Professional learning map with ${comprehensiveLearningMapData.totalModules || 0} modules • ${comprehensiveLearningMapData.totalDuration || 0} minutes total`;
+
+    document.getElementById('project-info-section').classList.remove('hidden');
+}
+
+// Display professional learning map table - PROFESSIONAL EXCEL FORMAT
+function displayModulesPreview() {
+    console.log('📚 Displaying professional learning map with topics...');
+
+    const headerTable = document.getElementById('learning-map-header-table');
+    const modulesContainer = document.getElementById('learning-map-modules-container');
+    const objectiveSection = document.getElementById('document-objective-section');
+    const objectiveText = document.getElementById('document-objective-text');
+
+    if (!comprehensiveLearningMapData.modules || comprehensiveLearningMapData.modules.length === 0) {
+        modulesContainer.innerHTML = '<p class="text-center text-red-600 py-4">No modules available. Please generate the learning map first.</p>';
+        document.getElementById('modules-preview-section').classList.remove('hidden');
+        return;
+    }
+
+    // Build header section table
+    const header = comprehensiveLearningMapData.headerSection || {};
+    let headerHTML = `
+        <tr>
+            <td class="header-label-cell">Customer Name:</td>
+            <td class="header-value-cell">${header.customerName || comprehensiveLearningMapData.customerName || 'TBD'}</td>
+        </tr>
+        <tr>
+            <td class="header-label-cell">Project Name:</td>
+            <td class="header-value-cell">${header.projectName || comprehensiveLearningMapData.projectName || 'Training Program'}</td>
+        </tr>
+        <tr>
+            <td class="header-label-cell">Source Content:</td>
+            <td class="header-value-cell">${header.sourceContent || 'Uploaded Content'}</td>
+        </tr>
+        <tr>
+            <td class="header-label-cell">Learner Persona:</td>
+            <td class="header-value-cell learner-persona-highlight">${header.learnerPersona || 'Professional learners'}</td>
+        </tr>
+        <tr>
+            <td class="header-label-cell">Course Story: Summary</td>
+            <td class="header-value-cell">${header.courseStorySummary || 'Course narrative'}</td>
+        </tr>
+    `;
+    headerTable.innerHTML = headerHTML;
+
+    // Build modules section
+    let modulesHTML = '';
+
+    comprehensiveLearningMapData.modules.forEach((module, idx) => {
+        const moduleNum = module.moduleNumber || (idx + 1);
+        const moduleTitle = module.moduleTitle || module.title || `Module ${moduleNum}`;
+
+        // Module header (yellow background)
+        modulesHTML += `
+        <div style="margin-top: 20px;">
+            <table class="topics-table">
+                <tr class="module-header-row">
+                    <td colspan="5" style="padding: 10px; border: 1px solid #ccc;">
+                        Module ${moduleNum}: ${moduleTitle}
+                    </td>
+                </tr>`;
+
+        // Module story row (light blue background)
+        if (module.moduleStory) {
+            modulesHTML += `
+                <tr class="module-story-row">
+                    <td colspan="5" style="padding: 8px; border: 1px solid #ccc;">
+                        <strong>Module Story:</strong> ${module.moduleStory}
+                    </td>
+                </tr>`;
+        }
+
+        // Topics header row
+        modulesHTML += `
+                <tr>
+                    <th>Topics</th>
+                    <th>Source Content Page Reference</th>
+                    <th>Estimated Seat Time (minutes)</th>
+                    <th>Learning Format*</th>
+                    <th>What Happens on Screen</th>
+                </tr>`;
+
+        // Topics rows
+        if (module.topics && module.topics.length > 0) {
+            module.topics.forEach((topic, topicIdx) => {
+                const rowClass = topicIdx % 2 === 0 ? 'table-row-even' : 'table-row-odd';
+                modulesHTML += `
+                <tr class="${rowClass}">
+                    <td>${topic.topicName || topic.title || 'Topic'}</td>
+                    <td>${topic.sourceContentPageReference || '-'}</td>
+                    <td style="text-align: center;">${topic.estimatedSeatTime || topic.duration || 5}</td>
+                    <td>${topic.learningFormat || topic.format || 'Interactive'}</td>
+                    <td>${topic.whatHappensOnScreen || topic.description || 'Interactive content'}</td>
+                </tr>`;
+            });
+
+            // Module total row
+            const totalTime = module.moduleTotalTime || module.topics.reduce((sum, t) => sum + (t.estimatedSeatTime || 0), 0);
+            modulesHTML += `
+                <tr class="module-total-row">
+                    <td>Module ${moduleNum} Total</td>
+                    <td></td>
+                    <td style="text-align: center;">${totalTime}</td>
+                    <td></td>
+                    <td></td>
+                </tr>`;
+        }
+
+        modulesHTML += `
+            </table>
+        </div>`;
+    });
+
+    modulesContainer.innerHTML = modulesHTML;
+
+    // Display document objective if available
+    if (comprehensiveLearningMapData.documentObjective) {
+        objectiveText.textContent = comprehensiveLearningMapData.documentObjective;
+        objectiveSection.style.display = 'block';
+    }
+
+    document.getElementById('modules-preview-section').classList.remove('hidden');
+}
+
+// Show download section
+function showDownloadSection() {
+    console.log('📥 Showing comprehensive download section...');
+    document.getElementById('download-section').classList.remove('hidden');
+}
+
+// Download professional learning map Excel with EXACT reference format colors
+async function downloadComprehensiveLearningMap() {
+    console.log('📥 Starting professional Excel export with reference format colors...');
+
+    try {
+        // Show downloading state
+        const downloadBtn = document.getElementById('download-excel-btn');
+        downloadBtn.innerHTML = '<div class="learning-map-spinner mr-3"></div>Generating Professional Excel...';
+        downloadBtn.disabled = true;
+
+        console.log('📊 Generating Excel with ExcelJS and professional formatting...');
+
+        if (!window.ExcelJS) {
+            throw new Error('ExcelJS library not loaded');
+        }
+
+        // Create workbook with ExcelJS
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('Learning Map');
+
+        // Set column widths matching reference format
+        worksheet.columns = [
+            { width: 35 },  // Topics / Labels
+            { width: 50 },  // Values / Source Content Page Reference
+            { width: 20 },  // Estimated Seat Time
+            { width: 30 },  // Learning Format
+            { width: 70 }   // What Happens on Screen
+        ];
+
+        let currentRow = 1;
+
+        // SECTION 1: HEADER with light gray background (#D3D3D3)
+        const header = comprehensiveLearningMapData?.headerSection || {};
+
+        // Customer Name
+        worksheet.getCell(`A${currentRow}`).value = 'Customer Name:';
+        worksheet.getCell(`B${currentRow}`).value = header.customerName || comprehensiveLearningMapData.customerName || 'TBD';
+        worksheet.getCell(`A${currentRow}`).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFD3D3D3' } };
+        worksheet.getCell(`A${currentRow}`).font = { bold: true };
+        worksheet.getCell(`A${currentRow}`).border = { top: {style: 'thin'}, left: {style: 'thin'}, bottom: {style: 'thin'}, right: {style: 'thin'} };
+        worksheet.getCell(`B${currentRow}`).border = { top: {style: 'thin'}, left: {style: 'thin'}, bottom: {style: 'thin'}, right: {style: 'thin'} };
+        currentRow++;
+
+        // Project Name
+        worksheet.getCell(`A${currentRow}`).value = 'Project Name:';
+        worksheet.getCell(`B${currentRow}`).value = header.projectName || comprehensiveLearningMapData.projectName || 'Training Program';
+        worksheet.getCell(`A${currentRow}`).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFD3D3D3' } };
+        worksheet.getCell(`A${currentRow}`).font = { bold: true };
+        worksheet.getCell(`A${currentRow}`).border = { top: {style: 'thin'}, left: {style: 'thin'}, bottom: {style: 'thin'}, right: {style: 'thin'} };
+        worksheet.getCell(`B${currentRow}`).border = { top: {style: 'thin'}, left: {style: 'thin'}, bottom: {style: 'thin'}, right: {style: 'thin'} };
+        currentRow++;
+
+        // Source Content
+        worksheet.getCell(`A${currentRow}`).value = 'Source Content:';
+        worksheet.getCell(`B${currentRow}`).value = header.sourceContent || 'Uploaded Content';
+        worksheet.getCell(`A${currentRow}`).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFD3D3D3' } };
+        worksheet.getCell(`A${currentRow}`).font = { bold: true };
+        worksheet.getCell(`A${currentRow}`).border = { top: {style: 'thin'}, left: {style: 'thin'}, bottom: {style: 'thin'}, right: {style: 'thin'} };
+        worksheet.getCell(`B${currentRow}`).border = { top: {style: 'thin'}, left: {style: 'thin'}, bottom: {style: 'thin'}, right: {style: 'thin'} };
+        currentRow++;
+
+        // Learner Persona (YELLOW highlight #FFFF00)
+        worksheet.getCell(`A${currentRow}`).value = 'Learner Persona:';
+        worksheet.getCell(`B${currentRow}`).value = header.learnerPersona || 'Professional learners';
+        worksheet.getCell(`A${currentRow}`).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFD3D3D3' } };
+        worksheet.getCell(`A${currentRow}`).font = { bold: true };
+        worksheet.getCell(`B${currentRow}`).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFFF00' } };
+        worksheet.getCell(`A${currentRow}`).border = { top: {style: 'thin'}, left: {style: 'thin'}, bottom: {style: 'thin'}, right: {style: 'thin'} };
+        worksheet.getCell(`B${currentRow}`).border = { top: {style: 'thin'}, left: {style: 'thin'}, bottom: {style: 'thin'}, right: {style: 'thin'} };
+        currentRow++;
+
+        // Course Story Summary
+        worksheet.getCell(`A${currentRow}`).value = 'Course Story: Summary';
+        worksheet.getCell(`B${currentRow}`).value = header.courseStorySummary || 'Course narrative';
+        worksheet.getCell(`A${currentRow}`).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFD3D3D3' } };
+        worksheet.getCell(`A${currentRow}`).font = { bold: true };
+        worksheet.getCell(`A${currentRow}`).border = { top: {style: 'thin'}, left: {style: 'thin'}, bottom: {style: 'thin'}, right: {style: 'thin'} };
+        worksheet.getCell(`B${currentRow}`).border = { top: {style: 'thin'}, left: {style: 'thin'}, bottom: {style: 'thin'}, right: {style: 'thin'} };
+        currentRow++;
+
+        // Empty row
+        currentRow++;
+
+        // SECTION 2-4: MODULES
+        if (comprehensiveLearningMapData?.modules) {
+            comprehensiveLearningMapData.modules.forEach((module, moduleIndex) => {
+                // Module header (YELLOW background #FFFF00)
+                const moduleRow = worksheet.getRow(currentRow);
+                worksheet.mergeCells(`A${currentRow}:E${currentRow}`);
+                worksheet.getCell(`A${currentRow}`).value = `Module ${module.moduleNumber}: ${module.moduleTitle}`;
+                worksheet.getCell(`A${currentRow}`).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFFFFF00' } };
+                worksheet.getCell(`A${currentRow}`).font = { bold: true, size: 12 };
+                worksheet.getCell(`A${currentRow}`).border = { top: {style: 'thin'}, left: {style: 'thin'}, bottom: {style: 'thin'}, right: {style: 'thin'} };
+                currentRow++;
+
+                // Module Story (Light blue #E6F2FF)
+                if (module.moduleStory) {
+                    worksheet.mergeCells(`A${currentRow}:E${currentRow}`);
+                    worksheet.getCell(`A${currentRow}`).value = `Module Story: ${module.moduleStory}`;
+                    worksheet.getCell(`A${currentRow}`).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFE6F2FF' } };
+                    worksheet.getCell(`A${currentRow}`).font = { italic: true };
+                    worksheet.getCell(`A${currentRow}`).alignment = { wrapText: true };
+                    worksheet.getCell(`A${currentRow}`).border = { top: {style: 'thin'}, left: {style: 'thin'}, bottom: {style: 'thin'}, right: {style: 'thin'} };
+                    currentRow++;
+                }
+
+                // Topics table header (Light gray #D3D3D3)
+                const headerRow = worksheet.getRow(currentRow);
+                ['Topics', 'Source Content Page Reference', 'Estimated Seat Time (minutes)', 'Learning Format*', 'What Happens on Screen'].forEach((header, idx) => {
+                    const cell = headerRow.getCell(idx + 1);
+                    cell.value = header;
+                    cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FFD3D3D3' } };
+                    cell.font = { bold: true };
+                    cell.border = { top: {style: 'thin'}, left: {style: 'thin'}, bottom: {style: 'thin'}, right: {style: 'thin'} };
+                });
+                currentRow++;
+
+                // Topics rows (alternating white and very light gray #F9F9F9)
+                if (module.topics && module.topics.length > 0) {
+                    module.topics.forEach((topic, topicIdx) => {
+                        const topicRow = worksheet.getRow(currentRow);
+                        const isEven = topicIdx % 2 === 0;
+                        const bgColor = isEven ? 'FFFFFFFF' : 'FFF9F9F9';
+
+                        [
+                            topic.topicName || topic.title || 'Topic',
+                            topic.sourceContentPageReference || '-',
+                            topic.estimatedSeatTime || topic.duration || 5,
+                            topic.learningFormat || topic.format || 'Interactive',
+                            topic.whatHappensOnScreen || topic.description || 'Interactive content'
+                        ].forEach((value, idx) => {
+                            const cell = topicRow.getCell(idx + 1);
+                            cell.value = value;
+                            cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: bgColor } };
+                            cell.border = { top: {style: 'thin'}, left: {style: 'thin'}, bottom: {style: 'thin'}, right: {style: 'thin'} };
+                            if (idx === 2) cell.alignment = { horizontal: 'center' };
+                            if (idx === 4) cell.alignment = { wrapText: true };
+                        });
+                        currentRow++;
+                    });
+
+                    // Module total row (bold)
+                    const totalRow = worksheet.getRow(currentRow);
+                    const totalTime = module.moduleTotalTime || module.topics.reduce((sum, t) => sum + (t.estimatedSeatTime || 0), 0);
+
+                    [
+                        `Module ${module.moduleNumber} Total`,
+                        '',
+                        totalTime,
+                        '',
+                        ''
+                    ].forEach((value, idx) => {
+                        const cell = totalRow.getCell(idx + 1);
+                        cell.value = value;
+                        cell.font = { bold: true };
+                        cell.border = { top: {style: 'thin'}, left: {style: 'thin'}, bottom: {style: 'thin'}, right: {style: 'thin'} };
+                        if (idx === 2) cell.alignment = { horizontal: 'center' };
+                    });
+                    currentRow++;
+                }
+
+                // Empty rows between modules
+                currentRow += 2;
+            });
+        }
+
+        // SECTION 5: DOCUMENT OBJECTIVE
+        if (comprehensiveLearningMapData?.documentObjective) {
+            worksheet.mergeCells(`A${currentRow}:E${currentRow}`);
+            worksheet.getCell(`A${currentRow}`).value = 'Document Objective';
+            worksheet.getCell(`A${currentRow}`).font = { bold: true };
+            worksheet.getCell(`A${currentRow}`).border = { top: {style: 'thin'}, left: {style: 'thin'}, bottom: {style: 'thin'}, right: {style: 'thin'} };
+            currentRow++;
+
+            worksheet.mergeCells(`A${currentRow}:E${currentRow}`);
+            worksheet.getCell(`A${currentRow}`).value = comprehensiveLearningMapData.documentObjective;
+            worksheet.getCell(`A${currentRow}`).alignment = { wrapText: true };
+            worksheet.getCell(`A${currentRow}`).border = { top: {style: 'thin'}, left: {style: 'thin'}, bottom: {style: 'thin'}, right: {style: 'thin'} };
+        }
+
+        // Generate and download
+        const buffer = await workbook.xlsx.writeBuffer();
+        const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
+        const clientName = (comprehensiveLearningMapData?.customerName || 'Client').replace(/\s+/g, '_');
+        const filename = `CourseCraft_LearningMap_${clientName}_${timestamp}.xlsx`;
+
+        saveAs(new Blob([buffer]), filename);
+
+        console.log('✅ Professional Excel generation successful with reference format colors');
+        showExportSuccess();
+
+        // Reset download button
+        setTimeout(() => {
+            downloadBtn.innerHTML = '<span class="material-symbols-outlined text-3xl">file_download</span>Download Professional Excel';
+            downloadBtn.disabled = false;
+        }, 2000);
+
+    } catch (error) {
+        console.error('❌ Excel generation failed:', error);
+        alert('❌ Excel export failed: ' + error.message);
+
+        // Reset download button
+        const downloadBtn = document.getElementById('download-excel-btn');
+        if (downloadBtn) {
+            downloadBtn.innerHTML = '<span class="material-symbols-outlined text-3xl">file_download</span>Download Professional Excel';
+            downloadBtn.disabled = false;
+        }
+    }
+}
+
+// Show export success message
+function showExportSuccess() {
+    // Create and show success notification
+    const notification = document.createElement('div');
+    notification.className = 'fixed top-4 right-4 bg-green-600 text-white px-6 py-4 rounded-lg shadow-lg z-50 flex items-center gap-3';
+    notification.innerHTML = `
+        <span class="material-symbols-outlined">check_circle</span>
+        <div>
+            <div class="font-semibold">Professional Excel Export Successful!</div>
+            <div class="text-sm opacity-90">Learning map exported with enhanced content scores and selected strategies highlighted.</div>
+        </div>
+    `;
+
+    document.body.appendChild(notification);
+
+    // Auto-remove after 5 seconds
+    setTimeout(() => {
+        if (notification.parentNode) {
+            notification.parentNode.removeChild(notification);
+        }
+    }, 5000);
+}
+
+// Show learning map completion
+function showLearningMapCompletion() {
+    // Show completion section
+    document.getElementById('learning-map-completion-section').classList.remove('hidden');
+    
+    updateLearningMapStatus('Learning Map Complete', 'map-complete');
+    
+    console.log('✅ Comprehensive learning map creation completed');
+}
+
+// Regenerate learning map
+function regenerateLearningMap() {
+    if (confirm('Are you sure you want to regenerate the learning map?')) {
+        console.log('🔄 Regenerating comprehensive learning map...');
+        
+        // Hide all sections
+        document.getElementById('learning-map-completion-section').classList.add('hidden');
+        document.getElementById('modules-preview-section').classList.add('hidden');
+        document.getElementById('download-section').classList.add('hidden');
+        document.getElementById('project-info-section').classList.add('hidden');
+        
+        // Restart the process
+        setTimeout(() => {
+            generateComprehensiveLearningMap();
+        }, 1000);
+    }
+}
+
+// Proceed to development
+function proceedToDevelopment() {
+    console.log('🚀 Proceeding to course development...');
+    
+    const proceedBtn = document.getElementById('proceed-to-development');
+    proceedBtn.disabled = true;
+    proceedBtn.innerHTML = '<div class="learning-map-spinner mr-3"></div>Preparing Development...';
+    
+    setTimeout(() => {
+        alert('🎯 Comprehensive Learning Map Complete!\n\nYour detailed Excel learning map includes:\n\n📋 Project information\n📚 Module breakdowns\n📝 Detailed topics and activities\n⏱️ Precise timing\n🎯 Learning formats\n📊 Screen activities\n\nNext: Upload brand documentation to customize templates, or skip to choose from our template gallery.');
+
+        // Navigate to brand document upload & analysis
+        window.location.href = '../brand_document_upload_&_analysis/code.html';
+    }, 2000);
+}
+
+// ===================================
+// OFFLINE EXCEL GENERATION FUNCTIONS
+// ===================================
+
+// Get stored learning map data
+function getStoredLearningMapData() {
+    try {
+        // First, try to get the stored learning map if it exists
+        const storedMap = localStorage.getItem('generatedLearningMap');
+        if (storedMap) {
+            const parsed = JSON.parse(storedMap);
+            console.log('✅ Retrieved stored learning map:', parsed);
+            return parsed;
+        }
+
+        // If no stored map, return the current comprehensiveLearningMapData if it exists
+        if (comprehensiveLearningMapData && comprehensiveLearningMapData.modules) {
+            console.log('✅ Using current comprehensiveLearningMapData');
+            return comprehensiveLearningMapData;
+        }
+
+        console.log('⚠️ No learning map data found');
+        return null;
+
+        // Return default learning map data
+        return {
+            courseInfo: {
+                title: 'Professional Training Course',
+                domain: 'General Training',
+                totalDuration: 180,
+                moduleCount: 4,
+                targetAudience: 'Professional Learners'
+            },
+            modules: [
+                {
+                    id: 1,
+                    title: 'Foundation Module',
+                    duration: 45,
+                    topics: [
+                        { id: 1, title: 'Introduction to Core Concepts', format: 'Interactive Video', duration: 15 },
+                        { id: 2, title: 'Essential Principles', format: 'Interactive Simulation', duration: 20 },
+                        { id: 3, title: 'Assessment', format: 'Interactive Quiz', duration: 10 }
+                    ]
+                }
+            ]
+        };
+    } catch (error) {
+        console.error('Error getting stored learning map data:', error);
+        return null;
+    }
+}
+
+// Generate offline Excel data
+function generateOfflineExcelData(learningMapData) {
+    if (!learningMapData) {
+        learningMapData = getStoredLearningMapData();
+    }
+
+    // Get real data from localStorage
+    const domainClassificationData = localStorage.getItem('domainClassificationResults');
+    const preSMEData = localStorage.getItem('preSMEAnswers');
+    const professionalAnalysisData = localStorage.getItem('professionalAnalysisResults');
+
+    const domainData = domainClassificationData ? JSON.parse(domainClassificationData) : {};
+    const preSME = preSMEData ? JSON.parse(preSMEData) : {};
+    const analysisData = professionalAnalysisData ? JSON.parse(professionalAnalysisData) : {};
+
+    // Extract real values
+    const clientName = preSME.clientName || preSME['Client Name'] || preSME['client name']
+        || analysisData.data?.clientName || 'CourseCraft Client';
+    const projectName = preSME.projectName || preSME['Project Name'] || preSME['project name']
+        || analysisData.data?.projectName || 'Training Program';
+
+    const excelStructure = {
+        courseOverview: {
+            title: learningMapData.courseOverview?.projectName || learningMapData.projectName || projectName,
+            clientName: learningMapData.courseOverview?.clientName || learningMapData.customerName || clientName,
+            projectName: learningMapData.courseOverview?.projectName || learningMapData.projectName || projectName,
+            domain: learningMapData.courseOverview?.domain || learningMapData.contentDomain || domainData.domain || domainData.data?.domain || 'General Training',
+            totalDuration: learningMapData.courseOverview?.totalDuration || learningMapData.totalDuration || '12 hours',
+            moduleCount: learningMapData.modules?.length || 0,
+            learningSummary: learningMapData.courseOverview?.learningSummary || 'Comprehensive professional training',
+            targetAudience: learningMapData.courseOverview?.learnerProfile || learningMapData.courseOverview?.targetAudience || 'Professional Learners',
+            generatedDate: new Date().toISOString(),
+            generatedBy: 'CourseCraft AI - Dr. Elena Rodriguez'
+        },
+        modules: []
+    };
+
+    // Process modules in new professional format
+    if (learningMapData.modules) {
+        learningMapData.modules.forEach((module, moduleIdx) => {
+            // Handle new professional format
+            const moduleDuration = module.duration || '2-3 hours';
+            const durationMatch = String(moduleDuration).match(/(\d+)/);
+            const durationInMinutes = durationMatch ? parseInt(durationMatch[1]) * (String(moduleDuration).includes('hour') ? 60 : 1) : 120;
+
+            const moduleData = {
+                moduleId: module.moduleNumber || (moduleIdx + 1),
+                title: module.moduleTitle || module.title || `Module ${moduleIdx + 1}`,
+                clientName: module.clientName || clientName,
+                domain: module.domain || domainData.domain || domainData.data?.domain || 'General',
+                description: module.description || `Professional training module focusing on ${module.moduleTitle || module.title}`,
+                duration: durationInMinutes,
+                learningObjectives: module.learningObjectives || [],
+                contentTopics: module.contentTopics || [],
+                activitiesAndMethods: module.activitiesAndMethods || [],
+                assessmentType: module.assessmentType || 'Formative and summative',
+                resourcesNeeded: module.resourcesNeeded || [],
+                implementationNotes: module.implementationNotes || `Delivered in sequence as Module ${moduleIdx + 1}`,
+                topics: []
+            };
+
+            // Keep topics if they exist (for backward compatibility)
+            if (module.topics) {
+                module.topics.forEach((topic, topicIdx) => {
+                    const topicDuration = topic.duration || topic.estimatedTime || '10-15 min';
+                    const topicDurationMatch = String(topicDuration).match(/(\d+)/);
+                    const topicDurationInMinutes = topicDurationMatch ? parseInt(topicDurationMatch[1]) : 10;
+
+                    moduleData.topics.push({
+                        topicId: topic.id || topic.topicNumber || (topicIdx + 1),
+                        title: topic.title,
+                        description: topic.description || topic.screenActivity || (topic.activities?.join(', ')) || `Learn ${topic.title}`,
+                        format: topic.contentType || topic.learningFormat || topic.format || 'Interactive',
+                        duration: topicDurationInMinutes,
+                        type: topic.type || 'content'
+                    });
+                });
+            }
+
+            excelStructure.modules.push(moduleData);
+        });
+    }
+
+    return excelStructure;
+}
+
+console.log('✅ Intelligent Learning Map System Ready! (Online Mode)');
+console.log('👩‍🏫 Expert: Dr. Elena Rodriguez - Instructional Designer');
+console.log('🎯 Purpose: AI-Generated Content-Specific Learning Map');
+console.log('📥 Export: Professional Excel format with comprehensive learning map data');
+console.log('🗺️ Structure: Content analysis + Strategy integration + Personalized modules');
+console.log('📊 Features: Content-specific topics, strategy-based activities, adaptive timing');
+console.log('🧠 AI Integration: Backend GPT-4o-mini powered learning map generation with professional Excel export');
+
+// TEST DATA SETUP FUNCTION - Call this in console to populate test data
+window.setupTestData = function() {
+    console.log('🔧 Setting up test data for OGC APIs course...');
+
+    // Domain Classification
+    localStorage.setItem('domainClassificationResults', JSON.stringify({
+        domain: 'Technical Training',
+        data: {
+            domain: 'Technical Training',
+            confidence: 95
+        }
+    }));
+
+    // Pre-SME Answers (Client and Project info)
+    localStorage.setItem('preSMEAnswers', JSON.stringify({
+        'Client Name': 'OGC',
+        'clientName': 'OGC',
+        'Project Name': 'Publishing Open Data Using OGC APIs',
+        'projectName': 'Publishing Open Data Using OGC APIs'
+    }));
+
+    // Professional Analysis (Content)
+    const existingAnalysis = localStorage.getItem('professionalAnalysisResults');
+    if (existingAnalysis) {
+        const analysis = JSON.parse(existingAnalysis);
+        if (!analysis.data) analysis.data = {};
+        analysis.data.content = 'OGC APIs training content for geospatial data publishing. Learn how to use OGC standards to make your geospatial data accessible through modern web APIs. Topics include understanding different data types (raster vs vector), API specifications, and implementation best practices.';
+        analysis.data.fileName = 'OGC_APIs_Training.pdf';
+        localStorage.setItem('professionalAnalysisResults', JSON.stringify(analysis));
+    }
+
+    console.log('✅ Test data populated! Refresh the page to see OGC content.');
+    console.log('📊 Domain: Technical Training');
+    console.log('👤 Client: OGC');
+    console.log('📁 Project: Publishing Open Data Using OGC APIs');
+};
+
+console.log('💡 To test with sample data, run: setupTestData() in console');
+</script>
+
+
+
+<script>
+function showBackendError(message) {
+    const errorDiv = document.createElement('div');
+    errorDiv.id = 'backend-error-overlay';
+    errorDiv.className = 'fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50';
+    errorDiv.innerHTML = `
+        <div class="bg-red-900 text-white p-8 rounded-lg max-w-2xl">
+            <h2 class="text-2xl font-bold mb-4">⚠️ AI Backend Required</h2>
+            <p class="mb-4">${message}</p>
+            <p class="text-sm opacity-80">Backend must be running at http://localhost:3000</p>
+            <button onclick="location.reload()" class="mt-4 bg-white text-red-900 px-6 py-2 rounded font-bold">Retry</button>
+        </div>
+    `;
+    document.body.appendChild(errorDiv);
+}
+</script>
+
+</body>
+</html>

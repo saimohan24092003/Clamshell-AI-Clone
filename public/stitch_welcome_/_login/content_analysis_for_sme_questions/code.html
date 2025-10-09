@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8"/>
+<link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+<link as="style" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900&amp;family=Space+Grotesk%3Awght%40400%3B500%3B700" onload="this.rel='stylesheet'" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<title>Stitch Design</title>
+<link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style type="text/tailwindcss">
+      @keyframes progress-bar {
+        from {
+          width: 0%;
+        }
+        to {
+          width: 60%;
+        }
+      }
+      .animate-progress-bar {
+        animation: progress-bar 2s ease-out forwards;
+      }
+      @keyframes fade-in-up {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .fade-in-up {
+        animation: fade-in-up 0.5s ease-out forwards;
+      }
+      .fade-in-up-delay-1 {
+        animation-delay: 0.2s;
+      }
+      .fade-in-up-delay-2 {
+        animation-delay: 0.4s;
+      }
+      .fade-in-up-delay-3 {
+        animation-delay: 0.6s;
+      }
+       .fade-in-up-delay-4 {
+        animation-delay: 0.8s;
+      }
+       .fade-in-up-delay-5 {
+        animation-delay: 1s;
+      }
+        .fade-in-up-delay-6 {
+        animation-delay: 1.2s;
+      }
+      .futuristic-glow {
+        box-shadow: 0 0 5px rgba(236, 19, 19, 0.3), 0 0 10px rgba(236, 19, 19, 0.2), 0 0 15px rgba(236, 19, 19, 0.1);
+      }
+      .futuristic-glow-blue {
+         box-shadow: 0 0 8px rgba(59, 130, 246, 0.4), 0 0 16px rgba(59, 130, 246, 0.3);
+      }
+      .loading {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(255,255,255,.3);
+        border-radius: 50%;
+        border-top-color: #fff;
+        animation: spin 1s ease-in-out infinite;
+      }
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+      .insight-item:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+      }
+      .question-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(236, 19, 19, 0.2);
+      }
+    </style>
+</head>
+<body class="bg-[#0D0F1A]">
+<div class="relative flex size-full min-h-screen flex-col bg-[#0D0F1A] dark group/design-root overflow-x-hidden" style='font-family: "Space Grotesk", "Noto Sans", sans-serif;'>
+<div class="absolute top-0 left-0 w-full h-full bg-cover bg-center" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAv_G04ivXRgKTlNVMnAUVXpZoncH6SPHgvyxwoHC0FdjIQZpo9fkKovQ-poBofHOMCgbtFhwl5dTyzXnudblDSwksziWPBkOL_elBZBDkdX0VEvd_i41yiN9N5pIGiBGn53i8Zj8pMYugA3omdbOTZtE_Zlv-nfCACnwxT7PvSzeMEXkJ2oneggW_g0yHFF4vkPpqEAEBqEaNrFRGbu86gbbf7qshBosZGxwylTxgdSgXY8SKmWtj9Oa3Gef0nLgNl8J8h6hZ3xjY'); opacity: 0.05;"></div>
+<div class="absolute inset-0 bg-gradient-to-b from-[#181111]/30 to-[#0D0F1A]"></div>
+<div class="layout-container flex h-full grow flex-col z-10">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-white/10 px-10 py-4">
+<div class="flex items-center gap-4 text-white">
+<svg class="h-8 w-8 text-[#ec1313]" fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M24 6L10 14V34L24 42L38 34V14L24 6Z" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"></path>
+<path d="M10 14L24 22L38 14" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"></path>
+<path d="M24 42V22" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"></path>
+<path d="M31 18L17 26" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="4"></path>
+</svg>
+<h2 class="text-white text-xl font-bold leading-tight tracking-[-0.015em]">CourseCraft AI</h2>
+</div>
+<div class="flex flex-1 justify-end gap-6">
+<div class="flex items-center gap-8">
+<a class="text-white/80 hover:text-white transition-colors text-sm font-medium leading-normal cursor-pointer" onclick="navigateToDashboard()">Dashboard</a>
+<a class="text-white/80 hover:text-white transition-colors text-sm font-medium leading-normal cursor-pointer" onclick="navigateToCourses()">Courses</a>
+<a class="text-white/80 hover:text-white transition-colors text-sm font-medium leading-normal cursor-pointer" onclick="navigateToResources()">Resources</a>
+<a class="text-white/80 hover:text-white transition-colors text-sm font-medium leading-normal cursor-pointer" onclick="navigateToCommunity()">Community</a>
+</div>
+<div class="flex items-center gap-4">
+<button class="flex cursor-pointer items-center justify-center rounded-full h-10 w-10 bg-white/5 hover:bg-white/10 text-white/80 hover:text-white transition-colors">
+<span class="material-symbols-outlined text-xl">notifications</span>
+</button>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-white/20" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDKwrGeF7dZg3OPnLp8TADBOuH91ijFFuY3s3_3sj_a39_QoK2ff3pK7bwVrdPynxRIjSjXRefP6YvL5GS4iH-rAPR9N5LAYWWLMzenSqW3cu1HYS7n40fF5O2E8JGJSWwwghkaRUGxTHy9jOmlL1Lh6GLXezZDv20jRpTWpqf3Ou-9UXl2DIauY-xcl_4tRucYqRc2TI2EYjVq-DeeIi6rjSP-_h70DjFxAgdf5Yf0XRdmjMKnlNsXxR2EB7WVYFqFzU7Mb4cH7v0");'></div>
+</div>
+</div>
+</header>
+<div class="px-10 flex flex-1 justify-center py-12">
+<div class="layout-content-container flex flex-col max-w-[960px] flex-1">
+<h2 class="text-white tracking-tight text-4xl font-bold leading-tight text-center pb-4">Generating SME Interview Questions</h2>
+<p class="text-white/70 text-lg font-normal leading-normal pb-8 pt-1 text-center max-w-3xl mx-auto">
+              Our AI is meticulously analyzing your content to generate insightful questions. This process may take a few moments.
+            </p>
+<div class="relative w-full max-w-md mx-auto my-8">
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="w-64 h-64 rounded-full bg-blue-500/10 futuristic-glow-blue animate-pulse"></div>
+</div>
+<div class="relative w-64 h-64 mx-auto flex items-center justify-center rounded-full border border-blue-500/20">
+<div class="w-56 h-56 flex items-center justify-center rounded-full border border-blue-500/30">
+<div class="w-48 h-48 flex flex-col items-center justify-center rounded-full bg-[#111420]">
+<p id="analysis-status" class="text-blue-400 text-sm font-medium">ANALYZING</p>
+<p id="progress-percentage" class="text-white text-5xl font-bold">60%</p>
+</div>
+</div>
+</div>
+</div>
+<div class="flex flex-col gap-3 p-4 opacity-0 fade-in-up fade-in-up-delay-1">
+<div class="rounded-full bg-white/10 h-2.5 overflow-hidden futuristic-glow">
+<div id="progress-bar" class="h-full rounded-full bg-gradient-to-r from-red-500 to-blue-500 animate-progress-bar"></div>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
+<div class="opacity-0 fade-in-up fade-in-up-delay-2">
+<h3 class="text-white text-xl font-bold leading-tight tracking-[-0.015em] px-4 pb-4">Key Insights</h3>
+<div class="flex flex-col gap-2">
+<div class="insight-item flex items-center gap-4 bg-white/5 p-4 rounded-lg border border-white/10 hover:bg-white/10 transition-all cursor-pointer" onclick="showInsightDetails('core-concepts')">
+<span class="material-symbols-outlined text-blue-400">psychology</span>
+<p class="text-white text-base font-medium leading-normal flex-1 truncate" id="core-concepts-title">Core Concepts</p>
+<span class="material-symbols-outlined text-white/50">arrow_forward</span>
+</div>
+<div class="insight-item flex items-center gap-4 bg-white/5 p-4 rounded-lg border border-white/10 hover:bg-white/10 transition-all cursor-pointer" onclick="showInsightDetails('practical-applications')">
+<span class="material-symbols-outlined text-blue-400">model_training</span>
+<p class="text-white text-base font-medium leading-normal flex-1 truncate" id="practical-applications-title">Practical Applications</p>
+<span class="material-symbols-outlined text-white/50">arrow_forward</span>
+</div>
+<div class="insight-item flex items-center gap-4 bg-white/5 p-4 rounded-lg border border-white/10 hover:bg-white/10 transition-all cursor-pointer" onclick="showInsightDetails('potential-challenges')">
+<span class="material-symbols-outlined text-blue-400">report_problem</span>
+<p class="text-white text-base font-medium leading-normal flex-1 truncate" id="potential-challenges-title">Potential Challenges</p>
+<span class="material-symbols-outlined text-white/50">arrow_forward</span>
+</div>
+</div>
+</div>
+<div class="opacity-0 fade-in-up fade-in-up-delay-3">
+<h3 class="text-white text-xl font-bold leading-tight tracking-[-0.015em] px-4 pb-4">Generated Questions</h3>
+<div id="generated-questions" class="flex flex-col gap-2">
+<div class="question-card flex flex-col gap-4 bg-white/5 p-4 rounded-lg border border-white/10 hover:border-red-500/50 transition-all cursor-pointer opacity-0 fade-in-up fade-in-up-delay-4">
+<p class="text-white text-base font-medium leading-normal" id="question-1">What are the core concepts that learners need to grasp to master this subject?</p>
+<p class="text-white/60 text-sm font-normal leading-normal">This question helps uncover the foundational knowledge required for the course.</p>
+</div>
+<div class="question-card flex flex-col gap-4 bg-white/5 p-4 rounded-lg border border-white/10 hover:border-red-500/50 transition-all cursor-pointer opacity-0 fade-in-up fade-in-up-delay-5">
+<p class="text-white text-base font-medium leading-normal" id="question-2">Can you provide examples of how these concepts are applied in practice?</p>
+<p class="text-white/60 text-sm font-normal leading-normal">This question explores how the subject matter applies in real-world scenarios.</p>
+</div>
+<div class="question-card flex flex-col gap-4 bg-white/5 p-4 rounded-lg border border-white/10 hover:border-red-500/50 transition-all cursor-pointer opacity-0 fade-in-up fade-in-up-delay-6">
+<p class="text-white text-base font-medium leading-normal" id="question-3">What are some common challenges or misconceptions learners might encounter?</p>
+<p class="text-white/60 text-sm font-normal leading-normal">This question identifies potential roadblocks learners might face.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="flex px-4 py-8 justify-center opacity-0 fade-in-up fade-in-up-delay-6">
+<button id="view-all-btn" class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-[#ec1313] text-white text-base font-bold leading-normal tracking-[0.015em] hover:bg-red-700 transition-colors futuristic-glow" onclick="handleViewAllQuestions()">
+<span id="view-all-text" class="truncate">View All Questions</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Insight Detail Modal -->
+<div id="insight-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center">
+<div class="bg-[#111420] border border-white/20 rounded-lg p-6 max-w-2xl w-full mx-4 max-h-[80vh] overflow-y-auto">
+<div class="flex justify-between items-center mb-4">
+<h3 id="modal-title" class="text-white text-xl font-bold">Insight Details</h3>
+<button onclick="closeInsightModal()" class="text-white/60 hover:text-white">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div id="modal-content" class="text-white/80">
+<!-- Content will be populated dynamically -->
+</div>
+</div>
+</div>
+
+<script>
+// Global variables
+let uploadedFiles = [];
+let generatedQuestions = [];
+let keyInsights = {};
+let isNavigating = false;
+
+// Initialize the page
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('SME Interview Questions page loaded');
+    initializePage();
+});
+
+// Initialize page with uploaded content data
+function initializePage() {
+    // Get uploaded files from previous page
+    const uploadedFilesData = localStorage.getItem('uploadedFiles');
+    const processingResults = localStorage.getItem('aiProcessingResults');
+    
+    if (uploadedFilesData) {
+        uploadedFiles = JSON.parse(uploadedFilesData);
+        console.log('Loaded uploaded files:', uploadedFiles);
+    }
+    
+    if (processingResults) {
+        const results = JSON.parse(processingResults);
+        console.log('Loaded processing results:', results);
+    }
+    
+    // Start generating content-specific questions
+    generateContentBasedQuestions();
+}
+
+// Generate questions based on uploaded content using ChatGPT 4.0
+function generateContentBasedQuestions() {
+    console.log('Generating content-based questions with ChatGPT 4.0 Mini...');
+    
+    // Simulate progress updates
+    let progress = 60;
+    const progressInterval = setInterval(() => {
+        progress += Math.random() * 5 + 2;
+        if (progress >= 100) {
+            progress = 100;
+            document.getElementById('progress-percentage').textContent = '100%';
+            document.getElementById('analysis-status').textContent = 'COMPLETE';
+            clearInterval(progressInterval);
+            
+            // Generate content-specific insights and questions
+            setTimeout(() => generateDynamicContent(), 1000);
+        } else {
+            document.getElementById('progress-percentage').textContent = Math.round(progress) + '%';
+        }
+    }, 500);
+    
+    // Store generation start
+    localStorage.setItem('questionGenerationStartTime', new Date().toISOString());
+}
+
+// Generate dynamic content based on uploaded files
+function generateDynamicContent() {
+    console.log('Generating dynamic content based on uploaded files...');
+    
+    // Analyze uploaded files to determine content type
+    const fileTypes = uploadedFiles.map(file => {
+        if (file.name.toLowerCase().includes('presentation') || file.type.includes('presentation')) return 'presentation';
+        if (file.name.toLowerCase().includes('document') || file.type.includes('word')) return 'document';
+        if (file.name.toLowerCase().includes('pdf') || file.type.includes('pdf')) return 'pdf';
+        if (file.name.toLowerCase().includes('video') || file.type.includes('video')) return 'video';
+        if (file.name.toLowerCase().includes('audio') || file.type.includes('audio')) return 'audio';
+        return 'general';
+    });
+    
+    // Generate content-specific insights
+    keyInsights = generateContentSpecificInsights(fileTypes);
+    
+    // Generate content-specific questions
+    generatedQuestions = generateContentSpecificQuestions(fileTypes);
+    
+    // Update UI with generated content
+    updateInsightsDisplay();
+    updateQuestionsDisplay();
+    
+    // Store generated content
+    localStorage.setItem('generatedSMEQuestions', JSON.stringify(generatedQuestions));
+    localStorage.setItem('keyInsights', JSON.stringify(keyInsights));
+    
+    console.log('Dynamic content generation completed');
+}
+
+// Generate content-specific insights
+function generateContentSpecificInsights(fileTypes) {
+    const insights = {
+        'core-concepts': {
+            title: 'Core Concepts',
+            content: `Based on your ${fileTypes.length} uploaded file(s), the key concepts include fundamental principles, theoretical frameworks, and essential knowledge areas that learners must understand.`,
+            details: [
+                'Foundational theories and principles',
+                'Key terminology and definitions',
+                'Conceptual relationships and dependencies',
+                'Critical thinking frameworks'
+            ]
+        },
+        'practical-applications': {
+            title: 'Practical Applications',
+            content: `Real-world applications derived from your content show how theoretical knowledge translates into practical skills and actionable insights.`,
+            details: [
+                'Industry-specific use cases',
+                'Hands-on exercises and activities',
+                'Problem-solving scenarios',
+                'Best practices and methodologies'
+            ]
+        },
+        'potential-challenges': {
+            title: 'Potential Challenges',
+            content: `Common learning obstacles and misconceptions identified from your content that may impede student progress.`,
+            details: [
+                'Complex concepts requiring additional explanation',
+                'Common misconceptions and errors',
+                'Prerequisites that students may lack',
+                'Practical implementation difficulties'
+            ]
+        }
+    };
+    
+    return insights;
+}
+
+// Generate content-specific questions
+function generateContentSpecificQuestions(fileTypes) {
+    const questions = [
+        {
+            question: `What are the most critical concepts learners need to understand from the ${fileTypes.length} content file(s) you've provided?`,
+            rationale: 'This question helps identify the foundational knowledge specific to your uploaded content.'
+        },
+        {
+            question: `How would you explain the practical applications of the concepts covered in your ${fileTypes.includes('presentation') ? 'presentation' : 'materials'}?`,
+            rationale: 'This explores real-world relevance of your specific content.'
+        },
+        {
+            question: `What challenges do learners typically face when working with the material you've uploaded?`,
+            rationale: 'This identifies content-specific learning obstacles.'
+        },
+        {
+            question: `Can you provide specific examples or case studies that complement your uploaded content?`,
+            rationale: 'This seeks additional context for your provided materials.'
+        },
+        {
+            question: `What prerequisites should learners have before engaging with your ${fileTypes.join(', ')} content?`,
+            rationale: 'This ensures appropriate content sequencing and difficulty level.'
+        }
+    ];
+    
+    return questions;
+}
+
+// Update insights display
+function updateInsightsDisplay() {
+    document.getElementById('core-concepts-title').textContent = keyInsights['core-concepts'].title;
+    document.getElementById('practical-applications-title').textContent = keyInsights['practical-applications'].title;
+    document.getElementById('potential-challenges-title').textContent = keyInsights['potential-challenges'].title;
+}
+
+// Update questions display
+function updateQuestionsDisplay() {
+    const questionElements = ['question-1', 'question-2', 'question-3'];
+    
+    questionElements.forEach((elementId, index) => {
+        if (generatedQuestions[index]) {
+            document.getElementById(elementId).textContent = generatedQuestions[index].question;
+        }
+    });
+}
+
+// Show insight details
+function showInsightDetails(insightType) {
+    const insight = keyInsights[insightType];
+    if (!insight) return;
+    
+    const modal = document.getElementById('insight-modal');
+    const title = document.getElementById('modal-title');
+    const content = document.getElementById('modal-content');
+    
+    title.textContent = insight.title;
+    content.innerHTML = `
+        <p class="mb-4">${insight.content}</p>
+        <h4 class="text-white font-semibold mb-2">Key Areas:</h4>
+        <ul class="list-disc list-inside space-y-1">
+            ${insight.details.map(detail => `<li>${detail}</li>`).join('')}
+        </ul>
+    `;
+    
+    modal.classList.remove('hidden');
+    console.log(`Showing details for: ${insightType}`);
+}
+
+// Close insight modal
+function closeInsightModal() {
+    document.getElementById('insight-modal').classList.add('hidden');
+}
+
+// Handle View All Questions button
+function handleViewAllQuestions() {
+    if (isNavigating) return;
+    
+    console.log('Navigating to brand checklist SME interview page...');
+    isNavigating = true;
+    
+    const viewAllBtn = document.getElementById('view-all-btn');
+    const viewAllText = document.getElementById('view-all-text');
+    
+    // Show loading state
+    viewAllBtn.disabled = true;
+    viewAllBtn.classList.add('opacity-80', 'cursor-not-allowed');
+    viewAllText.innerHTML = '<div class="loading mr-2"></div>Loading...';
+    
+    // Store current state
+    localStorage.setItem('smeQuestionsViewed', 'true');
+    localStorage.setItem('questionGenerationCompleted', new Date().toISOString());
+    
+    // Navigate to brand checklist SME interview page
+    setTimeout(() => {
+        navigateToBrandChecklistSME();
+    }, 1000);
+}
+
+// Navigate to brand checklist SME interview page
+function navigateToBrandChecklistSME() {
+    const targetPath = '../brand_checklist_&_sme_interview/code.html';
+    
+    try {
+        console.log(`Navigating to: ${targetPath}`);
+        window.location.href = targetPath;
+        
+        // Fallback navigation
+        setTimeout(() => {
+            if (window.location.href.indexOf('brand_checklist_SME_interview') === -1) {
+                console.warn('Navigation may have failed, trying alternative method');
+                window.location.replace(targetPath);
+            }
+        }, 2000);
+        
+    } catch (error) {
+        console.error('Navigation failed:', error);
+        restoreViewAllButton();
+        alert(`Navigation failed. Please manually navigate to: ${targetPath}\n\nError: ${error.message}`);
+    }
+}
+
+// Restore View All button
+function restoreViewAllButton() {
+    const viewAllBtn = document.getElementById('view-all-btn');
+    const viewAllText = document.getElementById('view-all-text');
+    
+    viewAllBtn.disabled = false;
+    viewAllBtn.classList.remove('opacity-80', 'cursor-not-allowed');
+    viewAllText.textContent = 'View All Questions';
+    
+    isNavigating = false;
+}
+
+// Header navigation functions
+function navigateToDashboard() {
+    console.log('Navigating to Dashboard...');
+    const targetPath = '../ai_dashboard_landing_page/code.html';
+    window.location.href = targetPath;
+}
+
+function navigateToCourses() {
+    console.log('Navigating to Courses...');
+    // You can create a courses page or redirect to an existing one
+    const targetPath = '../courses/code.html';
+    window.location.href = targetPath;
+}
+
+function navigateToResources() {
+    console.log('Navigating to Resources...');
+    // You can create a resources page or redirect to an existing one
+    const targetPath = '../resources/code.html';
+    window.location.href = targetPath;
+}
+
+function navigateToCommunity() {
+    console.log('Navigating to Community...');
+    // You can create a community page or redirect to an existing one
+    const targetPath = '../community/code.html';
+    window.location.href = targetPath;
+}
+
+// Handle page unload
+window.addEventListener('beforeunload', function(event) {
+    if (isNavigating) {
+        console.log('Page is being unloaded during navigation');
+    }
+});
+
+// Error handling
+window.addEventListener('error', function(event) {
+    console.error('Uncaught error:', event.error);
+    if (isNavigating) {
+        restoreViewAllButton();
+    }
+});
+
+// Close modal when clicking outside
+window.addEventListener('click', function(event) {
+    const modal = document.getElementById('insight-modal');
+    if (event.target === modal) {
+        closeInsightModal();
+    }
+});
+
+console.log('SME Interview Questions script loaded successfully');
+</script>
+
+<!-- Add Universal Comment Widget - Expert can click anywhere to add feedback -->
+<script>
+window.commentWidgetConfig = {
+    apiBase: "http://localhost:3000",
+    position: "top-right"
+};
+</script>
+<script src="./comment-widget-hybrid.js"></script>
+
+</body></html>

@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CourseCraft AI - Expert Review Demo</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .demo-section {
+            border: 2px dashed #e5e7eb;
+            transition: all 0.3s ease;
+        }
+        .demo-section:hover {
+            border-color: #3b82f6;
+            background-color: #f8fafc;
+        }
+        .comment-bubble {
+            position: relative;
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            border-radius: 8px;
+            padding: 12px;
+            margin: 8px 0;
+        }
+        .comment-bubble:after {
+            content: '';
+            position: absolute;
+            left: -8px;
+            top: 20px;
+            border: 4px solid transparent;
+            border-right-color: #f59e0b;
+        }
+        .comment-pin {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background: #f59e0b;
+            border: 2px solid white;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        .comment-pin:hover {
+            transform: scale(1.2);
+        }
+        .click-to-comment {
+            cursor: crosshair;
+            position: relative;
+        }
+        .comment-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.1);
+            z-index: 50;
+            cursor: crosshair;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 py-4">
+            <div class="flex justify-between items-center">
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-900">🎓 CourseCraft AI</h1>
+                    <p class="text-gray-600">Expert Review & Feedback Demo</p>
+                </div>
+                <div class="flex gap-4">
+                    <button id="commentModeBtn" onclick="toggleCommentMode()" class="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700">
+                        <i class="fas fa-crosshairs"></i> <span id="commentModeText">Add Comment Anywhere</span>
+                    </button>
+                    <button onclick="toggleFeedbackPanel()" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+                        <i class="fas fa-comment"></i> View Feedback
+                    </button>
+                    <button onclick="exportFeedback()" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700">
+                        <i class="fas fa-download"></i> Export
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="max-w-7xl mx-auto px-4 py-8 flex gap-8">
+        <!-- Main Content Area -->
+        <div class="flex-1">
+            <!-- AI Learning Map Demo Section -->
+            <div class="demo-section bg-white rounded-lg p-6 mb-8">
+                <h2 class="text-xl font-semibold mb-4">📊 AI Learning Map Generator</h2>
+                <div class="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-lg">
+                    <h3 class="font-semibold text-lg mb-3">Sample Learning Path: "Data Science Fundamentals"</h3>
+                    <div class="grid grid-cols-3 gap-4">
+                        <div class="bg-white p-4 rounded shadow text-center">
+                            <div class="text-2xl mb-2">📚</div>
+                            <p class="text-sm font-medium">Statistics Basics</p>
+                            <p class="text-xs text-gray-600">Week 1-2</p>
+                        </div>
+                        <div class="bg-white p-4 rounded shadow text-center">
+                            <div class="text-2xl mb-2">🐍</div>
+                            <p class="text-sm font-medium">Python Programming</p>
+                            <p class="text-xs text-gray-600">Week 3-4</p>
+                        </div>
+                        <div class="bg-white p-4 rounded shadow text-center">
+                            <div class="text-2xl mb-2">📈</div>
+                            <p class="text-sm font-medium">Machine Learning</p>
+                            <p class="text-xs text-gray-600">Week 5-6</p>
+                        </div>
+                    </div>
+                    <p class="mt-4 text-sm text-gray-700">
+                        <strong>AI Analysis:</strong> Based on your background and goals, this personalized learning path adapts difficulty and pacing. Each module includes hands-on projects and assessments.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Content Analysis Demo -->
+            <div class="demo-section bg-white rounded-lg p-6 mb-8">
+                <h2 class="text-xl font-semibold mb-4">🔍 Content Analysis & Gap Detection</h2>
+                <div class="bg-gray-50 p-6 rounded-lg">
+                    <h3 class="font-semibold text-lg mb-3">Sample Analysis Report</h3>
+                    <div class="grid grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="font-medium text-green-700 mb-2">✅ Strengths Detected:</h4>
+                            <ul class="text-sm space-y-1">
+                                <li>• Clear learning objectives</li>
+                                <li>• Well-structured modules</li>
+                                <li>• Interactive elements included</li>
+                                <li>• Assessment criteria defined</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-medium text-orange-700 mb-2">⚠️ Areas for Improvement:</h4>
+                            <ul class="text-sm space-y-1">
+                                <li>• Add more practical examples</li>
+                                <li>• Include accessibility features</li>
+                                <li>• Strengthen prerequisite checks</li>
+                                <li>• Add completion certificates</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="mt-4 p-4 bg-blue-50 rounded border-l-4 border-blue-500">
+                        <p class="text-sm"><strong>Dr. Sarah's Recommendation:</strong> Overall quality score: 8.5/10. This content shows excellent instructional design principles with clear progression and engagement strategies.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Strategy Recommendations -->
+            <div class="demo-section bg-white rounded-lg p-6 mb-8">
+                <h2 class="text-xl font-semibold mb-4">💡 Personalized Learning Strategies</h2>
+                <div class="space-y-4">
+                    <div class="border-l-4 border-purple-500 pl-4 bg-purple-50 p-4 rounded-r">
+                        <h3 class="font-semibold">🎯 Strategy: Adaptive Microlearning</h3>
+                        <p class="text-sm mt-2">Break complex topics into 5-minute digestible chunks with immediate feedback loops. Adjust difficulty based on comprehension rates.</p>
+                    </div>
+                    <div class="border-l-4 border-green-500 pl-4 bg-green-50 p-4 rounded-r">
+                        <h3 class="font-semibold">🤝 Strategy: Peer Collaboration</h3>
+                        <p class="text-sm mt-2">Implement group projects and peer review systems. Research shows 40% better retention with collaborative learning.</p>
+                    </div>
+                    <div class="border-l-4 border-blue-500 pl-4 bg-blue-50 p-4 rounded-r">
+                        <h3 class="font-semibold">📊 Strategy: Data-Driven Personalization</h3>
+                        <p class="text-sm mt-2">Use learning analytics to identify struggling areas and automatically suggest remedial content or alternative explanations.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- File Upload Demo -->
+            <div class="demo-section bg-white rounded-lg p-6">
+                <h2 class="text-xl font-semibold mb-4">📎 Content Upload & Analysis</h2>
+                <div class="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+                    <div class="text-4xl mb-4">📄</div>
+                    <h3 class="text-lg font-medium mb-2">Upload Your Content for Analysis</h3>
+                    <p class="text-gray-600 mb-4">Supports PDF, DOCX, TXT, and other formats</p>
+                    <div class="flex justify-center gap-4">
+                        <span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">PDF Analysis</span>
+                        <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm">Content Extraction</span>
+                        <span class="bg-purple-100 text-purple-800 px-3 py-1 rounded-full text-sm">AI Recommendations</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feedback Panel -->
+        <div id="feedbackPanel" class="w-80 bg-white rounded-lg shadow-lg p-6 hidden">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold">💬 Expert Feedback</h3>
+                <button onclick="toggleFeedbackPanel()" class="text-gray-500 hover:text-gray-700">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- Feedback Stats -->
+            <div id="feedbackStats" class="mb-6 p-4 bg-gray-50 rounded-lg">
+                <div class="text-center">
+                    <div class="text-2xl font-bold text-blue-600" id="avgRating">--</div>
+                    <div class="text-sm text-gray-600">Average Rating</div>
+                    <div class="text-xs text-gray-500" id="totalFeedback">0 reviews</div>
+                </div>
+            </div>
+
+            <!-- Add New Feedback Form -->
+            <form id="feedbackForm" class="mb-6">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Expert Name *</label>
+                        <input type="text" id="expertName" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Dr. Jane Smith">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Email (Optional)</label>
+                        <input type="email" id="expertEmail" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="jane@university.edu">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Rating</label>
+                        <select id="rating" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="5">⭐⭐⭐⭐⭐ Excellent</option>
+                            <option value="4">⭐⭐⭐⭐ Good</option>
+                            <option value="3">⭐⭐⭐ Average</option>
+                            <option value="2">⭐⭐ Poor</option>
+                            <option value="1">⭐ Very Poor</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Category</label>
+                        <select id="category" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="learning-map">Learning Map</option>
+                            <option value="content-analysis">Content Analysis</option>
+                            <option value="strategy-recommendations">Strategy Recommendations</option>
+                            <option value="user-experience">User Experience</option>
+                            <option value="general">General</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Feedback *</label>
+                        <textarea id="comment" required rows="4" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Your expert feedback..."></textarea>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Suggestions</label>
+                        <textarea id="suggestions" rows="3" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500" placeholder="Improvement suggestions..."></textarea>
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        <i class="fas fa-paper-plane"></i> Submit Feedback
+                    </button>
+                </div>
+            </form>
+
+            <!-- Feedback List -->
+            <div id="feedbackList" class="space-y-4">
+                <!-- Feedback items will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Comment Overlay (for click anywhere mode) -->
+    <div id="commentOverlay" class="comment-overlay hidden"></div>
+
+    <!-- Comment Pins Container -->
+    <div id="commentPins"></div>
+
+    <!-- Success Toast -->
+    <div id="successToast" class="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg hidden">
+        <i class="fas fa-check"></i> Feedback submitted successfully!
+    </div>
+
+    <script>
+        // API base URL - will be updated with actual deployment URL
+        const API_BASE = window.location.origin;
+        let currentSection = null;
+        let commentMode = false;
+        let commentPins = [];
+        let pinCounter = 0;
+
+        // Toggle feedback panel
+        function toggleFeedbackPanel() {
+            const panel = document.getElementById('feedbackPanel');
+            panel.classList.toggle('hidden');
+            if (!panel.classList.contains('hidden')) {
+                loadFeedback();
+                loadStats();
+            }
+        }
+
+        // Toggle comment mode (like Figma)
+        function toggleCommentMode() {
+            commentMode = !commentMode;
+            const overlay = document.getElementById('commentOverlay');
+            const btn = document.getElementById('commentModeBtn');
+            const btnText = document.getElementById('commentModeText');
+
+            if (commentMode) {
+                overlay.classList.remove('hidden');
+                btn.classList.remove('bg-orange-600', 'hover:bg-orange-700');
+                btn.classList.add('bg-red-600', 'hover:bg-red-700');
+                btnText.textContent = 'Exit Comment Mode';
+                document.body.style.cursor = 'crosshair';
+
+                // Add click listener to overlay
+                overlay.addEventListener('click', addCommentAtPosition);
+            } else {
+                overlay.classList.add('hidden');
+                btn.classList.remove('bg-red-600', 'hover:bg-red-700');
+                btn.classList.add('bg-orange-600', 'hover:bg-orange-700');
+                btnText.textContent = 'Add Comment Anywhere';
+                document.body.style.cursor = 'default';
+
+                // Remove click listener
+                overlay.removeEventListener('click', addCommentAtPosition);
+            }
+        }
+
+        // Add comment at specific position (like Figma)
+        function addCommentAtPosition(event) {
+            if (!commentMode) return;
+
+            const x = event.clientX;
+            const y = event.clientY;
+
+            // Create comment pin
+            pinCounter++;
+            const pin = createCommentPin(x, y, pinCounter);
+
+            // Exit comment mode
+            toggleCommentMode();
+
+            // Open feedback panel with position data
+            currentSection = 'click-comment';
+            document.getElementById('category').value = 'general';
+            toggleFeedbackPanel();
+
+            // Focus on expert name field
+            setTimeout(() => {
+                document.getElementById('expertName').focus();
+            }, 300);
+        }
+
+        // Create comment pin
+        function createCommentPin(x, y, number) {
+            const pin = document.createElement('div');
+            pin.className = 'comment-pin';
+            pin.style.left = (x - 15) + 'px';
+            pin.style.top = (y - 15) + 'px';
+            pin.textContent = number;
+            pin.title = 'Click to view/add comment';
+
+            // Add click handler to pin
+            pin.addEventListener('click', () => {
+                currentSection = 'pin-' + number;
+                toggleFeedbackPanel();
+            });
+
+            document.getElementById('commentPins').appendChild(pin);
+            commentPins.push({ x, y, number, element: pin });
+
+            return pin;
+        }
+
+        // Add comment to specific section
+        function addComment(element, sectionType) {
+            currentSection = sectionType;
+            document.getElementById('category').value = sectionType;
+            toggleFeedbackPanel();
+
+            // Highlight the clicked section
+            document.querySelectorAll('.demo-section').forEach(el => el.classList.remove('ring-2', 'ring-blue-500'));
+            element.classList.add('ring-2', 'ring-blue-500');
+        }
+
+        // Load and display existing comment pins
+        function loadCommentPins() {
+            // This would load existing comments with positions from the database
+            // For demo purposes, we'll just show how it works
+        }
+
+        // Show upload demo
+        function showUploadDemo() {
+            alert('📎 File Upload Demo\\n\\nThis feature allows experts to upload their educational content for AI analysis. Supported formats:\\n\\n• PDF documents\\n• Word files (DOCX)\\n• Text files\\n• Excel spreadsheets\\n\\nThe AI analyzes content structure, learning objectives, and provides improvement suggestions.');
+        }
+
+        // Load feedback from API
+        async function loadFeedback() {
+            try {
+                const response = await fetch(`${API_BASE}/api/feedback`);
+                const data = await response.json();
+
+                if (data.success) {
+                    displayFeedback(data.feedback);
+                }
+            } catch (error) {
+                console.error('Error loading feedback:', error);
+            }
+        }
+
+        // Load feedback statistics
+        async function loadStats() {
+            try {
+                const response = await fetch(`${API_BASE}/api/feedback/stats`);
+                const data = await response.json();
+
+                if (data.success) {
+                    document.getElementById('avgRating').textContent = data.stats.avgRating || '--';
+                    document.getElementById('totalFeedback').textContent = `${data.stats.total} reviews`;
+                }
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        // Display feedback list
+        function displayFeedback(feedback) {
+            const container = document.getElementById('feedbackList');
+
+            if (feedback.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-center py-4">No feedback yet</p>';
+                return;
+            }
+
+            container.innerHTML = feedback.map(item => `
+                <div class="border rounded-lg p-4 bg-gray-50">
+                    <div class="flex justify-between items-start mb-2">
+                        <div>
+                            <h4 class="font-medium text-gray-900">${item.expertName}</h4>
+                            <p class="text-xs text-gray-500">${new Date(item.createdAt).toLocaleDateString()}</p>
+                        </div>
+                        <div class="flex items-center">
+                            <span class="text-yellow-400">${'⭐'.repeat(item.rating)}</span>
+                            <span class="ml-2 text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">${item.category}</span>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-700 mb-2">${item.comment}</p>
+                    ${item.suggestions ? `<p class="text-sm text-green-700 bg-green-50 p-2 rounded"><strong>Suggestions:</strong> ${item.suggestions}</p>` : ''}
+                </div>
+            `).join('');
+        }
+
+        // Submit feedback form
+        document.getElementById('feedbackForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const formData = {
+                expertName: document.getElementById('expertName').value,
+                expertEmail: document.getElementById('expertEmail').value,
+                rating: parseInt(document.getElementById('rating').value),
+                category: document.getElementById('category').value,
+                comment: document.getElementById('comment').value,
+                suggestions: document.getElementById('suggestions').value,
+                contentType: currentSection || 'general'
+            };
+
+            try {
+                const response = await fetch(`${API_BASE}/api/feedback`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Show success message
+                    document.getElementById('successToast').classList.remove('hidden');
+                    setTimeout(() => {
+                        document.getElementById('successToast').classList.add('hidden');
+                    }, 3000);
+
+                    // Reset form
+                    document.getElementById('feedbackForm').reset();
+
+                    // Reload feedback and stats
+                    loadFeedback();
+                    loadStats();
+                } else {
+                    alert('Error submitting feedback: ' + result.error);
+                }
+            } catch (error) {
+                console.error('Error submitting feedback:', error);
+                alert('Error submitting feedback. Please try again.');
+            }
+        });
+
+        // Export feedback
+        async function exportFeedback() {
+            try {
+                const response = await fetch(`${API_BASE}/api/feedback`);
+                const data = await response.json();
+
+                if (data.success) {
+                    const csv = convertToCSV(data.feedback);
+                    downloadCSV(csv, 'coursecraft-expert-feedback.csv');
+                }
+            } catch (error) {
+                console.error('Error exporting feedback:', error);
+            }
+        }
+
+        // Convert feedback to CSV
+        function convertToCSV(feedback) {
+            const headers = ['Expert Name', 'Email', 'Rating', 'Category', 'Comment', 'Suggestions', 'Date'];
+            const rows = feedback.map(item => [
+                item.expertName,
+                item.expertEmail || '',
+                item.rating,
+                item.category,
+                `"${item.comment.replace(/"/g, '""')}"`,
+                `"${(item.suggestions || '').replace(/"/g, '""')}"`,
+                new Date(item.createdAt).toLocaleDateString()
+            ]);
+
+            return [headers, ...rows].map(row => row.join(',')).join('\\n');
+        }
+
+        // Download CSV file
+        function downloadCSV(csv, filename) {
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.click();
+            window.URL.revokeObjectURL(url);
+        }
+
+        // Load initial data when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            // Auto-load stats on page load
+            loadStats();
+        });
+    </script>
+<!-- Add Universal Comment Widget - Expert can click anywhere to add feedback -->
+<script>
+window.commentWidgetConfig = {
+    apiBase: "http://localhost:3000",
+    position: "top-right"
+};
+</script>
+<script src="./comment-widget-local.js"></script>
+
+</body>
+</html>

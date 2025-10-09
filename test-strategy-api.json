@@ -1,0 +1,25 @@
+{
+  "contentAnalysis": {
+    "extractedTopics": ["AI content processing", "instructional design"],
+    "complexityLevel": "medium",
+    "primaryContentType": "document",
+    "fileCount": 3
+  },
+  "smeInterview": {
+    "answers": {
+      "0": "We need to train our team on AI-driven content processing",
+      "1": "Interactive learning works best for our technical staff",
+      "2": "We prefer hands-on practice with real scenarios",
+      "3": "Assessment and progress tracking are important"
+    },
+    "completionPercentage": 90,
+    "questions": [
+      "What are your main learning objectives?",
+      "What learning approach works best?",
+      "What type of practice do you need?",
+      "How important is assessment?"
+    ]
+  },
+  "requestId": "test-frontend-connection",
+  "useAI": false
+}

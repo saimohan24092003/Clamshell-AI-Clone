@@ -1,0 +1,34 @@
+# Environment files
+.env
+.env.backup
+.env.local
+
+# Node modules
+node_modules/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+
+# Build folders
+dist/
+build/
+out/
+.vercel
+
+# User uploads
+uploads/
+
+# Backup files
+*.backup

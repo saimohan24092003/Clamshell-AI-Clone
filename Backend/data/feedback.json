@@ -1,0 +1,15 @@
+[
+  {
+    "id": "16527086-40a2-4be9-a509-13194c9af405",
+    "expertName": "Test Expert",
+    "expertEmail": "",
+    "rating": 5,
+    "category": "general",
+    "comment": "Test comment for E2E testing",
+    "suggestions": "",
+    "contentType": "general",
+    "contentId": null,
+    "createdAt": "2025-09-26T07:03:07.932Z",
+    "status": "new"
+  }
+]

@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Professional Analysis Integration</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="public/js/professionalAnalysisIntegration.js"></script>
+    <style>
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-8">🎓 Professional Analysis Integration Test</h1>
+
+        <!-- Connection Status -->
+        <div class="bg-gray-800 p-4 rounded-lg mb-6">
+            <h2 class="text-xl font-bold mb-2">Backend Connection</h2>
+            <p id="connection-status" class="text-gray-400">Checking connection...</p>
+        </div>
+
+        <!-- File Upload Test -->
+        <div class="bg-gray-800 p-4 rounded-lg mb-6">
+            <h2 class="text-xl font-bold mb-4">Test File Upload</h2>
+            <input type="file" id="test-file" accept=".pdf,.docx,.txt" class="mb-4 block w-full text-sm text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700">
+            <button id="upload-test-btn" class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors" onclick="testUpload()">
+                Test Upload & Analysis
+            </button>
+            <div id="upload-status" class="mt-4 text-gray-400"></div>
+        </div>
+
+        <!-- Analysis Progress -->
+        <div id="analysis-progress" class="bg-gray-800 p-4 rounded-lg mb-6" style="display: none;">
+            <h2 class="text-xl font-bold mb-4">Analysis Progress</h2>
+            <div class="w-full bg-gray-700 rounded-full h-4 mb-4">
+                <div id="progress-bar" class="bg-blue-600 h-4 rounded-full transition-all duration-500" style="width: 0%"></div>
+            </div>
+            <p id="status-text" class="text-gray-300">Starting analysis...</p>
+        </div>
+
+        <!-- Analysis Results -->
+        <div id="analysis-results" class="bg-gray-800 p-4 rounded-lg mb-6" style="display: none;">
+            <h2 class="text-xl font-bold mb-4">Professional Analysis Results</h2>
+
+            <!-- Domain Classification -->
+            <div id="domain-classification" class="mb-6"></div>
+
+            <!-- Complexity Assessment -->
+            <div id="complexity-assessment" class="mb-6"></div>
+
+            <!-- Quality Metrics -->
+            <div id="quality-metrics" class="mb-6"></div>
+
+            <!-- Suitability Assessment -->
+            <div id="suitability-assessment" class="mb-6"></div>
+
+            <!-- Gap Analysis -->
+            <div id="gap-analysis" class="mb-6"></div>
+
+            <!-- Enhancement Suggestions -->
+            <div id="enhancement-suggestions" class="mb-6"></div>
+
+            <!-- SME Questions -->
+            <div id="sme-questions" class="mb-6"></div>
+        </div>
+
+        <!-- Error Display -->
+        <div id="error-display" class="bg-red-900 p-4 rounded-lg mb-6" style="display: none;">
+            <h2 class="text-xl font-bold mb-2 text-red-300">Error</h2>
+            <p id="error-message" class="text-red-200"></p>
+        </div>
+
+        <!-- Test Results -->
+        <div class="bg-gray-800 p-4 rounded-lg">
+            <h2 class="text-xl font-bold mb-4">Test Results</h2>
+            <ul id="test-results" class="space-y-2">
+                <li class="text-gray-400">⏳ Backend connection test...</li>
+                <li class="text-gray-400">⏳ File upload test pending...</li>
+                <li class="text-gray-400">⏳ Professional analysis test pending...</li>
+                <li class="text-gray-400">⏳ Results display test pending...</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        let currentSessionId = null;
+
+        // Test connection on page load
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log('🧪 Starting Professional Analysis Integration Tests');
+
+            await testBackendConnection();
+        });
+
+        // Test backend connection
+        async function testBackendConnection() {
+            const statusElement = document.getElementById('connection-status');
+            const testResults = document.getElementById('test-results');
+
+            try {
+                statusElement.textContent = 'Testing connection...';
+
+                const response = await fetch('http://localhost:3000/api/content/health', {
+                    method: 'GET',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+
+                if (response.ok || response.status === 404) {
+                    // 404 is ok - means backend is running but health endpoint doesn't exist
+                    statusElement.innerHTML = '<span class="text-green-400">✅ Connected to Professional Analysis Backend</span>';
+                    updateTestResult(0, '✅ Backend connection successful');
+                } else {
+                    throw new Error(`Backend returned: ${response.status}`);
+                }
+
+            } catch (error) {
+                statusElement.innerHTML = '<span class="text-red-400">❌ Connection failed: ' + error.message + '</span>';
+                updateTestResult(0, '❌ Backend connection failed: ' + error.message);
+            }
+        }
+
+        // Test file upload and analysis
+        async function testUpload() {
+            const fileInput = document.getElementById('test-file');
+            const uploadBtn = document.getElementById('upload-test-btn');
+            const statusElement = document.getElementById('upload-status');
+
+            if (!fileInput.files || fileInput.files.length === 0) {
+                statusElement.innerHTML = '<span class="text-red-400">❌ Please select a file first</span>';
+                return;
+            }
+
+            const file = fileInput.files[0];
+            console.log('🧪 Testing upload with file:', file.name);
+
+            try {
+                // Disable button and show loading
+                uploadBtn.disabled = true;
+                uploadBtn.innerHTML = '<div class="loading mr-2"></div>Uploading...';
+                statusElement.innerHTML = '<span class="text-blue-400">📤 Uploading file for professional analysis...</span>';
+
+                // Create FormData
+                const formData = new FormData();
+                formData.append('files', file);
+
+                // Upload file
+                const uploadResponse = await fetch('http://localhost:3000/api/content/upload-and-analyze', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!uploadResponse.ok) {
+                    throw new Error(`Upload failed: ${uploadResponse.status}`);
+                }
+
+                const result = await uploadResponse.json();
+                currentSessionId = result.data.sessionId;
+
+                console.log('✅ Upload successful, session ID:', currentSessionId);
+                statusElement.innerHTML = '<span class="text-green-400">✅ Upload successful! Session ID: ' + currentSessionId + '</span>';
+                updateTestResult(1, '✅ File upload successful');
+
+                // Show progress and start monitoring
+                document.getElementById('analysis-progress').style.display = 'block';
+                startAnalysisMonitoring();
+
+            } catch (error) {
+                console.error('❌ Upload failed:', error);
+                statusElement.innerHTML = '<span class="text-red-400">❌ Upload failed: ' + error.message + '</span>';
+                updateTestResult(1, '❌ File upload failed: ' + error.message);
+
+                // Re-enable button
+                uploadBtn.disabled = false;
+                uploadBtn.textContent = 'Test Upload & Analysis';
+            }
+        }
+
+        // Monitor analysis progress
+        function startAnalysisMonitoring() {
+            console.log('🔍 Starting analysis monitoring...');
+
+            const checkInterval = setInterval(async () => {
+                try {
+                    const response = await fetch(`http://localhost:3000/api/content/analysis-status/${currentSessionId}`);
+
+                    if (!response.ok) {
+                        throw new Error(`Status check failed: ${response.status}`);
+                    }
+
+                    const result = await response.json();
+                    const data = result.data;
+
+                    console.log(`📊 Analysis Status: ${data.status} (${data.analysisProgress}%)`);
+
+                    // Update progress
+                    document.getElementById('progress-bar').style.width = data.analysisProgress + '%';
+                    document.getElementById('status-text').textContent = getStatusMessage(data.currentStep, data.analysisProgress);
+
+                    if (data.status === 'completed' && data.professionalAnalysis) {
+                        console.log('🎉 Professional analysis completed!');
+                        clearInterval(checkInterval);
+
+                        updateTestResult(2, '✅ Professional analysis completed');
+                        displayAnalysisResults(data);
+
+                    } else if (data.status === 'error') {
+                        console.error('❌ Analysis failed:', data.errorMessage);
+                        clearInterval(checkInterval);
+
+                        updateTestResult(2, '❌ Professional analysis failed: ' + (data.errorMessage || 'Unknown error'));
+                        showError('Analysis Failed', data.errorMessage || 'Unknown error occurred');
+                    }
+
+                } catch (error) {
+                    console.error('❌ Status check failed:', error);
+                    clearInterval(checkInterval);
+
+                    updateTestResult(2, '❌ Analysis monitoring failed: ' + error.message);
+                    showError('Status Check Failed', error.message);
+                }
+            }, 2000);
+        }
+
+        // Display analysis results
+        function displayAnalysisResults(analysisData) {
+            console.log('📊 Displaying professional analysis results...');
+
+            try {
+                const resultsDiv = document.getElementById('analysis-results');
+                resultsDiv.style.display = 'block';
+
+                const analysis = analysisData.professionalAnalysis;
+
+                // Display domain classification
+                document.getElementById('domain-classification').innerHTML = `
+                    <h3 class="text-lg font-bold mb-2">📊 Domain Classification</h3>
+                    <div class="bg-gray-700 p-3 rounded">
+                        <p><strong>Primary Domain:</strong> ${analysis.domainClassification.primaryDomain}</p>
+                        <p><strong>Confidence:</strong> ${analysis.domainClassification.confidence}%</p>
+                        <p><strong>Reasoning:</strong> ${analysis.domainClassification.reasoning}</p>
+                    </div>
+                `;
+
+                // Display complexity assessment
+                document.getElementById('complexity-assessment').innerHTML = `
+                    <h3 class="text-lg font-bold mb-2">🎯 Complexity Assessment</h3>
+                    <div class="bg-gray-700 p-3 rounded">
+                        <p><strong>Level:</strong> ${analysis.complexityAssessment.level}</p>
+                        <p><strong>Reasoning:</strong> ${analysis.complexityAssessment.reasoning}</p>
+                    </div>
+                `;
+
+                // Display quality assessment
+                document.getElementById('quality-metrics').innerHTML = `
+                    <h3 class="text-lg font-bold mb-2">📈 Quality Assessment</h3>
+                    <div class="bg-gray-700 p-3 rounded">
+                        <p><strong>Overall Score:</strong> ${analysis.qualityAssessment.overallScore}%</p>
+                        <p><strong>Clarity:</strong> ${analysis.qualityAssessment.clarityScore}% - ${analysis.qualityAssessment.clarityJustification}</p>
+                        <p><strong>Completeness:</strong> ${analysis.qualityAssessment.completenessScore}% - ${analysis.qualityAssessment.completenessJustification}</p>
+                        <p><strong>Engagement:</strong> ${analysis.qualityAssessment.engagementScore}% - ${analysis.qualityAssessment.engagementJustification}</p>
+                    </div>
+                `;
+
+                // Display suitability assessment
+                const suitabilityColor = {
+                    'GREEN': 'text-green-400',
+                    'YELLOW': 'text-yellow-400',
+                    'RED': 'text-red-400'
+                }[analysis.suitabilityAssessment.colorCode] || 'text-gray-400';
+
+                document.getElementById('suitability-assessment').innerHTML = `
+                    <h3 class="text-lg font-bold mb-2">🎯 Suitability Assessment</h3>
+                    <div class="bg-gray-700 p-3 rounded">
+                        <p><strong>Level:</strong> <span class="${suitabilityColor}">${analysis.suitabilityAssessment.level} (${analysis.suitabilityAssessment.score}%)</span></p>
+                        <p><strong>Recommendation:</strong> ${analysis.suitabilityAssessment.recommendation}</p>
+                        <p><strong>Reasoning:</strong> ${analysis.suitabilityAssessment.reasoning}</p>
+                    </div>
+                `;
+
+                // Display gap analysis
+                const gaps = analysis.gapAnalysis.identifiedGaps || [];
+                document.getElementById('gap-analysis').innerHTML = `
+                    <h3 class="text-lg font-bold mb-2">🔍 Gap Analysis</h3>
+                    <div class="bg-gray-700 p-3 rounded">
+                        <p><strong>Gaps Found:</strong> ${gaps.length}</p>
+                        ${gaps.length > 0 ? gaps.map(gap => `
+                            <div class="mt-2 p-2 bg-gray-600 rounded">
+                                <p><strong>${gap.type} Gap (${gap.severity}):</strong> ${gap.description}</p>
+                                <p><strong>Recommendation:</strong> ${gap.recommendation}</p>
+                            </div>
+                        `).join('') : '<p class="text-green-400">No significant gaps identified</p>'}
+                    </div>
+                `;
+
+                // Display SME questions
+                const smeQuestions = analysisData.contentSpecificSMEQuestions || [];
+                document.getElementById('sme-questions').innerHTML = `
+                    <h3 class="text-lg font-bold mb-2">❓ Content-Specific SME Questions</h3>
+                    <div class="bg-gray-700 p-3 rounded">
+                        <p><strong>Questions Generated:</strong> ${smeQuestions.length}</p>
+                        ${smeQuestions.length > 0 ? smeQuestions.map((q, index) => `
+                            <div class="mt-2 p-2 bg-gray-600 rounded">
+                                <p><strong>${index + 1}. [${q.category}]</strong> ${q.question}</p>
+                            </div>
+                        `).join('') : '<p class="text-yellow-400">No SME questions generated</p>'}
+                    </div>
+                `;
+
+                updateTestResult(3, '✅ Results display successful');
+                console.log('✅ Professional analysis results displayed successfully');
+
+            } catch (error) {
+                console.error('❌ Failed to display results:', error);
+                updateTestResult(3, '❌ Results display failed: ' + error.message);
+                showError('Display Error', 'Failed to display analysis results: ' + error.message);
+            }
+        }
+
+        // Helper functions
+        function getStatusMessage(step, progress) {
+            const messages = {
+                'content_extracted': '📄 Content extracted, analyzing...',
+                'domain_classification': '🎯 Classifying content domain...',
+                'quality_assessment': '📊 Assessing content quality...',
+                'gap_analysis': '🔍 Identifying instructional gaps...',
+                'analysis_complete': '✅ Professional analysis complete!'
+            };
+            return messages[step] || `Processing... (${progress}%)`;
+        }
+
+        function updateTestResult(index, message) {
+            const testResults = document.getElementById('test-results');
+            const items = testResults.querySelectorAll('li');
+            if (items[index]) {
+                items[index].textContent = message;
+                items[index].className = message.startsWith('✅') ? 'text-green-400' :
+                                        message.startsWith('❌') ? 'text-red-400' :
+                                        'text-yellow-400';
+            }
+        }
+
+        function showError(title, message) {
+            const errorDiv = document.getElementById('error-display');
+            const errorMessage = document.getElementById('error-message');
+
+            errorMessage.textContent = `${title}: ${message}`;
+            errorDiv.style.display = 'block';
+        }
+
+        console.log('🧪 Professional Analysis Integration Test Loaded');
+    </script>
+<!-- Add Universal Comment Widget - Expert can click anywhere to add feedback -->
+<script>
+window.commentWidgetConfig = {
+    apiBase: "http://localhost:3000",
+    position: "top-right"
+};
+</script>
+<script src="./comment-widget-local.js"></script>
+
+</body>
+</html>

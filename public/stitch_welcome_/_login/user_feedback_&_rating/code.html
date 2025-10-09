@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html><head>
+<meta charset="utf-8"/>
+<link crossorigin="" href="https://fonts.gstatic.com/" rel="preconnect"/>
+<link as="style" href="https://fonts.googleapis.com/css2?display=swap&amp;family=Noto+Sans%3Awght%40400%3B500%3B700%3B900&amp;family=Space+Grotesk%3Awght%40400%3B500%3B700" onload="this.rel='stylesheet'" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<title>Stitch Design</title>
+<link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<style type="text/tailwindcss">
+      @keyframes glowing-stars {
+        0% { transform: scale(1); opacity: 0.8; }
+        50% { transform: scale(1.1); opacity: 1; }
+        100% { transform: scale(1); opacity: 0.8; }
+      }
+      .glowing-star {
+        animation: glowing-stars 2s infinite ease-in-out;
+      }
+      .star-rating input[type="radio"] {
+        display: none;
+      }
+      .star-rating .star {
+        cursor: pointer;
+        transition: all 200ms ease-in-out;
+      }
+      .star-rating .star:hover {
+        transform: scale(1.1);
+      }
+      .loading {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(255,255,255,.3);
+        border-radius: 50%;
+        border-top-color: #fff;
+        animation: spin 1s ease-in-out infinite;
+      }
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+      .success-checkmark {
+        animation: checkmark-bounce 0.6s ease-in-out;
+      }
+      @keyframes checkmark-bounce {
+        0% { transform: scale(0); }
+        50% { transform: scale(1.3); }
+        100% { transform: scale(1); }
+      }
+      .fade-in {
+        animation: fadeIn 0.5s ease-in-out;
+      }
+      @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+    </style>
+</head>
+<body class="bg-[#111318]">
+<div class="relative flex size-full min-h-screen flex-col bg-[#111318] dark group/design-root overflow-x-hidden" style="--select-button-svg: url('data:image/svg+xml,%3csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2724px%27 height=%2724px%27 fill=%27rgb(157,166,185)%27 viewBox=%270 0 256 256%27%3e%3cpath d=%27M181.66,170.34a8,8,0,0,1,0,11.32l-48,48a8,8,0,0,1-11.32,0l-48-48a8,8,0,0,1,11.32-11.32L128,212.69l42.34-42.35A8,8,0,0,1,181.66,170.34Zm-96-84.68L128,43.31l42.34,42.35a8,8,0,0,0,11.32-11.32l-48-48a8,8,0,0,0-11.32,0l-48,48A8,8,0,0,0,85.66,85.66Z%27%3e%3c/path%3e%3c/svg%3e'); font-family: &quot;Space Grotesk&quot;, &quot;Noto Sans&quot;, sans-serif;">
+<div class="layout-container flex h-full grow flex-col">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-b-[#282e39] px-10 py-3">
+<div class="flex items-center gap-4 text-white">
+<div class="size-8 text-[#135bec]">
+<svg class="size-full" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+<path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1.5 14.5L6 12l1.41-1.41L10.5 15.17l6.09-6.09L18 10.5l-7.5 7.5z"></path>
+</svg>
+</div>
+<h2 class="text-white text-lg font-bold leading-tight tracking-[-0.015em]">CourseCraft AI</h2>
+</div>
+<nav class="flex items-center gap-6 text-sm font-medium text-gray-300">
+<a class="hover:text-white transition-colors cursor-pointer" onclick="navigateToDashboard()">Dashboard</a>
+<a class="hover:text-white transition-colors cursor-pointer" onclick="navigateToProjects()">Projects</a>
+<a class="hover:text-white transition-colors cursor-pointer" onclick="navigateToReports()">Reports</a>
+<a class="text-white font-semibold border-b-2 border-[#135bec] pb-1" href="#">Feedback</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="flex items-center justify-center rounded-full size-10 bg-[#282e39] text-gray-400 hover:bg-[#3b4354] hover:text-white transition-colors">
+<span class="material-symbols-outlined text-2xl">help</span>
+</button>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10 border-2 border-[#135bec]" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuA9g0Cwa9CnGjCtqsZRreMl9dkFxvl6UdotLvLWDkAsGu7ge7vK6pg2GYLqwrswXyZfgJEJpZvzbuuhX3bAIqJezwYjvymzlQs4I3iQxEpkv3gTUC_H9VLgjiYzkVSPyw-Q8Q7yrC4TYlEBbAfKto_DHfAmWIV-iWBZIXoMpW-ut5K-TJg_4O8sVzIGcpFT9KG_0GZ67HTE2hbGpIWxqOpMtQ8yRC2BJO_lyfSV1yOgDVTXqEK445a2wiUxKLmlrD6n7lrBqxkX6Hg");'></div>
+</div>
+</header>
+<main class="flex flex-1 justify-center py-10 px-4 sm:px-6 lg:px-8">
+<div class="w-full max-w-2xl mx-auto space-y-8">
+<div class="text-center fade-in">
+<h1 class="text-4xl font-bold text-white tracking-tighter">Share Your Thoughts</h1>
+<p id="project-summary" class="mt-3 text-lg text-gray-400">Your feedback helps us improve. Please share your experience with CourseCraft AI.</p>
+</div>
+
+<!-- Feedback Form -->
+<div id="feedback-form" class="bg-[#1c1f27] border border-[#282e39] rounded-xl p-8 shadow-2xl shadow-blue-500/10 fade-in">
+<form id="feedbackForm" class="space-y-6">
+<div>
+<label class="block text-sm font-medium text-gray-300 mb-2" for="feedback-type">Feedback Type</label>
+<select class="form-select w-full rounded-lg text-white bg-[#111318] border border-[#3b4354] focus:ring-2 focus:ring-[#135bec] focus:border-[#135bec] h-12 px-4" id="feedback-type" name="feedback-type" required>
+<option value="">Select feedback type...</option>
+<option value="general">General Feedback</option>
+<option value="report">Report Generation</option>
+<option value="design">Instructional Design Process</option>
+<option value="content">Content Analysis</option>
+<option value="gap">Gap Analysis</option>
+<option value="bug">Bug Report</option>
+<option value="feature">Feature Request</option>
+<option value="interface">User Interface</option>
+</select>
+</div>
+
+<div>
+<label class="block text-sm font-medium text-gray-300 mb-2">How would you rate your experience?</label>
+<div class="flex items-center justify-center space-x-2 star-rating">
+<input id="star5" name="rating" type="radio" value="5" required/>
+<label class="star text-4xl text-gray-600 hover:text-[#135bec] transition-colors" for="star5" title="5 stars - Excellent">
+<span class="material-symbols-outlined !text-4xl">star</span>
+</label>
+<input id="star4" name="rating" type="radio" value="4"/>
+<label class="star text-4xl text-gray-600 hover:text-[#135bec] transition-colors" for="star4" title="4 stars - Good">
+<span class="material-symbols-outlined !text-4xl">star</span>
+</label>
+<input id="star3" name="rating" type="radio" value="3"/>
+<label class="star text-4xl text-gray-600 hover:text-[#135bec] transition-colors" for="star3" title="3 stars - Average">
+<span class="material-symbols-outlined !text-4xl">star</span>
+</label>
+<input id="star2" name="rating" type="radio" value="2"/>
+<label class="star text-4xl text-gray-600 hover:text-[#135bec] transition-colors" for="star2" title="2 stars - Poor">
+<span class="material-symbols-outlined !text-4xl">star</span>
+</label>
+<input id="star1" name="rating" type="radio" value="1"/>
+<label class="star text-4xl text-gray-600 hover:text-[#135bec] transition-colors" for="star1" title="1 star - Very Poor">
+<span class="material-symbols-outlined !text-4xl">star</span>
+</label>
+</div>
+<p id="rating-text" class="text-center text-sm text-gray-400 mt-2"></p>
+</div>
+
+<div>
+<label class="block text-sm font-medium text-gray-300 mb-2" for="subject">Subject</label>
+<input class="form-input w-full rounded-lg text-white bg-[#111318] border border-[#3b4354] focus:ring-2 focus:ring-[#135bec] focus:border-[#135bec] h-12 px-4 placeholder:text-gray-500" 
+       id="subject" 
+       name="subject" 
+       placeholder="e.g., 'Great experience with content analysis'" 
+       type="text"
+       required/>
+</div>
+
+<div>
+<label class="block text-sm font-medium text-gray-300 mb-2" for="feedback">Your Feedback</label>
+<textarea class="form-textarea w-full rounded-lg text-white bg-[#111318] border border-[#3b4354] focus:ring-2 focus:ring-[#135bec] focus:border-[#135bec] p-4 placeholder:text-gray-500 resize-none" 
+          id="feedback" 
+          name="feedback" 
+          placeholder="Tell us about your experience with CourseCraft AI. What worked well? What could be improved?" 
+          rows="6"
+          required></textarea>
+<p class="text-xs text-gray-500 mt-1">Please provide specific details to help us improve</p>
+</div>
+
+<div>
+<label class="block text-sm font-medium text-gray-300 mb-2">Would you recommend CourseCraft AI to others?</label>
+<div class="flex gap-4">
+<label class="flex items-center gap-2 cursor-pointer">
+<input type="radio" name="recommend" value="yes" class="text-[#135bec] focus:ring-[#135bec]" required>
+<span class="text-gray-300">Yes, definitely</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer">
+<input type="radio" name="recommend" value="maybe" class="text-[#135bec] focus:ring-[#135bec]">
+<span class="text-gray-300">Maybe</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer">
+<input type="radio" name="recommend" value="no" class="text-[#135bec] focus:ring-[#135bec]">
+<span class="text-gray-300">No</span>
+</label>
+</div>
+</div>
+
+<div class="flex justify-between items-center pt-4">
+<button type="button" id="save-draft-btn" class="flex items-center gap-2 px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-500 transition-colors">
+<span class="material-symbols-outlined">save</span>
+<span>Save Draft</span>
+</button>
+
+<button type="submit" id="submit-btn" class="flex items-center justify-center gap-2 rounded-lg bg-[#135bec] text-white font-bold h-12 px-6 hover:bg-blue-600 transition-all duration-300 transform hover:scale-105 shadow-lg shadow-blue-500/20">
+<span class="material-symbols-outlined">send</span>
+<span id="submit-text">Submit Feedback</span>
+</button>
+</div>
+</form>
+</div>
+
+<!-- Success Message -->
+<div id="success-message" class="hidden bg-green-900/20 border border-green-400 rounded-xl p-8 text-center fade-in">
+<div class="mb-4">
+<span class="material-symbols-outlined text-6xl text-green-400 success-checkmark">check_circle</span>
+</div>
+<h3 class="text-2xl font-bold text-white mb-2">Thank You!</h3>
+<p class="text-gray-300 mb-4">Your feedback has been submitted successfully. We appreciate your input!</p>
+<div class="flex justify-center gap-4">
+<button onclick="submitAnotherFeedback()" class="px-4 py-2 bg-[#135bec] text-white rounded-lg hover:bg-blue-600 transition-colors">
+Submit Another Feedback
+</button>
+<button onclick="navigateToDashboard()" class="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-500 transition-colors">
+Return to Dashboard
+</button>
+</div>
+</div>
+
+<!-- Project Summary Stats -->
+<div id="project-stats" class="bg-[#1c1f27] border border-[#282e39] rounded-xl p-6 fade-in">
+<h3 class="text-xl font-bold text-white mb-4">Your CourseCraft AI Journey</h3>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<div class="text-center">
+<div class="text-2xl font-bold text-[#135bec]" id="files-uploaded">0</div>
+<div class="text-sm text-gray-400">Files Uploaded</div>
+</div>
+<div class="text-center">
+<div class="text-2xl font-bold text-green-400" id="analysis-completed">0</div>
+<div class="text-sm text-gray-400">Analysis Completed</div>
+</div>
+<div class="text-center">
+<div class="text-2xl font-bold text-yellow-400" id="reports-generated">0</div>
+<div class="text-sm text-gray-400">Reports Generated</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+
+<script>
+// Global variables
+let userJourneyData = {};
+let feedbackData = {};
+let currentRating = 0;
+let draftSaved = false;
+
+// Initialize the page
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('User Feedback and Iteration page loaded');
+    initializePage();
+});
+
+// Initialize page with user journey data
+function initializePage() {
+    // Load user journey data from all previous steps
+    loadUserJourneyData();
+    
+    // Update project summary
+    updateProjectSummary();
+    
+    // Initialize star rating functionality
+    initializeStarRating();
+    
+    // Initialize form handling
+    initializeFormHandling();
+    
+    // Load any existing draft
+    loadDraft();
+    
+    console.log('Feedback page initialized successfully');
+}
+
+// Load user journey data from localStorage
+function loadUserJourneyData() {
+    const uploadedFiles = localStorage.getItem('uploadedFiles');
+    const contentAnalysis = localStorage.getItem('contentAnalysisCompleted');
+    const gapAnalysis = localStorage.getItem('gapAnalysisCompleted');
+    const brandAnalysis = localStorage.getItem('brandAnalysisResults');
+    const smeInterview = localStorage.getItem('smeInterviewCompleted');
+    const finalReport = localStorage.getItem('finalReportCompleted');
+    
+    userJourneyData = {
+        filesUploaded: uploadedFiles ? JSON.parse(uploadedFiles).length : 0,
+        contentAnalysisCompleted: contentAnalysis === 'true',
+        gapAnalysisCompleted: gapAnalysis === 'true',
+        brandAnalysisCompleted: brandAnalysis !== null,
+        smeInterviewCompleted: smeInterview === 'true',
+        finalReportCompleted: finalReport === 'true',
+        reportsGenerated: 0
+    };
+    
+    // Count completed analyses
+    let analysisCount = 0;
+    if (userJourneyData.contentAnalysisCompleted) analysisCount++;
+    if (userJourneyData.gapAnalysisCompleted) analysisCount++;
+    if (userJourneyData.brandAnalysisCompleted) analysisCount++;
+    if (userJourneyData.smeInterviewCompleted) analysisCount++;
+    
+    userJourneyData.analysisCompleted = analysisCount;
+    
+    // Count generated reports
+    let reportsCount = 0;
+    if (localStorage.getItem('pdfReportGenerated') === 'true') reportsCount++;
+    if (localStorage.getItem('docxReportGenerated') === 'true') reportsCount++;
+    if (localStorage.getItem('analysisExported') === 'true') reportsCount++;
+    
+    userJourneyData.reportsGenerated = reportsCount;
+    
+    console.log('User journey data loaded:', userJourneyData);
+}
+
+// Update project summary based on user journey
+function updateProjectSummary() {
+    const summaryElement = document.getElementById('project-summary');
+    const filesUploadedElement = document.getElementById('files-uploaded');
+    const analysisCompletedElement = document.getElementById('analysis-completed');
+    const reportsGeneratedElement = document.getElementById('reports-generated');
+    
+    // Update summary text
+    if (userJourneyData.filesUploaded > 0) {
+        summaryElement.textContent = `Thank you for using CourseCraft AI! You've uploaded ${userJourneyData.filesUploaded} file(s) and completed ${userJourneyData.analysisCompleted} analysis steps. Your feedback helps us improve.`;
+    }
+    
+    // Update stats with animation
+    animateCounter(filesUploadedElement, 0, userJourneyData.filesUploaded, 1000);
+    animateCounter(analysisCompletedElement, 0, userJourneyData.analysisCompleted, 1200);
+    animateCounter(reportsGeneratedElement, 0, userJourneyData.reportsGenerated, 1400);
+}
+
+// Animate counter numbers
+function animateCounter(element, start, end, duration) {
+    const startTime = Date.now();
+    const difference = end - start;
+    
+    const step = () => {
+        const elapsed = Date.now() - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const current = Math.floor(start + (difference * progress));
+        
+        element.textContent = current;
+        
+        if (progress < 1) {
+            requestAnimationFrame(step);
+        }
+    };
+    
+    requestAnimationFrame(step);
+}
+
+// Initialize star rating functionality
+function initializeStarRating() {
+    const stars = document.querySelectorAll('.star-rating .star');
+    const ratingText = document.getElementById('rating-text');
+    
+    const ratingTexts = {
+        1: 'Very Poor - We need significant improvements',
+        2: 'Poor - Several issues to address',
+        3: 'Average - Meets basic expectations',
+        4: 'Good - Enjoyable experience with minor issues',
+        5: 'Excellent - Outstanding experience!'
+    };
+    
+    stars.forEach((star, index) => {
+        star.addEventListener('click', () => {
+            const rating = star.previousElementSibling.value;
+            currentRating = parseInt(rating);
+            
+            // Update star display
+            stars.forEach((s, i) => {
+                if (i >= 5 - rating) {
+                    s.classList.add('text-[#135bec]', 'glowing-star');
+                    s.classList.remove('text-gray-600');
+                } else {
+                    s.classList.remove('text-[#135bec]', 'glowing-star');
+                    s.classList.add('text-gray-600');
+                }
+            });
+            
+            // Update rating text
+            ratingText.textContent = ratingTexts[rating];
+            ratingText.classList.add('text-[#135bec]', 'font-medium');
+            
+            console.log(`Rating selected: ${rating} stars`);
+        });
+        
+        // Hover effect
+        star.addEventListener('mouseenter', () => {
+            const rating = star.previousElementSibling.value;
+            stars.forEach((s, i) => {
+                if (i >= 5 - rating) {
+                    s.classList.add('text-[#135bec]');
+                    s.classList.remove('text-gray-600');
+                } else {
+                    s.classList.remove('text-[#135bec]');
+                    s.classList.add('text-gray-600');
+                }
+            });
+        });
+    });
+    
+    // Reset on mouse leave
+    document.querySelector('.star-rating').addEventListener('mouseleave', () => {
+        if (currentRating > 0) {
+            stars.forEach((s, i) => {
+                if (i >= 5 - currentRating) {
+                    s.classList.add('text-[#135bec]', 'glowing-star');
+                    s.classList.remove('text-gray-600');
+                } else {
+                    s.classList.remove('text-[#135bec]', 'glowing-star');
+                    s.classList.add('text-gray-600');
+                }
+            });
+        } else {
+            stars.forEach(s => {
+                s.classList.remove('text-[#135bec]', 'glowing-star');
+                s.classList.add('text-gray-600');
+            });
+        }
+    });
+}
+
+// Initialize form handling
+function initializeFormHandling() {
+    const form = document.getElementById('feedbackForm');
+    const saveDraftBtn = document.getElementById('save-draft-btn');
+    
+    // Form submission
+    form.addEventListener('submit', handleFormSubmission);
+    
+    // Save draft functionality
+    saveDraftBtn.addEventListener('click', saveDraft);
+    
+    // Auto-save draft every 30 seconds
+    setInterval(autoSaveDraft, 30000);
+}
+
+// Handle form submission
+function handleFormSubmission(event) {
+    event.preventDefault();
+    
+    console.log('Submitting feedback form...');
+    
+    const submitBtn = document.getElementById('submit-btn');
+    const submitText = document.getElementById('submit-text');
+    
+    // Show loading state
+    submitBtn.disabled = true;
+    submitBtn.classList.add('opacity-80', 'cursor-not-allowed');
+    submitText.innerHTML = '<div class="loading mr-2"></div>Submitting...';
+    
+    // Collect form data
+    const formData = new FormData(event.target);
+    feedbackData = {
+        type: formData.get('feedback-type'),
+        rating: parseInt(formData.get('rating')),
+        subject: formData.get('subject'),
+        feedback: formData.get('feedback'),
+        recommend: formData.get('recommend'),
+        userJourney: userJourneyData,
+        timestamp: new Date().toISOString(),
+        sessionId: generateSessionId()
+    };
+    
+    console.log('Feedback data collected:', feedbackData);
+    
+    // Simulate submission process
+    setTimeout(() => {
+        submitFeedback(feedbackData);
+    }, 2000);
+    
+    // TODO: Integrate with your feedback submission API
+    /*
+    fetch('/api/submit-feedback', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(feedbackData)
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('Feedback submitted successfully:', data);
+        showSuccessMessage();
+    })
+    .catch(error => {
+        console.error('Feedback submission failed:', error);
+        showErrorMessage();
+    });
+    */
+}
+
+// Submit feedback and show success
+function submitFeedback(data) {
+    // Store feedback in localStorage
+    const existingFeedback = JSON.parse(localStorage.getItem('userFeedbackHistory') || '[]');
+    existingFeedback.push(data);
+    localStorage.setItem('userFeedbackHistory', JSON.stringify(existingFeedback));
+    localStorage.setItem('feedbackSubmitted', 'true');
+    localStorage.setItem('lastFeedbackSubmission', data.timestamp);
+    
+    // Clear draft
+    localStorage.removeItem('feedbackDraft');
+    
+    // Show success message
+    showSuccessMessage();
+    
+    console.log('Feedback submitted successfully');
+}
+
+// Show success message
+function showSuccessMessage() {
+    document.getElementById('feedback-form').classList.add('hidden');
+    document.getElementById('success-message').classList.remove('hidden');
+}
+
+// Save draft functionality
+function saveDraft() {
+    const form = document.getElementById('feedbackForm');
+    const formData = new FormData(form);
+    
+    const draftData = {
+        type: formData.get('feedback-type'),
+        rating: formData.get('rating'),
+        subject: formData.get('subject'),
+        feedback: formData.get('feedback'),
+        recommend: formData.get('recommend'),
+        timestamp: new Date().toISOString()
+    };
+    
+    localStorage.setItem('feedbackDraft', JSON.stringify(draftData));
+    draftSaved = true;
+    
+    // Show save confirmation
+    const saveDraftBtn = document.getElementById('save-draft-btn');
+    const originalText = saveDraftBtn.innerHTML;
+    saveDraftBtn.innerHTML = '<span class="material-symbols-outlined">check</span><span>Saved!</span>';
+    saveDraftBtn.classList.add('bg-green-600');
+    
+    setTimeout(() => {
+        saveDraftBtn.innerHTML = originalText;
+        saveDraftBtn.classList.remove('bg-green-600');
+    }, 2000);
+    
+    console.log('Draft saved');
+}
+
+// Auto-save draft
+function autoSaveDraft() {
+    const form = document.getElementById('feedbackForm');
+    if (form && !document.getElementById('success-message').classList.contains('hidden')) {
+        return; // Don't auto-save if success message is shown
+    }
+    
+    if (form && (form.querySelector('#subject').value || form.querySelector('#feedback').value)) {
+        saveDraft();
+        console.log('Auto-saved draft');
+    }
+}
+
+// Load existing draft
+function loadDraft() {
+    const draftData = localStorage.getItem('feedbackDraft');
+    
+    if (draftData) {
+        const draft = JSON.parse(draftData);
+        
+        // Populate form fields
+        if (draft.type) document.getElementById('feedback-type').value = draft.type;
+        if (draft.subject) document.getElementById('subject').value = draft.subject;
+        if (draft.feedback) document.getElementById('feedback').value = draft.feedback;
+        
+        if (draft.rating) {
+            document.getElementById(`star${draft.rating}`).checked = true;
+            currentRating = parseInt(draft.rating);
+            
+            // Update star display
+            const stars = document.querySelectorAll('.star-rating .star');
+            stars.forEach((s, i) => {
+                if (i >= 5 - draft.rating) {
+                    s.classList.add('text-[#135bec]', 'glowing-star');
+                    s.classList.remove('text-gray-600');
+                } else {
+                    s.classList.remove('text-[#135bec]', 'glowing-star');
+                    s.classList.add('text-gray-600');
+                }
+            });
+        }
+        
+        if (draft.recommend) {
+            document.querySelector(`input[name="recommend"][value="${draft.recommend}"]`).checked = true;
+        }
+        
+        console.log('Draft loaded');
+    }
+}
+
+// Generate session ID
+function generateSessionId() {
+    return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+}
+
+// Submit another feedback
+function submitAnotherFeedback() {
+    document.getElementById('success-message').classList.add('hidden');
+    document.getElementById('feedback-form').classList.remove('hidden');
+    
+    // Reset form
+    document.getElementById('feedbackForm').reset();
+    currentRating = 0;
+    
+    // Reset stars
+    const stars = document.querySelectorAll('.star-rating .star');
+    stars.forEach(s => {
+        s.classList.remove('text-[#135bec]', 'glowing-star');
+        s.classList.add('text-gray-600');
+    });
+    
+    // Reset rating text
+    document.getElementById('rating-text').textContent = '';
+    document.getElementById('rating-text').classList.remove('text-[#135bec]', 'font-medium');
+    
+    // Reset submit button
+    const submitBtn = document.getElementById('submit-btn');
+    const submitText = document.getElementById('submit-text');
+    submitBtn.disabled = false;
+    submitBtn.classList.remove('opacity-80', 'cursor-not-allowed');
+    submitText.textContent = 'Submit Feedback';
+}
+
+// Header navigation functions
+function navigateToDashboard() {
+    window.location.href = '../ai_dashboard_landing_page/code.html';
+}
+
+function navigateToProjects() {
+    window.location.href = '../projects/code.html';
+}
+
+function navigateToReports() {
+    window.location.href = '../enhanced_final_report/code.html';
+}
+
+// Handle page unload
+window.addEventListener('beforeunload', function(event) {
+    // Auto-save draft if form has content
+    const subject = document.getElementById('subject');
+    const feedback = document.getElementById('feedback');
+    
+    if (subject && feedback && (subject.value || feedback.value) && !draftSaved) {
+        autoSaveDraft();
+    }
+});
+
+// Error handling
+window.addEventListener('error', function(event) {
+    console.error('Uncaught error:', event.error);
+});
+
+console.log('User Feedback and Iteration script loaded successfully');
+</script>
+
+<!-- Add Universal Comment Widget - Expert can click anywhere to add feedback -->
+<script>
+window.commentWidgetConfig = {
+    apiBase: "http://localhost:3000",
+    position: "top-right"
+};
+</script>
+<script src="./comment-widget-hybrid.js"></script>
+
+</body></html>

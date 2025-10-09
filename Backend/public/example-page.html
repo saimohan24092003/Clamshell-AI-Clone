@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Example Page with Comment Widget</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 40px;
+            background: #f9fafb;
+        }
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #1f2937;
+            margin-bottom: 30px;
+        }
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin: 30px 0;
+        }
+        .feature-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+        .feature-card h3 {
+            margin-top: 0;
+            font-size: 20px;
+        }
+        .code-block {
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            font-family: 'Monaco', 'Courier New', monospace;
+            overflow-x: auto;
+        }
+        .highlight {
+            background: #fef3c7;
+            padding: 20px;
+            border-left: 4px solid #f59e0b;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎓 Your Product Page Example</h1>
+
+        <div class="highlight">
+            <strong>👆 Try the Comment Widget:</strong>
+            <ol>
+                <li>Click the "💬 Add Comment" button in the bottom-right corner</li>
+                <li>Click anywhere on this page to add a comment pin</li>
+                <li>Fill in your expert feedback</li>
+                <li>View all comments using "👁️ View" button</li>
+            </ol>
+        </div>
+
+        <h2>🚀 AI Learning Features</h2>
+
+        <div class="feature-grid">
+            <div class="feature-card">
+                <h3>📊 Personalized Learning Maps</h3>
+                <p>AI-generated learning paths adapted to individual student needs and progress. Each path includes assessments, resources, and milestone tracking.</p>
+                <ul>
+                    <li>Adaptive difficulty progression</li>
+                    <li>Multi-modal content delivery</li>
+                    <li>Real-time progress tracking</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>🔍 Content Analysis Engine</h3>
+                <p>Advanced AI analysis of educational content to identify gaps, assess quality, and suggest improvements for maximum learning effectiveness.</p>
+                <ul>
+                    <li>Automatic gap detection</li>
+                    <li>Quality scoring algorithms</li>
+                    <li>Enhancement recommendations</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>💡 Smart Recommendations</h3>
+                <p>Intelligent suggestions for learning strategies, content improvements, and personalized interventions based on learner data and best practices.</p>
+                <ul>
+                    <li>Evidence-based strategies</li>
+                    <li>Personalized interventions</li>
+                    <li>Performance optimization</li>
+                </ul>
+            </div>
+
+            <div class="feature-card">
+                <h3>📈 Analytics Dashboard</h3>
+                <p>Comprehensive analytics and reporting tools for instructors to track learner progress, identify at-risk students, and optimize course content.</p>
+                <ul>
+                    <li>Real-time progress monitoring</li>
+                    <li>Predictive analytics</li>
+                    <li>Intervention alerts</li>
+                </ul>
+            </div>
+        </div>
+
+        <h2>🎯 Implementation Example</h2>
+
+        <p>This is how easy it is to add expert commenting to any page:</p>
+
+        <div class="code-block">
+&lt;!-- Add this to any page in your product --&gt;
+&lt;script src="/comment-widget.js"&gt;&lt;/script&gt;
+
+&lt;!-- That's it! The widget auto-initializes --&gt;
+        </div>
+
+        <h2>💬 Expert Feedback System</h2>
+
+        <p>Your Subject Matter Expert can now:</p>
+        <ul>
+            <li><strong>Click anywhere</strong> on any page to add contextual feedback</li>
+            <li><strong>Rate features</strong> from 1-5 stars with detailed comments</li>
+            <li><strong>View all feedback</strong> in an organized interface</li>
+            <li><strong>Export comments</strong> for further analysis</li>
+        </ul>
+
+        <div class="highlight">
+            <strong>🎉 Perfect for tomorrow's SME meeting!</strong><br>
+            Just share the page URL and your expert can immediately start adding feedback by clicking anywhere on your product.
+        </div>
+
+        <h2>📊 Sample Learning Analytics</h2>
+
+        <div style="background: #f0f9ff; padding: 30px; border-radius: 12px; margin: 30px 0;">
+            <h3 style="color: #0369a1; margin-top: 0;">Student Engagement Metrics</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 20px; text-align: center;">
+                <div>
+                    <div style="font-size: 24px; font-weight: bold; color: #059669;">87%</div>
+                    <div style="color: #6b7280; font-size: 14px;">Completion Rate</div>
+                </div>
+                <div>
+                    <div style="font-size: 24px; font-weight: bold; color: #dc2626;">23min</div>
+                    <div style="color: #6b7280; font-size: 14px;">Avg. Session</div>
+                </div>
+                <div>
+                    <div style="font-size: 24px; font-weight: bold; color: #7c3aed;">4.8/5</div>
+                    <div style="color: #6b7280; font-size: 14px;">Satisfaction</div>
+                </div>
+                <div>
+                    <div style="font-size: 24px; font-weight: bold; color: #f59e0b;">92%</div>
+                    <div style="color: #6b7280; font-size: 14px;">Knowledge Retention</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add the Comment Widget to ANY page with this single line -->
+    <script src="/comment-widget.js"></script>
+
+<!-- Add Universal Comment Widget - Expert can click anywhere to add feedback -->
+<script>
+window.commentWidgetConfig = {
+    apiBase: "http://localhost:3000",
+    position: "top-right"
+};
+</script>
+<script src="./comment-widget-local.js"></script>
+
+</body>
+</html>

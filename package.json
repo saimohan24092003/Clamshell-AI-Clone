@@ -1,0 +1,25 @@
+{
+  "name": "coursecraft-ai-frontend",
+  "version": "1.0.0",
+  "description": "Frontend server for CourseCraft AI with CORS support",
+  "main": "serve_frontend.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node serve_frontend.js",
+    "build": "echo 'No build step required for static frontend'",
+    "frontend": "node serve_frontend.js",
+    "dev": "node serve_frontend.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
+  },
+  "engines": {
+    "node": "22.x"
+  },
+  "author": "CourseCraft AI",
+  "license": "MIT",
+  "overrides": {
+    "debug": "4.3.4"
+  }
+}
