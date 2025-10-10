@@ -13,6 +13,7 @@
 <meta name="comment-page-id" content="content_upload_processing">
 <meta name="comment-session-id" content="demo-session-123">
 <meta name="comment-admin-mode" content="true">
+<script src="./public/js/config.js"></script>
 <script src="./expert-comment-widget.js"></script>
 <style>
     /* Force centered layout for analysis results - works in static HTML */
@@ -68,7 +69,7 @@ console.log('🎓 Professional Analysis Integration Loaded Inline');
 // Professional analysis helper functions
 async function checkProfessionalBackendConnection() {
     try {
-        const response = await fetch('https://ai-id-product-2.vercel.app//api/health', {
+            const response = await fetch(`${BACKEND_URL}/api/health`, {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         });
@@ -1410,7 +1411,7 @@ Skip Expert Enhancements
 };
 
 // 🧠 REAL AI INSTRUCTIONAL DESIGNER SYSTEM
-const BACKEND_URL = 'https://ai-id-product-2.vercel.app/';
+ 
 
 // Expert global state
 let uploadedFiles = [];
