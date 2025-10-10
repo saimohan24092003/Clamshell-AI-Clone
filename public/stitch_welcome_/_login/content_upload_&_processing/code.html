@@ -62,7 +62,7 @@ console.log('🎓 Professional Analysis Integration Loaded Inline');
 // Professional analysis helper functions
 async function checkProfessionalBackendConnection() {
     try {
-        const response = await fetch('https://clamshell-backend-o7g90prgf-mohammed-asrafs-projects.vercel.app/api/health', {
+        const response = await fetch('https://clamshell-backend-e5dmap3xc-mohammed-asrafs-projects.vercel.app/api/health', {
             method: 'GET',
             headers: { 'Content-Type': 'application/json' }
         });
@@ -448,7 +448,7 @@ function displayProfessionalAnalysisSummary(analysis) {
                                     <strong class="text-orange-400">Solution:</strong> ${gap.recommendation}
                                 </div>
                             </div>
-                        `).join('') || '<div class="text-center py-8"><div class="text-green-400 text-4xl mb-2">✅</div><p class="text-green-300 font-semibold">Excellent Content Quality</p><p class="text-gray-400 text-sm">No significant gaps identified in your content</p></div>'}
+                        `).join('') || '<div class="text-center py-8"><div class="text-green-400 text-4xl mb-2">✅</div><p class="text-green-300 font-semibold">Excellent Content Quality</p><p class="text-gray-400 text-sm">No significant gaps identified in your content</p></div>'} 
                     </div>
                 </div>
             </div>
@@ -485,7 +485,7 @@ function displayProfessionalAnalysisSummary(analysis) {
                                         💡 <strong>Implementation:</strong> Add interactive scenarios, practice exercises, and real-world examples to enhance engagement
                                     </div>
                                 </div>
-                                <button onclick="approveSuggestion(\`${suggestion}\`, ${index})"
+                                <button onclick="approveSuggestion('${suggestion.replace(/'/g, "\'")}', ${index})"
                                         class="approve-btn bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all duration-300 flex items-center gap-2 min-w-[100px]">
                                     <span>✓</span> Approve
                                 </button>
@@ -1360,7 +1360,7 @@ Skip Expert Enhancements
 
 <script>
     const BACKEND_CONFIG = {
-    baseURL: 'https://clamshell-backend-o7g90prgf-mohammed-asrafs-projects.vercel.app', // Your existing backend URL
+    baseURL: 'https://clamshell-backend-e5dmap3xc-mohammed-asrafs-projects.vercel.app', // Your existing backend URL
     endpoints: {
         analyze: '/api/analyze-content',        // NEW endpoint
         sme: '/api/generate-sme-questions',     // NEW endpoint  
@@ -1370,7 +1370,7 @@ Skip Expert Enhancements
 };
 
 // 🧠 REAL AI INSTRUCTIONAL DESIGNER SYSTEM
-const BACKEND_URL = 'https://clamshell-backend-o7g90prgf-mohammed-asrafs-projects.vercel.app';
+const BACKEND_URL = 'https://clamshell-backend-e5dmap3xc-mohammed-asrafs-projects.vercel.app';
 
 // Expert global state
 let uploadedFiles = [];
@@ -2662,7 +2662,7 @@ function showExpertRecommendationsPopup(data) {
                             ` : ''}
                             
                             <div class="flex flex-wrap items-center gap-3 text-sm">
-                                <span class="px-4 py-2 rounded-full font-medium ${
+                                <span class="px-4 py-2 rounded-full font-medium ${ 
                                     rec.priority === 'Critical' ? 'bg-red-500/20 text-red-300 border border-red-500/30' :
                                     rec.priority === 'High' ? 'bg-red-500/20 text-red-300 border border-red-500/30' : 
                                     rec.priority === 'Medium' ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/30' : 
@@ -2691,7 +2691,7 @@ function showExpertRecommendationsPopup(data) {
                         </div>
                     </div>
                 </div>
-            `).join('')}
+            `).join('')} 
         </div>
     `;
     
@@ -3109,7 +3109,7 @@ function startProfessionalAnalysisMonitoring(sessionId) {
 
     const checkInterval = setInterval(async () => {
         try {
-            const response = await fetch(`https://clamshell-backend-o7g90prgf-mohammed-asrafs-projects.vercel.app/api/analyze`, {
+            const response = await fetch(`https://clamshell-backend-e5dmap3xc-mohammed-asrafs-projects.vercel.app/api/analyze`, {
                 method: 'GET',
                 headers: { 'Content-Type': 'application/json' }
             });
@@ -3157,7 +3157,7 @@ function startProfessionalAnalysisMonitoring(sessionId) {
 // Update progress display for professional analysis
 function updateExpertAnalysisProgress(progress, currentStep) {
     const stepMessages = {
-        'content_extracted': '📄 Content extracted, analyzing...',
+        'content_extracted': '📄 Content extracted, analyzing...', 
         'domain_classification': '🎯 Classifying content domain...',
         'quality_assessment': '📊 Assessing content quality...',
         'gap_analysis': '🔍 Identifying instructional gaps...',
@@ -3218,7 +3218,7 @@ function approveSuggestion(suggestion, index) {
     }
 
     // Update UI with enhanced feedback
-    const button = event?.target?.closest('button') || document.querySelector(`button[onclick*="approveSuggestion('${suggestion.replace(/'/g, "\\'")}'"`);
+    const button = event?.target?.closest('button') || document.querySelector(`button[onclick*="approveSuggestion('${suggestion.replace(/'/g, "\'")}'"`);
     const card = button?.closest('.suggestion-card') || button?.closest('div');
 
     // Animate the approval
@@ -3582,7 +3582,7 @@ function displayEnhancedSuitabilityAssessment(suitabilityData) {
 <!-- Add Universal Comment Widget - Expert can click anywhere to add feedback -->
 <script>
 window.commentWidgetConfig = {
-    apiBase: "https://clamshell-backend-o7g90prgf-mohammed-asrafs-projects.vercel.app",
+    apiBase: "https://clamshell-backend-e5dmap3xc-mohammed-asrafs-projects.vercel.app",
     position: "top-right"
 };
 </script>
@@ -3597,7 +3597,7 @@ function showBackendError(message) {
         <div class="bg-red-900 text-white p-8 rounded-lg max-w-2xl">
             <h2 class="text-2xl font-bold mb-4">⚠️ AI Backend Required</h2>
             <p class="mb-4">${message}</p>
-            <p class="text-sm opacity-80">Backend must be running at https://clamshell-backend-o7g90prgf-mohammed-asrafs-projects.vercel.app</p>
+            <p class="text-sm opacity-80">Backend must be running at https://clamshell-backend-e5dmap3xc-mohammed-asrafs-projects.vercel.app</p>
             <button onclick="location.reload()" class="mt-4 bg-white text-red-900 px-6 py-2 rounded font-bold">Retry</button>
         </div>
     `;

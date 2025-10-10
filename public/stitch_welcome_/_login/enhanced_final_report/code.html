@@ -294,7 +294,7 @@ async function generateContextualReport() {
     });
 
     // Call backend API for AI-powered report generation
-    const BACKEND_URL = 'https://clamshell-backend-o7g90prgf-mohammed-asrafs-projects.vercel.app';
+    const BACKEND_URL = 'https://clamshell-backend-e5dmap3xc-mohammed-asrafs-projects.vercel.app';
 
     try {
         const response = await fetch(`${BACKEND_URL}/api/generate-final-report`, {
@@ -637,7 +637,7 @@ function generateStrategyRecommendations(context) {
     });
     
     return {
-        summary: `Based on your ${context.contentTypes.join(', ')} content, the recommended strategy focuses on enhancing interactivity, adding multimedia elements, and implementing modern learning methodologies to improve engagement and effectiveness.`,
+        summary: `Based on your ${context.contentTypes.join(', ')} content, the recommended strategy focuses on enhancing interactivity, adding multimedia elements, and implementing modern learning methodologies to improve engagement and effectiveness.`, 
         strategies: strategies
     };
 }
@@ -1023,7 +1023,7 @@ console.log('Enhanced Final Report script loaded successfully');
 <!-- Add Universal Comment Widget - Expert can click anywhere to add feedback -->
 <script>
 window.commentWidgetConfig = {
-    apiBase: "https://clamshell-backend-o7g90prgf-mohammed-asrafs-projects.vercel.app",
+    apiBase: "https://clamshell-backend-e5dmap3xc-mohammed-asrafs-projects.vercel.app",
     position: "top-right"
 };
 </script>
