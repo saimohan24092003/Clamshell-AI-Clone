@@ -1,5 +1,6 @@
 import OpenAI from 'openai';
 import { uploadedFiles } from './upload.js';
+import { withCors } from '../utils/cors.js';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY
@@ -304,4 +305,4 @@ async function handler(req, res) {
   }
 }
 
-export default handler;
+export default withCors(handler);

@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from 'uuid';
+import { withCors } from '../utils/cors.js';
 
 // Store uploaded files in memory (for development)
 const uploadedFiles = new Map();
@@ -52,7 +53,7 @@ async function handler(req, res) {
   }
 }
 
-export default handler;
+export default withCors(handler);
 
 // Export the store for use in analyze endpoint
 export { uploadedFiles };

@@ -1,3 +1,4 @@
+import { withCors } from '../utils/cors.js';
 
 // Generate strategy recommendations based on content analysis and SME answers
 function generateStrategyRecommendations(content, domain, smeAnswers, frameworks) {
@@ -120,4 +121,4 @@ async function handler(req, res) {
   }
 }
 
-export default handler;
+export default withCors(handler);

@@ -1,4 +1,4 @@
-
+import { withCors } from '../utils/cors.js';
 import OpenAI from 'openai';
 
 const openai = new OpenAI({
@@ -345,4 +345,4 @@ async function handler(req, res) {
   }
 }
 
-export default handler;
+export default withCors(handler);

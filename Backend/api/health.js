@@ -1,8 +1,8 @@
 import connectDB from '../lib/mongodb.js';
 import mongoose from 'mongoose';
+import { withCors } from '../utils/cors.js';
 
 async function handler(req, res) {
-
   try {
     await connectDB();
     const dbStatus = mongoose.connection.readyState === 1 ? 'connected' : 'disconnected';
@@ -26,4 +26,4 @@ async function handler(req, res) {
   }
 }
 
-export default handler;
+export default withCors(handler);

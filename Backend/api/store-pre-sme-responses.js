@@ -1,4 +1,4 @@
-
+import { withCors } from '../utils/cors.js';
 import connectDB from '../lib/mongodb.js';
 import PreSMEResponse from '../models/PreSMEResponse.js';
 
@@ -69,4 +69,4 @@ async function handler(req, res) {
   }
 }
 
-export default handler;
+export default withCors(handler);
