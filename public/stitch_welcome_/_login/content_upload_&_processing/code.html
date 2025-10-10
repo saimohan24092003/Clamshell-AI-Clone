@@ -3340,9 +3340,7 @@ ${analysisData.gapAnalysis?.identifiedGaps?.map((gap, index) => {
    Impact: ${gap.impact || 'Not provided'}
    Recommendation: ${gap.recommendation || 'Not provided'}
    Category: ${gap.category || 'General'}`;
-}).join('
-
-') || 'No specific gaps identified'}
+}).join('\\n\\n') || 'No specific gaps identified'}
 
 ${'='.repeat(80)}
 EXPERT RECOMMENDATIONS
@@ -3354,8 +3352,7 @@ ${analysisData.expertSuggestions?.keyRecommendation || 'Focus on structured cont
 💡 INTERACTIVE SUGGESTIONS:
 ${analysisData.expertSuggestions?.interactiveSuggestions?.map((suggestion, index) => {
     return `${index + 1}. ${suggestion}`;
-}).join('
-') || 'Add interactive elements to enhance engagement'}
+}).join('\\n') || 'Add interactive elements to enhance engagement'}
 
 ${'='.repeat(80)}
 APPROVED SUGGESTIONS (${approvedSuggestions.length})
@@ -3363,10 +3360,8 @@ ${'='.repeat(80)}
 
 ${approvedSuggestions.length > 0 ?
     approvedSuggestions.map((item, index) => {
-        return `${index + 1}. ${item.suggestion}\n   Status: APPROVED\n   Implementation: ${item.implementation || 'To be determined'}\n   Approved: ${new Date(item.timestamp).toLocaleDateString()}`;
-    }).join('
-
-') : 'No suggestions have been approved yet'}
+        return `${index + 1}. ${item.suggestion}\\n   Status: APPROVED\\n   Implementation: ${item.implementation || 'To be determined'}\\n   Approved: ${new Date(item.timestamp).toLocaleDateString()}`;
+    }).join('\\n\\n') : 'No suggestions have been approved yet'}
 
 ${'='.repeat(80)}
 SME INTERVIEW QUESTIONS
@@ -3374,8 +3369,7 @@ ${'='.repeat(80)}
 
 ${analysisData.contentSpecificSMEQuestions?.map((questionObj, index) => {
     return `${index + 1}. ${questionObj.question || questionObj}`;
-}).join('
-') || 'No content-specific SME questions generated'}
+}).join('\\n') || 'No content-specific SME questions generated'}
 
 ${'='.repeat(80)}
 NEXT STEPS
