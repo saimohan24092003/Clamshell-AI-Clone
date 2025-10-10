@@ -12,7 +12,7 @@ const API_CONFIG = {
     CHAT: '/api/chat',
     STRATEGY: '/api/strategy',
     UPLOAD: '/api/upload',
-    ANALYSIS: '/api/analysis'
+    ANALYSIS: '/api/analyze'
   },
 
   // Helper function to get full API URL
