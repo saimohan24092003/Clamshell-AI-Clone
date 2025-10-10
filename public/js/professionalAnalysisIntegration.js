@@ -4,7 +4,7 @@
  */
 
 // Configuration
-const PROFESSIONAL_BACKEND_URL = 'https://clamshell-backend-109dgz94r-mohammed-asrafs-projects.vercel.app';
+const PROFESSIONAL_BACKEND_URL = 'https://clamshell-backend-o7g90prgf-mohammed-asrafs-projects.vercel.app';
 const ANALYSIS_CHECK_INTERVAL = 2000; // 2 seconds
 
 // Global state
