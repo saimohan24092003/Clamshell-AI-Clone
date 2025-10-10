@@ -1,11 +1,36 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
-import { corsMiddleware } from './utils/cors.js';
+import cors from 'cors';
 
 dotenv.config();
 
 const app = express();
+
+// Standard CORS configuration
+const allowedOrigins = [
+  'http://localhost:3000',
+  'http://localhost:3001',
+  'https://clamshell-frontend.vercel.app' // The frontend URL
+];
+
+const corsOptions = {
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.indexOf(origin) === -1) {
+      const msg = 'The CORS policy for this site does not allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    }
+    return callback(null, true);
+  },
+  credentials: true,
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  optionsSuccessStatus: 204
+};
+
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); // Enable pre-flight for all routes
 
 // MongoDB Connection (async, will connect on first request)
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/coursecraft-ai';
@@ -24,9 +49,6 @@ async function connectDB() {
 
 // Connect to DB on startup (non-blocking)
 connectDB().catch(() => console.log('ℹ️  Running without MongoDB - some features may be limited'));
-
-// CORS configuration - Use centralized CORS middleware
-app.use(corsMiddleware);
 
 // Body parser with increased limit for file uploads
 app.use(express.json({ limit: '50mb' }));
