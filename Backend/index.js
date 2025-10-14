@@ -33,7 +33,8 @@ async function connectDB() {
     isConnected = true;
     console.log('✅ MongoDB connected');
   } catch (err) {
-    console.warn('⚠️  MongoDB not connected (optional for local dev):', err.message);
+    console.error('❌ MongoDB connection error:', err.message);
+    throw err;
   }
 }
 
@@ -73,9 +74,9 @@ app.get('/api/health', async (req, res) => {
       database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
     });
   } catch (error) {
-    res.status(200).json({
-      status: 'ok',
-      message: 'CourseCraft AI Backend is running',
+    res.status(500).json({
+      status: 'error',
+      message: 'Database connection failed',
       timestamp: new Date().toISOString(),
       environment: process.env.NODE_ENV || 'development',
       database: 'error',
