@@ -246,13 +246,35 @@ async function handler(req, res) {
 
     console.log('📊 Starting analysis with content length:', (content || '').length);
 
+    // Validate content is not empty
+    if (!content || content.trim().length === 0) {
+      console.log('⚠️  Empty content received');
+      return res.status(400).json({
+        success: false,
+        error: 'Content extraction failed',
+        message: 'The uploaded file appears to be empty or the content could not be extracted. Please ensure the file contains text content and try again.',
+        userMessage: 'Unable to extract content from the uploaded file. This might be because:\n- The file is empty\n- The file format is not supported\n- The file is corrupted\n\nPlease try uploading a different file with text content.'
+      });
+    }
+
     // Calculate word count
-    const wordCount = getWordCount(content || '');
+    const wordCount = getWordCount(content);
     console.log('📊 Word count calculated:', wordCount);
+
+    // Check if content has sufficient words for analysis
+    if (wordCount < 10) {
+      console.log('⚠️  Insufficient content for analysis');
+      return res.status(400).json({
+        success: false,
+        error: 'Insufficient content',
+        message: `Content is too short for analysis (${wordCount} words). Please provide at least 10 words for meaningful analysis.`,
+        userMessage: `The content is too short (only ${wordCount} words). Please upload a file with more substantial content for analysis.`
+      });
+    }
 
     // Analyze domain based on content using AI
     console.log('🧠 Starting AI domain analysis...');
-    const { domain, reasoning } = await analyzeDomain(content || '');
+    const { domain, reasoning } = await analyzeDomain(content);
     console.log('🧠 AI domain analysis complete:', { domain, reasoning: reasoning.substring(0, 100) });
 
     // Generate AI-powered SME questions based on content and frameworks

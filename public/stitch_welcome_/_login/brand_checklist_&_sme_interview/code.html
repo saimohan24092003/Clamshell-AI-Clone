@@ -1447,9 +1447,8 @@ async function showComprehensiveReport() {
             <div style="color: #e2e8f0; line-height: 1.6; font-size: 16px; margin-bottom: 20px;">
                 <div style="background: rgba(139, 92, 246, 0.05); padding: 20px; border-radius: 12px; margin-bottom: 20px;">
                     <div style="color: #a78bfa; font-weight: 600; margin-bottom: 10px;">🧠 Dr. Elena's Professional Assessment:</div>
-                    <div style="color: #e2e8f0; font-style: italic;">${enhancedReport?.executiveSummary?.assessment || `Your ${domain} content demonstrates strong foundational elements with a ${overallScore}% overall quality rating. Based on my analysis of the content structure, domain-specific requirements, and SME validation, this material shows excellent potential for e-learning transformation.`}</div>
+                    <div style="color: #e2e8f0; font-style: italic;">${enhancedReport?.executiveSummary?.assessment || `Your content demonstrates strong foundational elements with a ${overallScore}% overall quality rating. Based on my analysis of the content structure and SME validation, this material shows excellent potential for e-learning transformation.`}</div>
                 </div>
-                <strong>Domain:</strong> <span style="color: #8b5cf6;">${domain}</span><br>
                 <strong>Overall Quality Score:</strong> <span style="color: ${overallScore >= 80 ? '#22c55e' : overallScore >= 70 ? '#f59e0b' : '#ef4444'};">${overallScore}%</span><br>
                 <strong>E-Learning Suitability:</strong> <span style="color: ${suitabilityScore >= 80 ? '#22c55e' : '#f59e0b'};">${suitabilityScore}%</span><br>
                 <strong>SME Validation:</strong> <span style="color: #14b8a6;">${Object.keys(smeAnswers).length} expert responses</span><br>
@@ -1505,7 +1504,7 @@ async function showComprehensiveReport() {
             </h3>
             <div style="color: #e2e8f0; line-height: 1.6;">
                 <p><strong>Expert Questions Completed:</strong> ${Object.keys(smeAnswers).length} of ${smeQuestions.length}</p>
-                <p><strong>Domain-Specific Insights:</strong> Captured expert knowledge specific to ${domain}</p>
+                <p><strong>Expert Insights:</strong> Captured comprehensive domain-specific knowledge from subject matter experts</p>
                 <p><strong>Implementation Guidance:</strong> Real-world application context provided</p>
                 <p><strong>Assessment Methods:</strong> Expert-validated evaluation approaches identified</p>
             </div>
