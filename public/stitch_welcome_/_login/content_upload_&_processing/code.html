@@ -1504,7 +1504,7 @@ async function processExpertFiles(files) {
 
     const validFiles = validateExpertFiles(Array.from(files));
     if (validFiles.length === 0) {
-        showExpertMessage('❌ Please select valid files for Dr. Elena to analyze (PDF, DOC, PPT, Audio, Video, Images, Text)', 'error');
+        // Error message is shown by validateExpertFiles()
         return;
     }
 
@@ -1514,20 +1514,54 @@ async function processExpertFiles(files) {
 }
 
 function validateExpertFiles(files) {
-    const allowedTypes = [
-        'application/pdf', 'application/msword',
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        'application/vnd.ms-powerpoint', 
-        'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-        'audio/mpeg', 'audio/wav', 'audio/mp3',
-        'video/mp4', 'video/quicktime',
-        'application/zip', 'image/jpeg', 'image/png', 'image/gif',
+    // Currently ONLY text files are supported
+    // PDF, DOCX, SCORM, Video, Audio require additional libraries
+    const supportedTypes = [
         'text/plain'
     ];
 
+    const unsupportedTypes = [
+        'application/pdf', 'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'application/vnd.ms-powerpoint',
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+        'audio/mpeg', 'audio/wav', 'audio/mp3',
+        'video/mp4', 'video/quicktime',
+        'application/zip', 'image/jpeg', 'image/png', 'image/gif'
+    ];
+
+    // Check for unsupported file types and show helpful message
+    const hasUnsupported = files.some(file => {
+        return unsupportedTypes.some(type => file.type === type) ||
+               file.name.toLowerCase().match(/\.(pdf|docx?|pptx?|mp3|mp4|mov|wav|zip|scorm|jpe?g|png|gif)$/i);
+    });
+
+    if (hasUnsupported) {
+        const unsupportedFile = files.find(file =>
+            unsupportedTypes.some(type => file.type === type) ||
+            file.name.toLowerCase().match(/\.(pdf|docx?|pptx?|mp3|mp4|mov|wav|zip|scorm|jpe?g|png|gif)$/i)
+        );
+
+        showExpertMessage(`
+            ⚠️ File Type Not Yet Supported: ${unsupportedFile?.name}
+
+            Currently, only TEXT files (.txt) are supported for analysis.
+
+            PDF, DOCX, SCORM, Video, and Audio files require additional processing libraries.
+
+            For now, please:
+            • Convert your content to a .txt file, OR
+            • Copy and paste your content into a text file
+
+            Full file support is coming soon!
+            See BUGFIXES_FILE_SUPPORT.md for details.
+        `, 'error');
+        return [];
+    }
+
     return files.filter(file => {
-        return allowedTypes.some(type => file.type === type) || 
-               file.name.toLowerCase().endsWith('.scorm');
+        return supportedTypes.some(type => file.type === type) ||
+               file.name.toLowerCase().endsWith('.txt');
     });
 }
 
