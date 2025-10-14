@@ -1,6 +1,4 @@
 import { v4 as uuidv4 } from 'uuid';
-import { IncomingForm } from 'formidable';
-import fs from 'fs';
 import pdfParse from 'pdf-parse';
 import mammoth from 'mammoth';
 import { withCors } from '../utils/cors.js';
@@ -8,11 +6,10 @@ import { withCors } from '../utils/cors.js';
 // Store uploaded files in memory (for development)
 const uploadedFiles = new Map();
 
-// Extract text from PDF
-async function extractTextFromPDF(filePath) {
+// Extract text from PDF buffer
+async function extractTextFromPDF(buffer) {
   try {
-    const dataBuffer = fs.readFileSync(filePath);
-    const data = await pdfParse(dataBuffer);
+    const data = await pdfParse(buffer);
     return data.text;
   } catch (error) {
     console.error('PDF extraction error:', error);
@@ -20,10 +17,10 @@ async function extractTextFromPDF(filePath) {
   }
 }
 
-// Extract text from DOCX
-async function extractTextFromDOCX(filePath) {
+// Extract text from DOCX buffer
+async function extractTextFromDOCX(buffer) {
   try {
-    const result = await mammoth.extractRawText({ path: filePath });
+    const result = await mammoth.extractRawText({ buffer: buffer });
     return result.value;
   } catch (error) {
     console.error('DOCX extraction error:', error);
@@ -31,18 +28,18 @@ async function extractTextFromDOCX(filePath) {
   }
 }
 
-// Extract text from TXT
-async function extractTextFromTXT(filePath) {
+// Extract text from TXT buffer
+function extractTextFromTXT(buffer) {
   try {
-    return fs.readFileSync(filePath, 'utf8');
+    return buffer.toString('utf8');
   } catch (error) {
     console.error('TXT extraction error:', error);
     throw new Error(`Failed to read text file: ${error.message}`);
   }
 }
 
-// Determine file type and extract content
-async function extractContentFromFile(filePath, mimeType, fileName) {
+// Determine file type and extract content from buffer
+async function extractContentFromBuffer(buffer, mimeType, fileName) {
   console.log(`📄 Extracting content from: ${fileName} (${mimeType})`);
 
   // Check file extension as fallback
@@ -50,7 +47,7 @@ async function extractContentFromFile(filePath, mimeType, fileName) {
 
   // PDF files
   if (mimeType === 'application/pdf' || ext === 'pdf') {
-    return await extractTextFromPDF(filePath);
+    return await extractTextFromPDF(buffer);
   }
 
   // DOCX files
@@ -58,14 +55,13 @@ async function extractContentFromFile(filePath, mimeType, fileName) {
     mimeType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
     ext === 'docx'
   ) {
-    return await extractTextFromDOCX(filePath);
+    return await extractTextFromDOCX(buffer);
   }
 
   // DOC files (older Word format)
   if (mimeType === 'application/msword' || ext === 'doc') {
-    // Note: mammoth primarily supports DOCX, DOC files may not work well
     try {
-      return await extractTextFromDOCX(filePath);
+      return await extractTextFromDOCX(buffer);
     } catch (error) {
       throw new Error('DOC format is not fully supported. Please convert to DOCX or TXT format.');
     }
@@ -73,7 +69,7 @@ async function extractContentFromFile(filePath, mimeType, fileName) {
 
   // Text files
   if (mimeType === 'text/plain' || ext === 'txt') {
-    return await extractTextFromTXT(filePath);
+    return extractTextFromTXT(buffer);
   }
 
   // PPTX - Not yet implemented
@@ -118,6 +114,56 @@ async function extractContentFromFile(filePath, mimeType, fileName) {
   );
 }
 
+// Parse multipart form data manually (Vercel-compatible)
+async function parseMultipartForm(req) {
+  return new Promise((resolve, reject) => {
+    const boundary = req.headers['content-type']?.split('boundary=')[1];
+    if (!boundary) {
+      reject(new Error('No boundary found in content-type'));
+      return;
+    }
+
+    const chunks = [];
+    req.on('data', (chunk) => chunks.push(chunk));
+    req.on('end', () => {
+      try {
+        const buffer = Buffer.concat(chunks);
+        const parts = buffer.toString('binary').split(`--${boundary}`);
+        const files = [];
+
+        for (const part of parts) {
+          if (part.includes('Content-Disposition: form-data')) {
+            const nameMatch = part.match(/name="([^"]+)"/);
+            const filenameMatch = part.match(/filename="([^"]+)"/);
+            const contentTypeMatch = part.match(/Content-Type: ([^\r\n]+)/);
+
+            if (filenameMatch) {
+              // This is a file
+              const contentStart = part.indexOf('\r\n\r\n') + 4;
+              const contentEnd = part.lastIndexOf('\r\n');
+              const fileContent = part.substring(contentStart, contentEnd);
+              const fileBuffer = Buffer.from(fileContent, 'binary');
+
+              files.push({
+                fieldName: nameMatch ? nameMatch[1] : 'file',
+                fileName: filenameMatch[1],
+                mimeType: contentTypeMatch ? contentTypeMatch[1].trim() : 'application/octet-stream',
+                buffer: fileBuffer,
+                size: fileBuffer.length,
+              });
+            }
+          }
+        }
+
+        resolve({ files });
+      } catch (error) {
+        reject(error);
+      }
+    });
+    req.on('error', reject);
+  });
+}
+
 async function handler(req, res) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
@@ -126,36 +172,85 @@ async function handler(req, res) {
   try {
     console.log('📥 Upload request received');
 
-    // Parse multipart form data using formidable
-    const form = new IncomingForm({
-      keepExtensions: true,
-      maxFileSize: 50 * 1024 * 1024, // 50MB
-    });
+    // Check if this is multipart form data or JSON
+    const contentType = req.headers['content-type'] || '';
 
-    const [fields, files] = await new Promise((resolve, reject) => {
-      form.parse(req, (err, fields, files) => {
-        if (err) reject(err);
-        else resolve([fields, files]);
+    if (contentType.includes('multipart/form-data')) {
+      // Parse multipart form data
+      const { files } = await parseMultipartForm(req);
+
+      if (!files || files.length === 0) {
+        throw new Error('No files provided');
+      }
+
+      console.log(`📦 Received ${files.length} file(s)`);
+
+      // Process each uploaded file
+      const uploadedFilesList = [];
+      const fileIds = [];
+      let allContent = '';
+
+      for (const file of files) {
+        console.log(`📄 Processing file: ${file.fileName}`);
+
+        try {
+          // Extract content based on file type
+          const content = await extractContentFromBuffer(file.buffer, file.mimeType, file.fileName);
+
+          console.log(`✅ Extracted ${content.length} characters from ${file.fileName}`);
+
+          // Generate file ID
+          const fileId = uuidv4();
+
+          // Store file content
+          uploadedFiles.set(fileId, {
+            content: content,
+            fileName: file.fileName,
+            mimeType: file.mimeType,
+            size: file.size,
+            uploadedAt: new Date().toISOString(),
+          });
+
+          uploadedFilesList.push({
+            fileId: fileId,
+            fileName: file.fileName,
+            size: file.size,
+            contentLength: content.length,
+            wordCount: content.trim().split(/\s+/).length,
+          });
+
+          fileIds.push(fileId);
+          allContent += content + '\n\n';
+        } catch (extractionError) {
+          console.error(`❌ Extraction failed for ${file.fileName}:`, extractionError);
+
+          // Return user-friendly error
+          return res.status(400).json({
+            success: false,
+            error: 'Content extraction failed',
+            message: extractionError.message,
+            fileName: file.fileName,
+            fileType: file.mimeType,
+          });
+        }
+      }
+
+      console.log(`✅ Successfully processed ${uploadedFilesList.length} file(s)`);
+
+      return res.status(200).json({
+        success: true,
+        message: `Successfully processed ${uploadedFilesList.length} file(s)`,
+        fileId: fileIds[0], // Primary file ID for single file
+        fileIds: fileIds,
+        sessionId: uuidv4(),
+        files: uploadedFilesList,
+        totalWordCount: allContent.trim().split(/\s+/).length,
+        content: allContent, // Combined content for analysis
       });
-    });
-
-    console.log('📦 Parsed form data:', {
-      fieldCount: Object.keys(fields).length,
-      fileCount: Object.keys(files).length,
-    });
-
-    // Get the uploaded files (could be single or multiple)
-    const uploadedFilesList = [];
-    const fileIds = [];
-    let allContent = '';
-
-    // Handle files from formidable (could be array or single file)
-    const fileEntries = Object.entries(files);
-
-    if (fileEntries.length === 0) {
-      // No files uploaded via multipart - check for JSON body with content
-      const bodyContent = fields.content?.[0] || fields.content;
-      const bodyFileName = fields.fileName?.[0] || fields.fileName || 'uploaded-file';
+    } else {
+      // JSON body with content
+      const bodyContent = req.body.content;
+      const bodyFileName = req.body.fileName || 'uploaded-file';
 
       if (bodyContent) {
         console.log('📄 Processing content from JSON body');
@@ -179,88 +274,6 @@ async function handler(req, res) {
 
       throw new Error('No files or content provided');
     }
-
-    // Process each uploaded file
-    for (const [fieldName, fileData] of fileEntries) {
-      // formidable returns array of files
-      const fileArray = Array.isArray(fileData) ? fileData : [fileData];
-
-      for (const file of fileArray) {
-        console.log(`📄 Processing file: ${file.originalFilename || file.newFilename}`);
-
-        try {
-          // Extract content based on file type
-          const content = await extractContentFromFile(
-            file.filepath,
-            file.mimetype,
-            file.originalFilename || file.newFilename
-          );
-
-          console.log(`✅ Extracted ${content.length} characters from ${file.originalFilename}`);
-
-          // Generate file ID
-          const fileId = uuidv4();
-
-          // Store file content
-          uploadedFiles.set(fileId, {
-            content: content,
-            fileName: file.originalFilename || file.newFilename,
-            mimeType: file.mimetype,
-            size: file.size,
-            uploadedAt: new Date().toISOString(),
-          });
-
-          uploadedFilesList.push({
-            fileId: fileId,
-            fileName: file.originalFilename || file.newFilename,
-            size: file.size,
-            contentLength: content.length,
-            wordCount: content.trim().split(/\s+/).length,
-          });
-
-          fileIds.push(fileId);
-          allContent += content + '\n\n';
-
-          // Clean up temp file
-          try {
-            fs.unlinkSync(file.filepath);
-          } catch (cleanupError) {
-            console.warn('Failed to clean up temp file:', cleanupError.message);
-          }
-        } catch (extractionError) {
-          console.error(`❌ Extraction failed for ${file.originalFilename}:`, extractionError);
-
-          // Clean up temp file even on error
-          try {
-            fs.unlinkSync(file.filepath);
-          } catch (cleanupError) {
-            console.warn('Failed to clean up temp file:', cleanupError.message);
-          }
-
-          // Return user-friendly error
-          return res.status(400).json({
-            success: false,
-            error: 'Content extraction failed',
-            message: extractionError.message,
-            fileName: file.originalFilename || file.newFilename,
-            fileType: file.mimetype,
-          });
-        }
-      }
-    }
-
-    console.log(`✅ Successfully processed ${uploadedFilesList.length} file(s)`);
-
-    res.status(200).json({
-      success: true,
-      message: `Successfully processed ${uploadedFilesList.length} file(s)`,
-      fileId: fileIds[0], // Primary file ID for single file
-      fileIds: fileIds,
-      sessionId: uuidv4(),
-      files: uploadedFilesList,
-      totalWordCount: allContent.trim().split(/\s+/).length,
-      content: allContent, // Combined content for analysis
-    });
   } catch (error) {
     console.error('❌ Upload error:', error);
     res.status(500).json({
