@@ -1645,6 +1645,7 @@ async function downloadComprehensiveLearningMap() {
 
                     // Module total row (bold)
                     const totalTime = module.moduleTotalTime || module.topics.reduce((sum, t) => sum + (t.estimatedSeatTime || 0), 0);
+                    const totalRow = worksheet.getRow(currentRow);
 
                     [
                         `Module ${module.moduleNumber} Total`,
