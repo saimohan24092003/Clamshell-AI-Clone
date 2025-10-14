@@ -9,6 +9,10 @@
 <link href="data:image/x-icon;base64," rel="icon" type="image/x-icon"/>
 <script src="../../../js/config.js"></script>
 <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- PDF.js for PDF text extraction -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<!-- Mammoth.js for DOCX text extraction -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 <style>
     /* Force centered layout for analysis results - works in static HTML */
     .professional-analysis-container {
@@ -2123,6 +2127,84 @@ function showCompletionAndRedirect() {
     });
 }
 
+// Extract text content from various file types (PDF, DOCX, TXT)
+async function extractTextFromFile(file) {
+    console.log(`📄 Extracting text from ${file.name} (${file.type})`);
+
+    try {
+        const fileExt = file.name.toLowerCase().split('.').pop();
+
+        // PDF extraction using PDF.js
+        if (fileExt === 'pdf' || file.type === 'application/pdf') {
+            console.log('📕 Processing PDF file...');
+            const arrayBuffer = await file.arrayBuffer();
+
+            // Configure PDF.js worker
+            if (typeof pdfjsLib !== 'undefined') {
+                pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+                const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+                let fullText = '';
+                let pageCount = pdf.numPages;
+
+                // Extract text from all pages
+                for (let i = 1; i <= pdf.numPages; i++) {
+                    const page = await pdf.getPage(i);
+                    const textContent = await page.getTextContent();
+                    const pageText = textContent.items.map(item => item.str).join(' ');
+                    fullText += pageText + '\n\n';
+                }
+
+                console.log(`✅ PDF extracted: ${fullText.length} characters, ${pageCount} pages`);
+                return { content: fullText.trim(), pageCount: pageCount };
+            } else {
+                throw new Error('PDF.js library not loaded');
+            }
+        }
+
+        // DOCX extraction using Mammoth.js
+        else if (fileExt === 'docx' || file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+            console.log('📘 Processing DOCX file...');
+            const arrayBuffer = await file.arrayBuffer();
+
+            if (typeof mammoth !== 'undefined') {
+                const result = await mammoth.extractRawText({ arrayBuffer: arrayBuffer });
+                const text = result.value;
+                console.log(`✅ DOCX extracted: ${text.length} characters`);
+                return { content: text.trim(), pageCount: null };
+            } else {
+                throw new Error('Mammoth.js library not loaded');
+            }
+        }
+
+        // DOC (old Word format) - attempt as text
+        else if (fileExt === 'doc' || file.type === 'application/msword') {
+            console.log('📗 Processing DOC file (legacy format)...');
+            const text = await file.text();
+            console.log(`✅ DOC extracted as text: ${text.length} characters`);
+            return { content: text.trim(), pageCount: null };
+        }
+
+        // Plain text files (TXT, HTML, etc.)
+        else if (fileExt === 'txt' || file.type.startsWith('text/')) {
+            console.log('📝 Processing text file...');
+            const text = await file.text();
+            console.log(`✅ Text file extracted: ${text.length} characters`);
+            return { content: text.trim(), pageCount: null };
+        }
+
+        // Unsupported file types
+        else {
+            console.warn(`⚠️ Unsupported file type: ${file.type} (.${fileExt})`);
+            throw new Error(`File type .${fileExt} is not yet supported. Please upload PDF, DOCX, or TXT files.`);
+        }
+
+    } catch (error) {
+        console.error(`❌ Text extraction failed for ${file.name}:`, error);
+        throw new Error(`Failed to extract text from ${file.name}: ${error.message}`);
+    }
+}
+
 async function startExpertAnalysisWorkflow(files) {
     isExpertProcessing = true;
 
@@ -2133,13 +2215,40 @@ async function startExpertAnalysisWorkflow(files) {
         showExpertProcessingStatus('Dr. Elena extracting content...', 'Real content extraction from your files');
         updateExpertAIStatus('Content Extraction...', 'Dr. Elena Rodriguez extracting real content from your files');
 
-        // Phase 1: Expert Upload using correct endpoint
-        const formData = new FormData();
-        files.forEach(file => formData.append('files', file));
+        // Phase 1: Extract text from files (client-side PDF/DOCX extraction)
+        console.log('📄 Extracting text from', files.length, 'file(s)...');
 
+        let extractedContent = '';
+        let totalPageCount = 0;
+        let fileName = files.length === 1 ? files[0].name : `${files.length} files`;
+
+        // Extract text from each file
+        for (const file of files) {
+            try {
+                const extraction = await extractTextFromFile(file);
+                extractedContent += extraction.content + '\n\n--- END OF FILE ---\n\n';
+                if (extraction.pageCount) {
+                    totalPageCount += extraction.pageCount;
+                }
+            } catch (error) {
+                console.error(`❌ Failed to extract ${file.name}:`, error);
+                throw new Error(`Could not extract text from ${file.name}. ${error.message}`);
+            }
+        }
+
+        console.log(`✅ Extracted ${extractedContent.length} characters from all files, ${totalPageCount || 'unknown'} pages`);
+
+        // Phase 2: Upload extracted content to backend as JSON
         const uploadResponse = await fetch(`${BACKEND_URL}/api/upload`, {
             method: 'POST',
-            body: formData
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                content: extractedContent,
+                fileName: fileName,
+                pageCount: totalPageCount || null
+            })
         });
 
         if (!uploadResponse.ok) {

@@ -12,20 +12,22 @@ async function handler(req, res) {
   try {
     console.log('📥 Upload request received');
 
-    // Handle JSON upload
-    const { content: bodyContent, fileName: bodyFileName } = req.body;
+    // Handle JSON upload with optional pageCount
+    const { content: bodyContent, fileName: bodyFileName, pageCount: bodyPageCount } = req.body;
     const content = bodyContent || '';
     const fileName = bodyFileName || 'uploaded-file';
+    const pageCount = bodyPageCount || null;
 
-    console.log('📄 Processing upload:', { fileName, contentLength: content.length });
+    console.log('📄 Processing upload:', { fileName, contentLength: content.length, pageCount });
 
     // Generate file ID
     const fileId = uuidv4();
 
-    // Store file content
+    // Store file content with page tracking
     uploadedFiles.set(fileId, {
       content: content,
       fileName: fileName,
+      pageCount: pageCount,
       uploadedAt: new Date().toISOString()
     });
 
