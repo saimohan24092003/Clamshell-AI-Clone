@@ -1,12 +1,13 @@
-node_modules
-.env
-.env.local
 *.log
 .DS_Store
 uploads/*
 !uploads/.gitkeep
 
-# Exclude test and standalone server files only
+# Exclude test and standalone server files
 test*.js
 professional_server.js
 simple-server.js
+src/
+prompts/
+public/
+scripts/
