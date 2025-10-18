@@ -2208,7 +2208,9 @@ async function startExpertAnalysisWorkflow(files) {
             body: JSON.stringify({
                 fileId: uploadResult.fileId,
                 fileIds: uploadResult.fileIds,
-                sessionId: currentExpertSessionId
+                sessionId: currentExpertSessionId,
+                content: uploadResult.content,
+                fileName: uploadResult.fileName
             })
         });
 
