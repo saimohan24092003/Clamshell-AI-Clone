@@ -1,1 +1,0 @@
-console.log('Upload request body:', JSON.stringify(req.body, null, 2));
