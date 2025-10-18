@@ -5,3 +5,15 @@ node_modules
 .DS_Store
 uploads/*
 !uploads/.gitkeep
+
+# Exclude test and server files from deployment
+test*.js
+*_server.js
+index.js
+src/
+lib/
+models/
+prompts/
+public/
+scripts/
+utils/
