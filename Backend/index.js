@@ -29,17 +29,21 @@ let isConnected = false;
 async function connectDB() {
   if (isConnected) return;
   try {
-    await mongoose.connect(MONGODB_URI);
+    await mongoose.connect(MONGODB_URI, {
+      serverSelectionTimeoutMS: 5000, // Timeout after 5 seconds
+      socketTimeoutMS: 10000
+    });
     isConnected = true;
     console.log('✅ MongoDB connected');
   } catch (err) {
     console.error('❌ MongoDB connection error:', err.message);
-    throw err;
+    // Don't throw - allow app to continue without DB
+    console.log('ℹ️  Running without MongoDB - some features may be limited');
   }
 }
 
-// Connect to DB on startup (non-blocking)
-connectDB().catch(() => console.log('ℹ️  Running without MongoDB - some features may be limited'));
+// Connect to DB on startup (non-blocking) - but don't wait for it
+connectDB();
 
 // Body parser with increased limit for file uploads
 app.use(express.json({ limit: '50mb' }));
@@ -62,36 +66,22 @@ app.get('/', (req, res) => {
   });
 });
 
-// Basic health check
-app.get('/api/health', async (req, res) => {
-  try {
-    await connectDB();
-    res.json({
-      status: 'ok',
-      message: 'CourseCraft AI Backend is running',
-      timestamp: new Date().toISOString(),
-      environment: process.env.NODE_ENV || 'development',
-      database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
-    });
-  } catch (error) {
-    res.status(500).json({
-      status: 'error',
-      message: 'Database connection failed',
-      timestamp: new Date().toISOString(),
-      environment: process.env.NODE_ENV || 'development',
-      database: 'error',
-      error: error.message
-    });
-  }
+// Basic health check (don't wait for DB connection)
+app.get('/api/health', (req, res) => {
+  res.json({
+    status: 'ok',
+    message: 'CourseCraft AI Backend is running',
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development',
+    database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
+  });
 });
 
-app.get('/health', async (req, res) => {
-  try {
-    await connectDB();
-    res.json({ status: 'ok', database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected' });
-  } catch (error) {
-    res.json({ status: 'ok', database: 'error' });
-  }
+app.get('/health', (req, res) => {
+  res.json({
+    status: 'ok',
+    database: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected'
+  });
 });
 
 // Import API route handlers
