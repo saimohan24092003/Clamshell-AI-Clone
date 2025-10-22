@@ -11,18 +11,23 @@
  * @returns {boolean} - Whether the origin is allowed
  */
 export function isOriginAllowed(origin) {
+  console.log('[CORS] Checking origin:', origin);
+
   // Allow requests with no origin (mobile apps, curl, Postman, server-to-server)
   if (!origin) {
+    console.log('[CORS] No origin - allowing');
     return true;
   }
 
   // Allow all Vercel deployments (*.vercel.app)
   if (origin.includes('vercel.app')) {
+    console.log('[CORS] Vercel deployment - allowing');
     return true;
   }
 
   // Allow localhost for development
   if (origin.includes('localhost') || origin.includes('127.0.0.1')) {
+    console.log('[CORS] Localhost - allowing');
     return true;
   }
 
@@ -30,10 +35,12 @@ export function isOriginAllowed(origin) {
   if (process.env.FRONTEND_ORIGIN) {
     const allowedOrigins = process.env.FRONTEND_ORIGIN.split(',').map(o => o.trim());
     if (allowedOrigins.includes(origin)) {
+      console.log('[CORS] Environment variable match - allowing');
       return true;
     }
   }
 
+  console.log('[CORS] Origin not in allowlist - DENYING');
   return false;
 }
 

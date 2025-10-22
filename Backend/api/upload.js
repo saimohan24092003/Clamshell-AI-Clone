@@ -8,7 +8,8 @@ import { processFile, isFileTypeSupported } from '../utils/fileProcessor.js';
 const uploadedFiles = new Map();
 
 async function handler(req, res) {
-  if (req.method !== 'POST') {
+  // withCors wrapper already handles OPTIONS, only check for POST after that
+  if (req.method !== 'POST' && req.method !== 'OPTIONS') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
