@@ -1,18 +1,74 @@
 {
   "version": 2,
-  "env": {
-    "NODE_ENV": "production"
-  },
-  "functions": {
-    "api/**/*.js": {
-      "memory": 1024,
-      "maxDuration": 30
+  "builds": [
+    {
+      "src": "api/**/*.js",
+      "use": "@vercel/node"
     }
-  },
+  ],
   "rewrites": [
     {
       "source": "/",
-      "destination": "/api/health"
+      "destination": "/api/health.js"
+    },
+    {
+      "source": "/api",
+      "destination": "/api/health.js"
+    },
+    {
+      "source": "/api/health",
+      "destination": "/api/health.js"
+    },
+    {
+      "source": "/api/upload",
+      "destination": "/api/upload.js"
+    },
+    {
+      "source": "/api/upload-multipart",
+      "destination": "/api/upload-multipart.js"
+    },
+    {
+      "source": "/api/analyze",
+      "destination": "/api/analyze.js"
+    },
+    {
+      "source": "/api/strategy",
+      "destination": "/api/strategy.js"
+    },
+    {
+      "source": "/api/learning-map",
+      "destination": "/api/learning-map.js"
+    },
+    {
+      "source": "/api/store-pre-sme-responses",
+      "destination": "/api/store-pre-sme-responses.js"
+    },
+    {
+      "source": "/api/generate-final-report",
+      "destination": "/api/generate-final-report.js"
+    },
+    {
+      "source": "/upload-recommendation-docs",
+      "destination": "/api/upload-recommendation-docs.js"
+    },
+    {
+      "source": "/store-recommendation-approval",
+      "destination": "/api/store-recommendation-approval.js"
+    },
+    {
+      "source": "/api/enhance-recommendation-content",
+      "destination": "/api/enhance-recommendation-content.js"
+    },
+    {
+      "source": "/api/generate-strategies",
+      "destination": "/api/generate-strategies.js"
+    },
+    {
+      "source": "/api/generate-learning-map-ai",
+      "destination": "/api/generate-learning-map-ai.js"
     }
-  ]
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  }
 }

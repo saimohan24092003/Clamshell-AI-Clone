@@ -7,7 +7,3 @@ uploads/*
 test*.js
 professional_server.js
 simple-server.js
-src/
-prompts/
-public/
-scripts/

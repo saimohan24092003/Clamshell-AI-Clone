@@ -1518,55 +1518,54 @@ async function processExpertFiles(files) {
 }
 
 function validateExpertFiles(files) {
-    // Currently ONLY text files are supported
-    // PDF, DOCX, SCORM, Video, Audio require additional libraries
+    // Multi-format file support with client-side and server-side processing
     const supportedTypes = [
-        'text/plain'
-    ];
-
-    const unsupportedTypes = [
-        'application/pdf', 'application/msword',
+        // Text files
+        'text/plain', 'text/html', 'text/csv',
+        // PDF
+        'application/pdf',
+        // Word documents
+        'application/msword',
         'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        'application/vnd.ms-powerpoint',
-        'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-        'audio/mpeg', 'audio/wav', 'audio/mp3',
-        'video/mp4', 'video/quicktime',
-        'application/zip', 'image/jpeg', 'image/png', 'image/gif'
+        // Audio files (server-side transcription)
+        'audio/mpeg', 'audio/wav', 'audio/mp3', 'audio/m4a', 'audio/ogg', 'audio/flac', 'audio/webm',
+        // Video files (server-side transcription)
+        'video/mp4', 'video/quicktime', 'video/x-msvideo', 'video/webm', 'video/x-matroska', 'video/mpeg'
     ];
 
-    // Check for unsupported file types and show helpful message
-    const hasUnsupported = files.some(file => {
-        return unsupportedTypes.some(type => file.type === type) ||
-               file.name.toLowerCase().match(/\.(pdf|docx?|pptx?|mp3|mp4|mov|wav|zip|scorm|jpe?g|png|gif)$/i);
+    const supportedExtensions = [
+        'txt', 'html', 'csv',  // Text
+        'pdf',                  // PDF
+        'doc', 'docx',         // Word
+        'mp3', 'wav', 'm4a', 'ogg', 'flac', 'webm',  // Audio
+        'mp4', 'mov', 'avi', 'webm', 'mkv', 'mpeg', 'mpg'  // Video
+    ];
+
+    // Validate files are in supported formats
+    const unsupportedFiles = files.filter(file => {
+        const ext = file.name.toLowerCase().split('.').pop();
+        const isTypeSupported = supportedTypes.some(type => file.type === type || file.type.startsWith(type.split('/')[0] + '/'));
+        const isExtSupported = supportedExtensions.includes(ext);
+        return !isTypeSupported && !isExtSupported;
     });
 
-    if (hasUnsupported) {
-        const unsupportedFile = files.find(file =>
-            unsupportedTypes.some(type => file.type === type) ||
-            file.name.toLowerCase().match(/\.(pdf|docx?|pptx?|mp3|mp4|mov|wav|zip|scorm|jpe?g|png|gif)$/i)
-        );
-
+    if (unsupportedFiles.length > 0) {
+        const unsupportedFile = unsupportedFiles[0];
         showExpertMessage(`
-            ⚠️ File Type Not Yet Supported: ${unsupportedFile?.name}
+            ⚠️ File Type Not Supported: ${unsupportedFile.name}
 
-            Currently, only TEXT files (.txt) are supported for analysis.
+            ✅ Supported formats:
+            📄 Documents: PDF, DOC, DOCX, TXT
+            🎤 Audio: MP3, WAV, M4A, OGG, FLAC
+            🎬 Video: MP4, MOV, AVI, WEBM, MKV
 
-            PDF, DOCX, SCORM, Video, and Audio files require additional processing libraries.
-
-            For now, please:
-            • Convert your content to a .txt file, OR
-            • Copy and paste your content into a text file
-
-            Full file support is coming soon!
-            See BUGFIXES_FILE_SUPPORT.md for details.
+            Audio and video files are transcribed using AI.
+            Please upload files in one of these formats.
         `, 'error');
         return [];
     }
 
-    return files.filter(file => {
-        return supportedTypes.some(type => file.type === type) ||
-               file.name.toLowerCase().endsWith('.txt');
-    });
+    return files;
 }
 
 // Display expert file list
@@ -2128,10 +2127,22 @@ async function extractTextFromFile(file) {
             return { content: text.trim(), pageCount: null };
         }
 
+        // Audio files - need server-side processing (Whisper API)
+        else if (['mp3', 'wav', 'm4a', 'ogg', 'flac', 'webm'].includes(fileExt) || file.type.startsWith('audio/')) {
+            console.log('🎤 Audio file detected - will send to server for transcription');
+            return { content: null, pageCount: null, needsServerProcessing: true };
+        }
+
+        // Video files - need server-side processing (Whisper API)
+        else if (['mp4', 'mov', 'avi', 'webm', 'mkv', 'mpeg', 'mpg'].includes(fileExt) || file.type.startsWith('video/')) {
+            console.log('🎬 Video file detected - will send to server for transcription');
+            return { content: null, pageCount: null, needsServerProcessing: true };
+        }
+
         // Unsupported file types
         else {
             console.warn(`⚠️ Unsupported file type: ${file.type} (.${fileExt})`);
-            throw new Error(`File type .${fileExt} is not yet supported. Please upload PDF, DOCX, or TXT files.`);
+            throw new Error(`File type .${fileExt} is not yet supported. Please upload PDF, DOCX, TXT, audio (MP3, WAV), or video (MP4, MOV) files.`);
         }
 
     } catch (error) {
@@ -2150,20 +2161,28 @@ async function startExpertAnalysisWorkflow(files) {
         showExpertProcessingStatus('Dr. Elena extracting content...', 'Real content extraction from your files');
         updateExpertAIStatus('Content Extraction...', 'Dr. Elena Rodriguez extracting real content from your files');
 
-        // Phase 1: Extract text from files (client-side PDF/DOCX extraction)
+        // Phase 1: Determine if files need server-side processing
         console.log('📄 Extracting text from', files.length, 'file(s)...');
 
         let extractedContent = '';
         let totalPageCount = 0;
         let fileName = files.length === 1 ? files[0].name : `${files.length} files`;
+        let filesNeedingServerProcessing = [];
+        let clientProcessedContent = '';
 
-        // Extract text from each file
+        // Check which files need server processing
         for (const file of files) {
             try {
                 const extraction = await extractTextFromFile(file);
-                extractedContent += extraction.content + '\n\n--- END OF FILE ---\n\n';
-                if (extraction.pageCount) {
-                    totalPageCount += extraction.pageCount;
+
+                if (extraction.needsServerProcessing) {
+                    console.log(`📤 ${file.name} needs server-side processing`);
+                    filesNeedingServerProcessing.push(file);
+                } else {
+                    clientProcessedContent += extraction.content + '\n\n--- END OF FILE ---\n\n';
+                    if (extraction.pageCount) {
+                        totalPageCount += extraction.pageCount;
+                    }
                 }
             } catch (error) {
                 console.error(`❌ Failed to extract ${file.name}:`, error);
@@ -2171,20 +2190,38 @@ async function startExpertAnalysisWorkflow(files) {
             }
         }
 
-        console.log(`✅ Extracted ${extractedContent.length} characters from all files, ${totalPageCount || 'unknown'} pages`);
+        let uploadResponse;
 
-        // Phase 2: Upload extracted content to backend as JSON
-        const uploadResponse = await fetch(`${BACKEND_URL}/api/upload`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                content: extractedContent,
-                fileName: fileName,
-                pageCount: totalPageCount || null
-            })
-        });
+        // Phase 2: Upload based on file type
+        if (filesNeedingServerProcessing.length > 0) {
+            // Send files as multipart for server-side processing (audio/video)
+            console.log(`📤 Uploading ${filesNeedingServerProcessing.length} file(s) to server for processing...`);
+            updateExpertAIStatus('Server Processing...', 'Transcribing audio/video content via AI');
+
+            const formData = new FormData();
+            filesNeedingServerProcessing.forEach(file => {
+                formData.append('files', file);
+            });
+
+            uploadResponse = await fetch(`${BACKEND_URL}/api/upload`, {
+                method: 'POST',
+                body: formData // multipart/form-data
+            });
+        } else {
+            // Send extracted text as JSON (PDF/DOCX/TXT)
+            console.log('📤 Uploading extracted text to server...');
+            uploadResponse = await fetch(`${BACKEND_URL}/api/upload`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    content: clientProcessedContent,
+                    fileName: fileName,
+                    pageCount: totalPageCount || null
+                })
+            });
+        }
 
         if (!uploadResponse.ok) {
             const errorText = await uploadResponse.text();
@@ -2194,11 +2231,31 @@ async function startExpertAnalysisWorkflow(files) {
         const uploadResult = await uploadResponse.json();
         console.log('✅ Upload response:', uploadResult);
 
+        // Handle multipart upload response (multiple files)
+        let fileId, fileIds, content, responseFileName;
+
+        if (uploadResult.files && Array.isArray(uploadResult.files)) {
+            // Multipart response - combine content from all files
+            fileIds = uploadResult.fileIds;
+            fileId = fileIds[0]; // Use first file ID
+            content = uploadResult.files.map(f => f.fileName + ':\n' +
+                      (filesNeedingServerProcessing.find(file => file.name === f.fileName) ?
+                       `[Content extracted from ${f.fileName}]` : '')).join('\n\n');
+            responseFileName = `${uploadResult.files.length} files`;
+            console.log(`✅ Server processed ${uploadResult.files.length} file(s)`);
+        } else {
+            // JSON response - single content
+            fileId = uploadResult.fileId;
+            fileIds = uploadResult.fileIds;
+            content = uploadResult.content;
+            responseFileName = uploadResult.fileName;
+        }
+
         currentExpertSessionId = uploadResult.sessionId || Date.now().toString();
         updateExpertFileStatus(files, 'Content Extracted', 'status-complete');
         console.log('✅ Real content extracted by Dr. Elena Rodriguez');
 
-        // Phase 2: Initial analysis without preSME context
+        // Phase 3: Initial analysis without preSME context
         console.log('🧠 Starting initial AI analysis...');
         const analysisResponse = await fetch(`${BACKEND_URL}/api/analyze`, {
             method: 'POST',
@@ -2206,11 +2263,11 @@ async function startExpertAnalysisWorkflow(files) {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                fileId: uploadResult.fileId,
-                fileIds: uploadResult.fileIds,
+                fileId: fileId,
+                fileIds: fileIds,
                 sessionId: currentExpertSessionId,
-                content: uploadResult.content,
-                fileName: uploadResult.fileName
+                content: content,
+                fileName: responseFileName
             })
         });
 

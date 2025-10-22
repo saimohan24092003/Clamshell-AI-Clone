@@ -241,7 +241,7 @@ async function handler(req, res) {
       pageMapping = fileData.pageMapping || null;
       console.log(`📂 Retrieved file from store: ${fileName}, content length: ${content.length}, pages: ${pageCount || 'unknown'}`);
     } else if (fileId) {
-      console.log(`❌ FileId ${fileId} not found in store`);
+      console.log(`❌ FileId ${fileId} not found in upload store`);
     }
 
     console.log('📊 Starting analysis with content length:', (content || '').length);
