@@ -54,22 +54,21 @@ export function setCorsHeaders(req, res) {
   const origin = req.headers.origin || req.headers.Origin;
 
   console.log('[CORS] Request origin:', origin);
-  console.log('[CORS] All headers:', JSON.stringify(req.headers));
+  console.log('[CORS] Request method:', req.method);
 
-  if (isOriginAllowed(origin)) {
-    console.log('[CORS] Origin allowed, setting headers');
-    // Set the origin explicitly (required for credentials)
-    res.setHeader('Access-Control-Allow-Origin', origin || '*');
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, Origin');
-    res.setHeader('Access-Control-Expose-Headers', 'Content-Length, Content-Type');
-    res.setHeader('Access-Control-Max-Age', '86400'); // 24 hours
-    return true;
-  }
+  // Always set CORS headers for Vercel deployments to avoid preflight issues
+  const allowedOrigin = origin && isOriginAllowed(origin) ? origin : '*';
 
-  console.log('[CORS] Origin NOT allowed');
-  return false;
+  console.log('[CORS] Setting Access-Control-Allow-Origin to:', allowedOrigin);
+
+  res.setHeader('Access-Control-Allow-Origin', allowedOrigin);
+  res.setHeader('Access-Control-Allow-Credentials', 'true');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, Origin');
+  res.setHeader('Access-Control-Expose-Headers', 'Content-Length, Content-Type');
+  res.setHeader('Access-Control-Max-Age', '86400'); // 24 hours
+
+  return true;
 }
 
 /**
