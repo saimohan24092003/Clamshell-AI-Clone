@@ -44,9 +44,13 @@ export function isOriginAllowed(origin) {
  * @returns {boolean} - Whether the origin was allowed
  */
 export function setCorsHeaders(req, res) {
-  const origin = req.headers.origin;
+  const origin = req.headers.origin || req.headers.Origin;
+
+  console.log('[CORS] Request origin:', origin);
+  console.log('[CORS] All headers:', JSON.stringify(req.headers));
 
   if (isOriginAllowed(origin)) {
+    console.log('[CORS] Origin allowed, setting headers');
     // Set the origin explicitly (required for credentials)
     res.setHeader('Access-Control-Allow-Origin', origin || '*');
     res.setHeader('Access-Control-Allow-Credentials', 'true');
@@ -57,6 +61,7 @@ export function setCorsHeaders(req, res) {
     return true;
   }
 
+  console.log('[CORS] Origin NOT allowed');
   return false;
 }
 
