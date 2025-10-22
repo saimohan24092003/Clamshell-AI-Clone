@@ -62,7 +62,12 @@ export function setCorsHeaders(req, res) {
   console.log('[CORS] Setting Access-Control-Allow-Origin to:', allowedOrigin);
 
   res.setHeader('Access-Control-Allow-Origin', allowedOrigin);
-  res.setHeader('Access-Control-Allow-Credentials', 'true');
+
+  // Only set credentials header if we have a specific origin (not wildcard)
+  if (allowedOrigin !== '*') {
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+  }
+
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, Accept, Origin');
   res.setHeader('Access-Control-Expose-Headers', 'Content-Length, Content-Type');
@@ -79,7 +84,6 @@ export function setCorsHeaders(req, res) {
  */
 export function handlePreflight(req, res) {
   if (req.method === 'OPTIONS') {
-    setCorsHeaders(req, res);
     res.status(204).end();
     return true;
   }
